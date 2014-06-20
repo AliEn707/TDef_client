@@ -1,3 +1,6 @@
+#include <windows.h> 
+#include <stdio.h> 
+
 #include <SDL2/SDL.h> // Библиотека SDL 2
 
 #include <GL/gl.h> // Библиотека OpenGL
@@ -28,9 +31,15 @@ void init(){
 	// Включаем двойной буфер, настраиваем цвета
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+/*	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+//	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 5);
+*/
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 1);
 
 	// Создаем окно с заголовком "Cube", размером 640х480 и расположенным по центру экрана.
 
@@ -41,7 +50,7 @@ void init(){
 	if(window == NULL){	// если не получилось создать окно, то выходим 
 		exit(1);
 	}
-
+	FreeConsole();
 	// Инициализация OpenGL
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // устанавливаем фоновый цвет на черный
@@ -49,6 +58,8 @@ void init(){
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST); // включаем тест глубины
 	glShadeModel(GL_SMOOTH);
+	//glEnable (GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0f, (float) width / (float) height, 0.1f, 100.0f); // настраиваем трехмерную перспективу
@@ -57,11 +68,16 @@ void init(){
 
 #undef main
 int main(int argc, char *argv[]){   
-
+	printf("Initializing...\n");
+	
 	init(); // инициализация
-
+	
+	
+	
 	bool running = true;
-
+	
+//	SetConsoleOutputCP(CP_UTF8);
+	printf("%ls\n",L"ПРИвет");
 	float xrf = 0, yrf = 0, zrf = 0; // углы поворота
 
 	while(running){ 
@@ -112,39 +128,41 @@ void drawCube(float xrf, float yrf, float zrf){
 	glRotatef(yrf, 0.0f, 1.0f, 0.0f);	// Вращение куба по X, Y, Z
 	glRotatef(zrf, 0.0f, 0.0f, 1.0f);	// Вращение куба по X, Y, Z
 	
+	glColor4f(0.0f, 1.0f, 0.0f,0.5f);		// Синяя сторона (Верхняя)
+	
 	glBegin(GL_QUADS);					// Рисуем куб
 
-	glColor3f(0.0f, 1.0f, 0.0f);		// Синяя сторона (Верхняя)
+	glColor4f(0.0f, 1.0f, 0.0f,0.5f);		// Синяя сторона (Верхняя)
 	glVertex3f( 1.0f, 1.0f, -1.0f);		// Верхний правый угол квадрата
 	glVertex3f(-1.0f, 1.0f, -1.0f);		// Верхний левый
 	glVertex3f(-1.0f, 1.0f,  1.0f);		// Нижний левый
 	glVertex3f( 1.0f, 1.0f,  1.0f);		// Нижний правый
 	
-	glColor3f(1.0f, 0.5f, 0.0f);		// Оранжевая сторона (Нижняя)
+	glColor4f(1.0f, 0.5f, 0.0f,0.5f);		// Оранжевая сторона (Нижняя)
 	glVertex3f( 1.0f, -1.0f,  1.0f);	// Верхний правый угол квадрата
 	glVertex3f(-1.0f, -1.0f,  1.0f);	// Верхний левый
 	glVertex3f(-1.0f, -1.0f, -1.0f);	// Нижний левый
 	glVertex3f( 1.0f, -1.0f, -1.0f);	// Нижний правый
 	
-	glColor3f(1.0f, 0.0f, 0.0f);		// Красная сторона (Передняя)
+	glColor4f(1.0f, 0.0f, 0.0f,0.5f);		// Красная сторона (Передняя)
 	glVertex3f( 1.0f,  1.0f, 1.0f);		// Верхний правый угол квадрата
 	glVertex3f(-1.0f,  1.0f, 1.0f);		// Верхний левый
 	glVertex3f(-1.0f, -1.0f, 1.0f);		// Нижний левый
 	glVertex3f( 1.0f, -1.0f, 1.0f);		// Нижний правый
 
-	glColor3f(1.0f,1.0f,0.0f);			// Желтая сторона (Задняя)
+	glColor4f(1.0f,1.0f,0.0f,0.5f);			// Желтая сторона (Задняя)
 	glVertex3f( 1.0f, -1.0f, -1.0f);	// Верхний правый угол квадрата
 	glVertex3f(-1.0f, -1.0f, -1.0f);	// Верхний левый
 	glVertex3f(-1.0f,  1.0f, -1.0f);	// Нижний левый
 	glVertex3f( 1.0f,  1.0f, -1.0f);	// Нижний правый
 
-	glColor3f(0.0f,0.0f,1.0f);			// Синяя сторона (Левая)
+	glColor4f(0.0f,0.0f,1.0f,0.5f);			// Синяя сторона (Левая)
 	glVertex3f(-1.0f,  1.0f,  1.0f);	// Верхний правый угол квадрата
 	glVertex3f(-1.0f,  1.0f, -1.0f);	// Верхний левый
 	glVertex3f(-1.0f, -1.0f, -1.0f);	// Нижний левый
 	glVertex3f(-1.0f, -1.0f,  1.0f);	// Нижний правый
 	
-	glColor3f(1.0f,0.0f,1.0f);			// Фиолетовая сторона (Правая)
+	glColor4f(1.0f,0.0f,1.0f,0.5f);			// Фиолетовая сторона (Правая)
 	glVertex3f( 1.0f,  1.0f, -1.0f);	// Верхний правый угол квадрата
 	glVertex3f( 1.0f,  1.0f,  1.0f);	// Верхний левый
 	glVertex3f( 1.0f, -1.0f,  1.0f);	// Нижний левый
