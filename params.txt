@@ -1,0 +1,1 @@
+nedd to do 20 fps on  animation -> 3 frames per frame
