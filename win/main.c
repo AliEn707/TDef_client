@@ -16,7 +16,9 @@ void frameSync(unsigned int *time){
 		return;
 	}
 		unsigned int t=config.time_per_frame-(timeGetTime()-*time);
-	Sleep(t);
+	if (t<0)
+		t=0;
+	Sleep(t<=config.time_per_frame?t:0);
 	*time=timeGetTime();
 }
 
@@ -47,7 +49,7 @@ int main(int argc, char *argv[]){
 	Uint32 time=0;
 	config.main_running=1;
 	while(config.main_running){ 
-//		frameSync(&time);
+		frameSync(&time);
 //		SDL_Delay(100);
 		SDL_Event event;
 	  
