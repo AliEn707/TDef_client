@@ -39,7 +39,7 @@ typedef struct
 //*********************************************************
 
 //Creates a glFont
-int glFontCreate (GLFONT *Font, char *FileName, int Tex);
+int glFontCreate (GLFONT *Font, char *FileName);
 
 //Deletes a glFont
 void glFontDestroy (GLFONT *Font);
@@ -51,7 +51,7 @@ void glFontBegin (GLFONT *Font);
 void glFontEnd (void);
 
 //Draws text with a glFont
-void glFontTextOut (char *String, float x, float y,
+void glFontTextOut (GLFONT *glFont, char *String, float x, float y,
 	float z);
 
 //*********************************************************

@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-#include <gl\gl.h>
+#include <GL/gl.h>
 #include "glfont.h"
 
 //*********************************************************
@@ -17,12 +17,12 @@
 //*********************************************************
 
 //Current font
-GLFONT *glFont;
+//GLFONT *glFont;
 
 //*********************************************************
 //Functions
 //*********************************************************
-int glFontCreate (GLFONT *Font, char *FileName, int Tex)
+int glFontCreate (GLFONT *Font, char *FileName)
 {
 	FILE *Input;
 	char *TexBytes;
@@ -36,7 +36,7 @@ int glFontCreate (GLFONT *Font, char *FileName, int Tex)
 	fread(Font, sizeof(GLFONT), 1, Input);
 
 	//Save texture number
-	Font->Tex = Tex;
+	 glGenTextures (1, &Font->Tex);
 
 	//Get number of characters
 	Num = Font->IntEnd - Font->IntStart + 1;
@@ -91,6 +91,7 @@ void glFontDestroy (GLFONT *Font)
 	free(Font->Char);
 }
 //*********************************************************
+/*
 void glFontBegin (GLFONT *Font)
 {
 	//Save pointer to font structure
@@ -108,17 +109,18 @@ void glFontEnd (void)
 	//Font no longer current
 	glFont = NULL;
 }
+*/
 //*********************************************************
-void glFontTextOut (char *String, float x, float y, 
+void glFontTextOut (GLFONT *glFont,char *String, float x, float y, 
 	float z)
 {
 	int Length, i;
 	GLFONTCHAR *Char;
-
+	
 	//Return if we don't have a valid glFont 
 	if (glFont == NULL)
 		return;
-	
+	glBindTexture(GL_TEXTURE_2D, glFont->Tex);
 	//Get length of string
 	Length = strlen(String);
 	

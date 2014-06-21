@@ -30,7 +30,7 @@
 //#include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <GL/gl.h>
 
 /* OpenGL texture info */
 typedef struct
