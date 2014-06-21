@@ -50,7 +50,7 @@ void init(){
 	if(window == NULL){	// если не получилось создать окно, то выходим 
 		exit(1);
 	}
-	FreeConsole();
+//	FreeConsole();
 	// Инициализация OpenGL
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // устанавливаем фоновый цвет на черный
@@ -77,11 +77,15 @@ int main(int argc, char *argv[]){
 	bool running = true;
 	
 //	SetConsoleOutputCP(CP_UTF8);
-	printf("%ls\n",L"ПРИвет");
+//	printf("%ls\n",L"ПРИвет");
 	float xrf = 0, yrf = 0, zrf = 0; // углы поворота
-
+	Uint32 time=SDL_GetTicks();
 	while(running){ 
-	  
+		Uint32 time_t=SDL_GetTicks();
+		printf("%u\n",30-(time_t-time));
+		SDL_Delay(20-(time_t-time));
+		time=SDL_GetTicks();
+//		SDL_Delay(100);
 		SDL_Event event; // события SDL
 	  
 		while ( SDL_PollEvent(&event) ){ // начинаем обработку событий
