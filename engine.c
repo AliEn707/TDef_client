@@ -11,6 +11,11 @@
 //0
 //  x
 
+int getNewTexture(){
+	glGenTextures(1,config.textures+config.textures_size);
+	return config.textures[config.textures_size++];
+}
+
 float gridToScreenX(float x, float y){
 	
 	return sx*(0.707*(x)+0.707*(y))+tx;

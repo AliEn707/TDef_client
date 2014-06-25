@@ -10,7 +10,8 @@
 #include <malloc.h>
 #include <string.h>
 #include <GL/gl.h>
-#include "glfont.h"
+#include "main.h"
+
 
 //*********************************************************
 //Variables
@@ -36,7 +37,8 @@ int glFontCreate (GLFONT *Font, char *FileName)
 	fread(Font, sizeof(GLFONT), 1, Input);
 
 	//Save texture number
-	 glGenTextures (1, &Font->Tex);
+	Font->Tex=getNewTexture();
+	// glGenTextures (1, &Font->Tex);
 
 	//Get number of characters
 	Num = Font->IntEnd - Font->IntStart + 1;

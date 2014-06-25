@@ -31,7 +31,7 @@ void tickSync(unsigned int *time){
 #undef main
 int main(int argc, char *argv[]){   
 	printf("Initializing...\n");
-	
+	memset(&config,0,sizeof(config));
 	config.window_width=640;
 	config.window_height=480;
 	config.time_per_frame=1000/58;
@@ -78,6 +78,8 @@ int main(int argc, char *argv[]){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 		glLoadIdentity();
+		
+		drawScene();
 		
 		glPushMatrix();
 			glTranslatef(config.window_width/2,config.window_height/2,0);
