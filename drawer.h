@@ -1,6 +1,6 @@
 
 
-void drawNode();
+void drawNode(gnode* n);
 
 void drawElement(element * e);
 

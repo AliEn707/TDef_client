@@ -9,8 +9,9 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-#include <GL/gl.h>
+//#include <GL/gl.h>
 #include "main.h"
+#include "glfont.h"
 
 
 //*********************************************************

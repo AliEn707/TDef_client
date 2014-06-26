@@ -2,8 +2,16 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <GL/gl.h>
+ 
 
-#include "glfont.h"
+
+
+#define MAX_TEXTURES 10000
+//texture global
+#define MAX_TEX_GLOBAL 10
+#define CURSOR 0
+#define WALKABLE 1
+#define BUILDABLE 2
 
 
 typedef
@@ -41,6 +49,7 @@ struct object{
 	element * elements;
 	int elements_size;
 	int arg[4];
+	void (*action)(void * arg);
 } object;
 
 typedef
@@ -50,13 +59,29 @@ struct menu{
 } menu;
 
 typedef
-struct menuroot{
+struct menu_conf{
 	char enable;
 	int depth;
 	int path[10];
-	menu* submenu;
-}menu_root;
+	menu* root;
+	object background;
+}menu_conf;
 
+typedef
+struct gnode{
+	int id;
+	int tex;
+	char walkable;
+	char buildable;
+	int tower_id;
+} gnode;
+
+
+typedef
+struct map_conf{
+	int gridsize;
+	gnode * grid;
+} map_conf;
 
 typedef
 struct g_config{
@@ -67,9 +92,13 @@ struct g_config{
 	int window_width; 
 	int window_height; 
 	int main_running;
-	menu_root menu;
+	
+	menu_conf menu;
+	map_conf map;
+	
 	int textures_size;
-	int textures[10000];
+	int textures[MAX_TEXTURES];
+	int global_tex[MAX_TEX_GLOBAL];
 }g_config;
 
 

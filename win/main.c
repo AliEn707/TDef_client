@@ -2,6 +2,10 @@
 
 
 #include "../main.h"
+#include "../glfont.h"
+#include "../tga.h"
+#include "../drawer.h"
+#include "../engine.h"
 
 
 
@@ -80,6 +84,7 @@ int main(int argc, char *argv[]){
 		glLoadIdentity();
 		
 		drawScene();
+	
 		
 		glPushMatrix();
 			glTranslatef(config.window_width/2,config.window_height/2,0);
@@ -100,7 +105,7 @@ int main(int argc, char *argv[]){
 				glFontTextOut(&font,"Hello world\n my friend",0,0,30);
 				glScalef(10,10,1);
 				glTranslatef(0,0,40);
-				drawNode();
+//				drawNode();
 		glFlush();
 		SDL_GL_SwapWindow(config.window);
 	}
