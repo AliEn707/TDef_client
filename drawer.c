@@ -1,5 +1,15 @@
 #include "main.h"
 
+void drawCursor(){
+	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_LINE_LOOP);
+	glVertex2f(cursor.state.x+20,cursor.state.y);
+	glVertex2f(cursor.state.x,cursor.state.y);
+	glVertex2f(cursor.state.x,cursor.state.y-20);
+	
+	glEnd();
+}
 
 void drawElement(element * e){
 	if (e->tex!=0)
@@ -36,6 +46,7 @@ void drawObject(object * o){
 
 void drawNode(gnode * n){
 	glBindTexture(GL_TEXTURE_2D, n->tex);
+	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		glTranslatef(n->id/config.map.gridsize,n->id%config.map.gridsize,0);
 		glBegin(GL_QUADS);
@@ -75,6 +86,7 @@ void drawNode(gnode * n){
 			glEnd();
 		}
 	glPopMatrix();	
+	glDisable(GL_TEXTURE_2D);
 }
 
 void globalTransform(){
@@ -94,20 +106,18 @@ void drawScene(){
 		
 	glPopMatrix();
 	//draw screen controls
-	element e;
-	e.position.x=0;
-	e.position.y=0;
-	e.size.x=100;
-	e.size.y=100;
-	e.color.r=1;
-	e.color.g=1;
-	e.color.b=0;
-	e.wire=0;
-	e.tex=0;
 	
-	glPushMatrix();
-		glTranslatef(config.window_width/2,config.window_height/2,0);
-			drawElement(&e);
-	glPopMatrix();
+	drawCursor();
+	
+	object o;
+	o.position.x=0;
+	o.position.y=0;
+	o.size.x=100;
+	o.size.y=100;
+	o.elements_size=0;
+	
+	drawObject(&o);
+	
+	
 }
 

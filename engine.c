@@ -2,6 +2,60 @@
 #include "engine.h "
 
 
+
+
+int checkMouseOnObject(object * o){
+	if (cursor.state.x>o->position.x && 
+			cursor.state.x<o->position.x+o->size.x &&
+			cursor.state.y>o->position.y && 
+			cursor.state.y<o->position.y+o->size.y)
+		return 1;
+	return 0;
+}
+
+
+void mouseMotion(){
+	cursor.state.x+=(cursor.pos.x-cursor.prev.x)*cursor.sens;
+	cursor.state.y+=-(cursor.pos.y-cursor.prev.y)*cursor.sens;
+	if (cursor.state.x<0)
+		cursor.state.x=0;
+	if (cursor.state.y<0)
+		cursor.state.y=0;
+	if (cursor.state.y>config.window_height)
+		cursor.state.y=config.window_height;
+	if (cursor.state.x>config.window_width)
+		cursor.state.x=config.window_width;
+	
+	cursor.prev.x=cursor.pos.x;
+	cursor.prev.y=cursor.pos.y;
+}
+
+
+int checkMouseState(){
+	mouseMotion();
+//	printf("%d %d\n",cursor.state.x,cursor.state.y);
+	
+	
+	
+	return 0;
+}
+
+
+void cursorInit(){
+	cursor.sens=1;
+	cursor.color.r=1;
+	cursor.color.g=1;
+	cursor.color.b=1;
+	cursor.state.x=0;
+	cursor.state.y=config.window_height;
+	
+}
+
+
+int getNewTexture(){
+	glGenTextures(1,config.textures+config.textures_size);
+	return config.textures[config.textures_size++];
+}
 #define tx config.transform.translate.x
 #define ty config.transform.translate.y
 #define sx config.transform.scale
@@ -11,11 +65,6 @@
 //  y
 //0
 //  x
-
-int getNewTexture(){
-	glGenTextures(1,config.textures+config.textures_size);
-	return config.textures[config.textures_size++];
-}
 
 float gridToScreenX(float x, float y){
 	
@@ -68,7 +117,9 @@ void graficsInit(){
 	if(config.window == NULL){
 		exit(1);
 	}
-
+	
+	cursorInit();
+	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); 
 	glClearDepth(1.0);
 	glDepthFunc(GL_LESS);

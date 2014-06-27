@@ -56,7 +56,8 @@ int main(int argc, char *argv[]){
 		frameSync(&time);
 //		SDL_Delay(100);
 		SDL_Event event;
-	  
+		SDL_GetMouseState(&cursor.pos.x,&cursor.pos.y);
+		checkMouseState();
 		while ( SDL_PollEvent(&event) ){
 			switch(event.type){
 				case SDL_QUIT: 

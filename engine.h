@@ -1,3 +1,6 @@
+
+int checkMouseState();
+	
 int getNewTexture();
 
 float gridToScreenX(float x, float y);
