@@ -2,6 +2,7 @@
 
 void drawCursor(){
 	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
+	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_TEXTURE_2D);
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(cursor.state.x+20,cursor.state.y);
@@ -9,6 +10,8 @@ void drawCursor(){
 	glVertex2f(cursor.state.x,cursor.state.y-20);
 	
 	glEnd();
+	glEnable(GL_DEPTH_TEST);
+	
 }
 
 void drawElement(element * e){
@@ -107,7 +110,6 @@ void drawScene(){
 	glPopMatrix();
 	//draw screen controls
 	
-	drawCursor();
 	
 	object o;
 	o.position.x=0;
@@ -118,6 +120,10 @@ void drawScene(){
 	
 	drawObject(&o);
 	
-	
+	if (config.menu.enable!=0){
+		//draw menu
+	}
+	//must be the last
+	drawCursor(); 
 }
 

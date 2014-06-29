@@ -51,6 +51,7 @@ struct element{
 typedef
 struct object{
 	char type;
+	char focus;
 	vec2 position;
 	vec2 size;
 	element * elements;
@@ -61,6 +62,8 @@ struct object{
 
 typedef
 struct menu{
+	int objects_size;
+	int submenu_size;
 	object * objects;
 	struct menu * submenu;
 } menu;
@@ -70,7 +73,7 @@ struct menu_conf{
 	char enable;
 	int depth;
 	int path[10];
-	menu* root;
+	menu root;
 	object background;
 }menu_conf;
 
@@ -98,6 +101,7 @@ struct cur{
 	color3 color;
 	float sens;
 } cur;
+
 typedef
 struct global_conf{
 	cur cursor;
@@ -139,7 +143,7 @@ struct g_config{
 
 
 
-
+#define ctoi(i) (i-48)
 
 
 

@@ -6,6 +6,7 @@
 #include "../tga.h"
 #include "../drawer.h"
 #include "../engine.h"
+#include "../file.h"
 
 
 
@@ -34,13 +35,15 @@ void tickSync(unsigned int *time){
 
 #undef main
 int main(int argc, char *argv[]){   
-	printf("Initializing...\n");
+	printf("Initializing.....");
 	memset(&config,0,sizeof(config));
 	config.window_width=640;
 	config.window_height=480;
 	config.time_per_frame=1000/58;
-	printf("done\n");
 	graficsInit(); // инициализация
+	printf("done\n");
+	loadFiles();
+	
 //	FreeConsole();
 	GLFONT font;
 	glFontCreate (&font, "test.glf");

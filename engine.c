@@ -8,8 +8,11 @@ int checkMouseOnObject(object * o){
 	if (cursor.state.x>o->position.x && 
 			cursor.state.x<o->position.x+o->size.x &&
 			cursor.state.y>o->position.y && 
-			cursor.state.y<o->position.y+o->size.y)
+			cursor.state.y<o->position.y+o->size.y){
+		o->focus=1;		
 		return 1;
+	}
+	o->focus=0;
 	return 0;
 }
 
@@ -42,7 +45,7 @@ int checkMouseState(){
 
 
 void cursorInit(){
-	cursor.sens=1;
+	cursor.sens=1.05;
 	cursor.color.r=1;
 	cursor.color.g=1;
 	cursor.color.b=1;
@@ -131,4 +134,9 @@ void graficsInit(){
 	glLoadIdentity();
 	glOrtho(0,config.window_width,0,config.window_height,-100,100);
 	glMatrixMode(GL_MODELVIEW); 
+}
+
+
+void clean(){
+	
 }
