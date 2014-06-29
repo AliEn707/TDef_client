@@ -34,6 +34,10 @@ void loadMenu(char* path){
 	printf("done\n");
 }
 
+void realizeMenu(){
+	//clean all mallocs
+}
+
 void loadFiles(){
 	loadMenu("data/menu.cfg");
 }
