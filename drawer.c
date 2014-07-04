@@ -10,16 +10,19 @@ void drawCursor(){
 	glVertex2f(cursor.state.x,cursor.state.y-20);
 	
 	glEnd();
-	glEnable(GL_DEPTH_TEST);
+	
 	
 }
 
-void drawElement(element * e){
+void drawElement(element * e,int focus){
 	if (e->tex!=0)
 		glEnable(GL_TEXTURE_2D);
 	else
 		glDisable(GL_TEXTURE_2D);
-	glColor4f(e->color.r,e->color.g,e->color.b,1.0);
+	if (focus==0)
+		glColor4f(e->color.r,e->color.g,e->color.b,1.0);
+	else
+		glColor4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,1.0);
 	e->wire==0?glBegin(GL_QUADS):glBegin(GL_LINE_LOOP);
 		if (e->tex!=0)
 			glTexCoord2f(0.0f, 0.0f);
@@ -34,17 +37,37 @@ void drawElement(element * e){
 			glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(e->position.x+e->size.x,e->position.y);
 	glEnd();
-	if (e->tex!=0)
-		glDisable(GL_TEXTURE_2D);
 }
 
 void drawObject(object * o){
 	int i;
+//	printf("%g %g|%g %g\n",o->position.x,o->position.y,o->size.x,o->size.y);
 	glPushMatrix();
+		if(1){ 
+			glDisable(GL_TEXTURE_2D);
+			glColor4f(1,1,1,1);
+			glBegin(GL_LINE_LOOP);
+				glVertex2f(o->position.x,o->position.y);
+				glVertex2f(o->position.x,o->position.y+o->size.y);
+				glVertex2f(o->position.x+o->size.x,o->position.y+o->size.y);
+				glVertex2f(o->position.x+o->size.x,o->position.y);
+			glEnd();
+		}
 		glTranslatef(o->position.x,o->position.y,0);
 		for(i=0;i<o->elements_size;i++)
-			drawElement(&o->elements[i]);
+			drawElement(&o->elements[i],o->in_focus);
 	glPopMatrix();
+}
+
+void drawMenu(){
+	menu* m=0;
+	m=&config.menu.root;
+	int i;
+	for(i=0;i<config.menu.depth;i++)
+		m=&m->submenu[config.menu.path[i]];
+	for(i=0;i<m->objects_size;i++)
+		drawObject(&m->objects[i]);
+	
 }
 
 void drawNode(gnode * n){
@@ -103,25 +126,21 @@ void globalTransform(){
 }
 
 void drawScene(){
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+//	glEnable(GL_DEPTH_TEST);
 	glPushMatrix();
-	//draw map
 		globalTransform();
-		
+		glDisable(GL_DEPTH_TEST);
+		//draw map
+		glEnable(GL_DEPTH_TEST);
+		//draw map egain
 	glPopMatrix();
+	glDisable(GL_DEPTH_TEST);
 	//draw screen controls
 	
-	
-	object o;
-	o.position.x=0;
-	o.position.y=0;
-	o.size.x=100;
-	o.size.y=100;
-	o.elements_size=0;
-	
-	drawObject(&o);
-	
 	if (config.menu.enable!=0){
-		//draw menu
+		drawMenu();
 	}
 	//must be the last
 	drawCursor(); 

@@ -1,25 +1,62 @@
 #include "main.h "
 #include "engine.h "
+#include "menu.h "
+
+void processEvent(SDL_Event event){
+	switch(event.type){
+		case SDL_QUIT: 
+			config.main_running = 0;
+			break;
+		case SDL_KEYDOWN: 
+			switch(event.key.keysym.sym){ 
+				case SDLK_ESCAPE: 
+					config.main_running = 0; 
+					break;
+				case SDLK_LEFT: 
+					cursorMove(-5,0);
+					break;
+				case SDLK_RIGHT: 
+					cursorMove(5,0);
+					break;
+				case SDLK_m:
+					actionToggleMenu(0);
+					break;
+			}
+			break;
+		case SDL_MOUSEMOTION:
+//			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
+			cursorMove(event.motion.xrel,event.motion.yrel);
+			checkCursorBorder();
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (config.menu.enable!=0)
+				processMouseMenu(event);
+		break;
+	} 
+}
 
 
-
-
-int checkMouseOnObject(object * o){
+object * checkMouseOnObject(object * o){
 	if (cursor.state.x>o->position.x && 
 			cursor.state.x<o->position.x+o->size.x &&
 			cursor.state.y>o->position.y && 
 			cursor.state.y<o->position.y+o->size.y){
-		o->focus=1;		
+		if (o->focus!=0)
+			o->in_focus=1;		
 		return o;
 	}
-	o->focus=0;
+	if (o->focus!=0)
+		o->in_focus=0;
 	return 0;
 }
 
+void cursorMove(int xrel,int yrel){
+	cursor.state.x+=xrel;
+	cursor.state.y-=yrel;
+}
 
-void mouseMotion(){
-	cursor.state.x+=(cursor.pos.x-cursor.prev.x)*cursor.sens;
-	cursor.state.y+=-(cursor.pos.y-cursor.prev.y)*cursor.sens;
+
+void checkCursorBorder(){
 	if (cursor.state.x<0)
 		cursor.state.x=0;
 	if (cursor.state.y<0)
@@ -29,13 +66,23 @@ void mouseMotion(){
 	if (cursor.state.x>config.window_width)
 		cursor.state.x=config.window_width;
 	
+}
+//not used
+void mouseMotion(){
+	cursor.state.x+=(cursor.pos.x-cursor.prev.x)*cursor.sens;
+	cursor.state.y+=-(cursor.pos.y-cursor.prev.y)*cursor.sens;
+	checkCursorBorder();
 	cursor.prev.x=cursor.pos.x;
 	cursor.prev.y=cursor.pos.y;
 }
 
 
 int checkMouseState(){
-	mouseMotion();
+//	mouseMotion();
+	if (config.menu.enable!=0)
+		checkMouseMenu();
+//			if (config.menu.selected!=0)
+//				config.menu.selected->in_focus=1;
 //	printf("%d %d\n",cursor.state.x,cursor.state.y);
 	
 	
@@ -45,7 +92,7 @@ int checkMouseState(){
 
 
 void cursorInit(){
-	cursor.sens=1.05;
+	cursor.sens=1.0;
 	cursor.color.r=1;
 	cursor.color.g=1;
 	cursor.color.b=1;

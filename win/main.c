@@ -62,36 +62,21 @@ int main(int argc, char *argv[]){
 		SDL_GetMouseState(&cursor.pos.x,&cursor.pos.y);
 		checkMouseState();
 		while ( SDL_PollEvent(&event) ){
-			switch(event.type){
-				case SDL_QUIT: 
-					config.main_running = 0;
-				break;
-
-				case SDL_KEYDOWN: 
-					switch(event.key.keysym.sym){ 
-						case SDLK_ESCAPE: 
-							config.main_running = 0; 
-						break;
-					}
-				break;
-			} 
+			processEvent(event);
 		}
 
-	  	
-
+	  	drawScene();
+//....................................................
+/*
 		xrf -= 0.5; 
 		yrf -= 0.5;
 		zrf -= 0.5;
 		
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-		glLoadIdentity();
 		
-		drawScene();
-	
+		glEnable(GL_DEPTH_TEST);
 		
 		glPushMatrix();
-			glTranslatef(config.window_width/2,config.window_height/2,0);
+			glTranslatef(config.window_width/2,config.window_height/2,-20);
 				
 			glScalef(100,100,1);
 			//glFontBegin(&font);
@@ -100,8 +85,8 @@ int main(int argc, char *argv[]){
 			glDisable (GL_TEXTURE_2D);
 			drawCube(xrf, yrf, zrf); 
 		 
-			
 		glPopMatrix();
+*/		
 		glEnable (GL_TEXTURE_2D);
 		glTranslatef(0,config.window_height/2,0);
 			glScalef(15,15,1);
@@ -110,6 +95,7 @@ int main(int argc, char *argv[]){
 				glScalef(10,10,1);
 				glTranslatef(0,0,40);
 //				drawNode();
+//.........................................................
 		glFlush();
 		SDL_GL_SwapWindow(config.window);
 	}

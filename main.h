@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 #include <SDL2/SDL.h>
 #include <GL/gl.h>
  
@@ -44,14 +46,17 @@ struct element{
 	vec2 position;
 	vec2 size;
 	int tex;
-	char wire;
+	int wire;
 	color3 color;
+	color3 fcolor;
 } element;
 	
 typedef
 struct object{
-	char type;
-	char focus;
+	int type;
+	int focus;
+	int in_focus;
+	int touch;
 	vec2 position;
 	vec2 size;
 	element * elements;
@@ -70,19 +75,19 @@ struct menu{
 
 typedef
 struct menu_conf{
-	char enable;
+	int enable;
 	int depth;
 	int path[10];
 	menu root;
-	object background;
+	object* selected;
 }menu_conf;
 
 typedef
 struct gnode{
 	int id;
 	int tex;
-	char walkable;
-	char buildable;
+	int walkable;
+	int buildable;
 	int tower_id;
 } gnode;
 
@@ -124,6 +129,7 @@ struct g_config{
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	int global_tex[MAX_TEX_GLOBAL];
+	int global_count;
 }g_config;
 
 
