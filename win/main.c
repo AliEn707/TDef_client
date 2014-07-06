@@ -61,9 +61,10 @@ int main(int argc, char *argv[]){
 		SDL_Event event;
 		SDL_GetMouseState(&cursor.pos.x,&cursor.pos.y);
 		checkMouseState();
-		while ( SDL_PollEvent(&event) ){
+		while( SDL_PollEvent(&event) ){
 			processEvent(event);
 		}
+		processKeyboard();
 
 	  	drawScene();
 //....................................................
@@ -100,6 +101,7 @@ int main(int argc, char *argv[]){
 		SDL_GL_SwapWindow(config.window);
 	}
 	glFontDestroy(&font);
+	cleanAll();
 	SDL_Quit(); // завершаем работу SDL и выходим
 	return 0;
 }

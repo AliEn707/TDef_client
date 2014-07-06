@@ -2,6 +2,7 @@ int checkMouseMenu();
 
 void processMouseMenu(SDL_Event event);
 
+void processKeysMenu(SDL_Event event);
 
 
 

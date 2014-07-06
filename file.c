@@ -142,7 +142,7 @@ void loadMenu(char* path){
 	}
 	
 	fclose(file);
-	
+/*load test	
 	printf("\n");
 	int i,j;
 	m=&config.menu.root;
@@ -150,14 +150,69 @@ void loadMenu(char* path){
 		for(j=0;j<m->objects[i].elements_size;j++)
 			printf("o%d e%d\n",i,j);
 	
-	
+*/	
 	printf("done\n");
 }
 
-void realizeMenu(){
+void realizeMenu(menu* m){
+	int i,j;
+	for(i=0;i<m->submenu_size;i++)
+		realizeMenu(&m->submenu[i]);
+	for(j=0;j<m->objects_size;j++)
+		free(m->objects[j].elements);
+	free(m->objects);
+	free(m->submenu);
 	//clean all mallocs
 }
 
+void loadMap(char* path){
+	gnode * grid;
+	FILE * file;
+	printf("load map...");
+	if ((file=fopen(path,"r"))==0) 
+		perror("fopen loadMap");
+	char buf[100];
+	int size;
+	fscanf(file,"%d\n",&size);
+	if ((grid=malloc(sizeof(gnode)*size*size))==0)
+		perror("malloc grid loadMap");
+	memset(grid,0,sizeof(gnode)*size*size);
+	char* walk;
+	char* build;
+	if((walk=malloc((size*size+1)*sizeof(char)))==0)
+		perror("malloc walk loadMap");
+	if((build=malloc((size*size+1)*sizeof(char)))==0)
+		perror("malloc build loadMap");
+	fscanf(file,"%s\n",walk);
+	fscanf(file,"%s\n",build);
+	int i;
+	for(i=0;i<size*size;i++){
+		grid[i].id=i;
+		grid[i].walkable= walk[i]=='1'?(char)1:walk[i]=='0'?(char)0:(char)-1;
+		grid[i].buildable= build[i]=='1'?(char)1:build[i]=='0'?(char)0:(char)-1;
+	}
+	free(walk);
+	free(build);
+	
+	
+	config.map.grid=grid;
+	config.map.grid_size=size;
+	config.map.enable=1;
+	setDefaultTransform();
+	printf("done\n");
+} 
+
+void realizeMap(){
+	free(config.map.grid);
+}
+
 void loadFiles(){
-	loadMenu("data/menu.cfg");
+	loadMenu("../data/menu.cfg");
+	
+	loadMap("../maps/test.mp");
+}
+
+void cleanAll(){
+	realizeMenu(&config.menu.root);
+	realizeMap();
 }

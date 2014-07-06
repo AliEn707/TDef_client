@@ -1,39 +1,65 @@
-#include "main.h "
-#include "engine.h "
-#include "menu.h "
+#include "main.h"
+#include "engine.h"
+#include "menu.h"
+#include "map.h"
 
 void processEvent(SDL_Event event){
 	switch(event.type){
 		case SDL_QUIT: 
 			config.main_running = 0;
 			break;
-		case SDL_KEYDOWN: 
+		case SDL_KEYDOWN:
+			config.global.keys[event.key.keysym.sym]=1;
 			switch(event.key.keysym.sym){ 
 				case SDLK_ESCAPE: 
 					config.main_running = 0; 
-					break;
-				case SDLK_LEFT: 
-					cursorMove(-5,0);
-					break;
-				case SDLK_RIGHT: 
-					cursorMove(5,0);
 					break;
 				case SDLK_m:
 					actionToggleMenu(0);
 					break;
 			}
+			if (config.menu.enable!=0)
+				processKeysMenu(event);
+			else
+				if (config.map.enable!=0)
+					processKeysMap(event);
+			break;
+		case SDL_KEYUP:
+			config.global.keys[event.key.keysym.sym]=0;
 			break;
 		case SDL_MOUSEMOTION:
 //			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
-			cursorMove(event.motion.xrel,event.motion.yrel);
+			cursorMove(event.motion.xrel,-event.motion.yrel);
 			checkCursorBorder();
 			break;
 		case SDL_MOUSEBUTTONDOWN:
+			config.global.mouse[event.button.button]=1;
 			if (config.menu.enable!=0)
 				processMouseMenu(event);
-		break;
-	} 
+			break;
+		case SDL_MOUSEBUTTONUP:
+			config.global.mouse[event.button.button]=0;
+			break;
+	}
 }
+
+void processKeyboard(){
+	//global keys
+	//mouse motion
+	if (config.global.keys[SDLK_UP])
+		cursorMove(0,5);
+	if (config.global.keys[SDLK_DOWN])
+		cursorMove(0,-5);
+	if (config.global.keys[SDLK_LEFT])
+		cursorMove(-5,0);
+	if (config.global.keys[SDLK_RIGHT])
+		cursorMove(5,0);
+	//
+
+	if (config.menu.enable==0)
+		processContKeysMap();
+				
+};
 
 
 object * checkMouseOnObject(object * o){
@@ -50,9 +76,10 @@ object * checkMouseOnObject(object * o){
 	return 0;
 }
 
+
 void cursorMove(int xrel,int yrel){
 	cursor.state.x+=xrel;
-	cursor.state.y-=yrel;
+	cursor.state.y+=yrel;
 }
 
 
@@ -81,6 +108,9 @@ int checkMouseState(){
 //	mouseMotion();
 	if (config.menu.enable!=0)
 		checkMouseMenu();
+	else
+		if (config.map.enable!=0)
+			checkMouseMap();
 //			if (config.menu.selected!=0)
 //				config.menu.selected->in_focus=1;
 //	printf("%d %d\n",cursor.state.x,cursor.state.y);
@@ -127,7 +157,7 @@ void graficsInit(){
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 1);
 
-	config.window = SDL_CreateWindow("Cube", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.window_width, config.window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	config.window = SDL_CreateWindow("TDef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.window_width, config.window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	
 	SDL_GLContext glcontext = SDL_GL_CreateContext(config.window); // создаем контекст OpenGL
 	
@@ -137,20 +167,24 @@ void graficsInit(){
 	
 	cursorInit();
 	
+	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); 
 	glClearDepth(1.0);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
-	glEnable (GL_BLEND);
+	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0,config.window_width,0,config.window_height,-100,100);
+	glOrtho(0,config.window_width,0,config.window_height,-10000,10000);
 	glMatrixMode(GL_MODELVIEW); 
-}
-
-
-void clean(){
+	
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POLYGON_SMOOTH);
+	
 	
 }
+
+

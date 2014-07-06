@@ -38,8 +38,15 @@ struct color3{
 typedef 
 struct g_params{
 	float scale;
+	int scale_push;
 	vec2 translate;
 } g_params;
+
+typedef 
+struct texture{
+	int tex[25];
+	int frames;
+} texture;
 
 typedef
 struct element{
@@ -61,6 +68,7 @@ struct object{
 	vec2 size;
 	element * elements;
 	int elements_size;
+	char text[25];
 	int arg[4];
 	void (*action)(void * arg);
 } object;
@@ -94,8 +102,12 @@ struct gnode{
 
 typedef
 struct map_conf{
-	int gridsize;
+	int enable;
+	int grid_size;
+	int focus;
 	gnode * grid;
+	g_params transform;
+	object * objects;
 } map_conf;
 
 typedef 
@@ -110,12 +122,12 @@ struct cur{
 typedef
 struct global_conf{
 	cur cursor;
+	int keys[5000];
+	int mouse[100];
 }global_conf;
 
 typedef
 struct g_config{
-	g_params transform;
-	global_conf global;
 	unsigned int time_per_frame;
 	unsigned int time_per_tick;
 	SDL_Window *window;
@@ -123,6 +135,7 @@ struct g_config{
 	int window_height; 
 	int main_running;
 	
+	global_conf global;
 	menu_conf menu;
 	map_conf map;
 	
@@ -148,6 +161,8 @@ struct g_config{
 #define cursor config.global.cursor
 
 
+#define to2d(x,y)  ((x)*config.map.grid_size+(y))
+#define to2di(x,y)  (((int)(x))*config.map.grid_size+((int)(y)))
 
 #define ctoi(i) (i-48)
 

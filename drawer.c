@@ -63,6 +63,14 @@ void drawMenu(){
 	menu* m=0;
 	m=&config.menu.root;
 	int i;
+	glDisable(GL_TEXTURE_2D);
+	glColor4f(0,0,0,0.8);
+	glBegin(GL_QUADS);
+		glVertex2f(0,0);
+		glVertex2f(config.window_width,0);
+		glVertex2f(config.window_width,config.window_height);
+		glVertex2f(0,config.window_height);
+	glEnd();
 	for(i=0;i<config.menu.depth;i++)
 		m=&m->submenu[config.menu.path[i]];
 	for(i=0;i<m->objects_size;i++)
@@ -71,11 +79,13 @@ void drawMenu(){
 }
 
 void drawNode(gnode * n){
-	glBindTexture(GL_TEXTURE_2D, n->tex);
-	glEnable(GL_TEXTURE_2D);
+//	glBindTexture(GL_TEXTURE_2D, n->tex);
+//	glEnable(GL_TEXTURE_2D);
+	glColor4f(1,1,1,1);
 	glPushMatrix();
-		glTranslatef(n->id/config.map.gridsize,n->id%config.map.gridsize,0);
-		glBegin(GL_QUADS);
+		glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
+		glBegin(GL_LINE_LOOP);
+//		glBegin(GL_QUADS);
 			glTexCoord2f (0.0f, 0.0f);
 			glVertex2f(0.0f,0.0f);
 			glTexCoord2f (1.0f, 0.0f);
@@ -86,7 +96,7 @@ void drawNode(gnode * n){
 			glVertex2f(0.0f,1.0f);
 		glEnd();
 		if (n->walkable!=0){
-			glBindTexture(GL_TEXTURE_2D, config.global_tex[WALKABLE]);
+/*			glBindTexture(GL_TEXTURE_2D, config.global_tex[WALKABLE]);
 			glBegin(GL_QUADS);
 				glTexCoord2f (0.0f, 0.0f);
 				glVertex2f(0.0f,0.0f);
@@ -97,9 +107,9 @@ void drawNode(gnode * n){
 				glTexCoord2f (0.0f, 1.0f);
 				glVertex2f(0.0f,1.0f);
 			glEnd();
-		}
+*/		}
 		if (n->buildable!=0){
-			glBindTexture(GL_TEXTURE_2D, config.global_tex[BUILDABLE]);
+/*			glBindTexture(GL_TEXTURE_2D, config.global_tex[BUILDABLE]);
 			glBegin(GL_QUADS);
 				glTexCoord2f (0.0f, 0.0f);
 				glVertex2f(0.0f,0.0f);
@@ -110,20 +120,44 @@ void drawNode(gnode * n){
 				glTexCoord2f (0.0f, 1.0f);
 				glVertex2f(0.0f,1.0f);
 			glEnd();
-		}
+*/		}
+	if (n->id==config.map.focus){
+		glColor4f(0,1,0,1);
+		glBegin(GL_LINE_LOOP);
+//		glBegin(GL_QUADS);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(0.0f,0.0f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(1.0f,0.0f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(1.0f,1.0f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(0.0f,1.0f);
+		glEnd();
+	}
 	glPopMatrix();	
 	glDisable(GL_TEXTURE_2D);
 }
 
+
+void drawMap(){
+	int i,j;
+	for(i=0;i<config.map.grid_size;i++)
+		for(j=0;j<config.map.grid_size;j++)
+			drawNode(&config.map.grid[to2d(i,j)]);
+}
+
 void globalTransform(){
-/*	
-	glTranslatef((tx),(ty),0);
+	
+	glTranslatef(config.map.transform.translate.x,config.map.transform.translate.y,0);
 	glRotatef(60,1,0,0);
-	glScalef(sx,sy,1);
+	glScalef(config.map.transform.scale,config.map.transform.scale,1);
 	//glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
-*/
+	
 }
+
+
 
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -133,11 +167,13 @@ void drawScene(){
 		globalTransform();
 		glDisable(GL_DEPTH_TEST);
 		//draw map
+		drawMap();
 		glEnable(GL_DEPTH_TEST);
 		//draw map egain
 	glPopMatrix();
 	glDisable(GL_DEPTH_TEST);
 	//draw screen controls
+	
 	
 	if (config.menu.enable!=0){
 		drawMenu();

@@ -32,6 +32,11 @@ void processMouseMenu(SDL_Event event){
 			}
 }
 
+void processKeysMenu(SDL_Event event){
+	
+}
+
+
 //actions
 
 void actionTestMenu(void * arg){
