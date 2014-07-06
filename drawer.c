@@ -46,14 +46,12 @@ void drawObject(object * o){
 		if(1){ 
 			glDisable(GL_TEXTURE_2D);
 			glColor4f(1,1,1,1);
-			glDisable(GL_LINE_SMOOTH);
 			glBegin(GL_LINE_LOOP);
 				glVertex2f(o->position.x,o->position.y);
 				glVertex2f(o->position.x,o->position.y+o->size.y+1);
 				glVertex2f(o->position.x+o->size.x+1,o->position.y+o->size.y+1);
 				glVertex2f(o->position.x+o->size.x+1,o->position.y);
 			glEnd();
-			glEnable(GL_LINE_SMOOTH);
 		}
 		glTranslatef(o->position.x,o->position.y,0);
 		for(i=0;i<o->elements_size;i++)
