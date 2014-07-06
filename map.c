@@ -7,6 +7,10 @@
 void checkMouseMap(){
 	float x=screenToGridX(cursor.state.x,cursor.state.y);
 	float y=screenToGridY(cursor.state.x,cursor.state.y);
+	if (x<0 || y<0 || x>config.map.grid_size || y>config.map.grid_size){
+		config.map.focus=-1;
+		return;
+	}
 	config.map.focus=to2di(x,y);
 }
 
