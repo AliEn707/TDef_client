@@ -90,7 +90,6 @@ void loadMenu(char* path){
 							m->objects[i].action=actionTestMenu;
 						continue;
 					}
-							
 					//something else
 					if(strcmp(buf,"elements")==0){
 						fscanf(file,"%d\n",&m->objects[i].elements_size);
@@ -154,6 +153,7 @@ void loadMenu(char* path){
 	printf("done\n");
 }
 
+
 void realizeMenu(menu* m){
 	int i,j;
 	for(i=0;i<m->submenu_size;i++)
@@ -164,6 +164,16 @@ void realizeMenu(menu* m){
 	free(m->submenu);
 	//clean all mallocs
 }
+
+void loadTowerMenu(){
+	
+	
+}
+
+void realizeTowerMenu(){
+	
+}
+
 
 void loadMap(char* path){
 	gnode * grid;
@@ -194,6 +204,54 @@ void loadMap(char* path){
 	free(walk);
 	free(build);
 	
+	while(feof(file)==0){
+		memset(buf,0,sizeof(buf));
+		fscanf(file,"%s ",buf);
+//		printf("%s\n",buf);
+		if (strcmp(buf,"max_npcs")==0){
+			fscanf(file,"%d\n",&config.map.npc_max);
+			if ((config.map.npc_array=malloc(sizeof(npc)*config.map.npc_max))==0)
+				perror("malloc NPC initArrays");
+			memset(config.map.npc_array,0,sizeof(npc)*config.map.npc_max);
+			continue;
+		}
+		if (strcmp(buf,"max_towers")==0){
+			fscanf(file,"%d\n",&config.map.tower_max);
+			if ((config.map.tower_array=malloc(sizeof(tower)*config.map.tower_max))==0)
+				perror("malloc tower initArrays");
+			memset(config.map.tower_array,0,sizeof(tower)*config.map.tower_max);
+			continue;
+		}
+		if (strcmp(buf,"max_bullets")==0){
+			fscanf(file,"%d\n",&config.map.bullet_max);
+			if ((config.map.bullet_array=malloc(sizeof(bullet)*config.map.bullet_max))==0)
+				perror("malloc bullet initArrays");
+			memset(config.map.bullet_array,0,sizeof(bullet)*config.map.bullet_max);
+			continue;
+		}
+/*		if (strcmp(buf,"points")==0){
+			int i;
+			fscanf(file,"%d\n",&config.points_size);
+			if ((config..map.points=malloc(config.points_size*sizeof(point)))==0)
+				perror("malloc config.points loadMap");
+			for(i=0;i<config.map.points_size;i++){
+				int j;
+				fscanf(file,"%d ",&j);
+				fscanf(file,"%d\n",&config.map.points[j].position);
+				config.points[j].id=j;
+			}
+			continue;
+		}
+*/		
+	}
+	////test
+	config.map.npc_array[1].position.x=1.5;
+	config.map.npc_array[1].position.y=1.5;
+	config.map.npc_array[1].id=100;
+	config.map.npc_array[0].position.x=2.0;
+	config.map.npc_array[0].position.y=1.5;
+	config.map.npc_array[0].id=200;
+	/////
 	
 	config.map.grid=grid;
 	config.map.grid_size=size;
@@ -204,6 +262,9 @@ void loadMap(char* path){
 
 void realizeMap(){
 	free(config.map.grid);
+	free(config.map.tower_array);
+	free(config.map.npc_array);
+	free(config.map.bullet_array);
 }
 
 void loadFiles(){

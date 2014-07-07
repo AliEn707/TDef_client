@@ -150,13 +150,72 @@ void drawMap(){
 void globalTransform(){
 	
 	glTranslatef(config.map.transform.translate.x,config.map.transform.translate.y,0);
-	glRotatef(60,1,0,0);
+	glRotatef(-60,1,0,0);
 	glScalef(config.map.transform.scale,config.map.transform.scale,1);
 	//glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
-	
 }
 
+void backTransform(){
+	glRotatef(45,0,0,1);
+	glRotatef(60,1,0,0);
+	glScalef(0.8,4*0.8,1);
+}
+
+
+void drawNpc(npc* n){
+	glPushMatrix();
+	glTranslatef(n->position.x,n->position.y,0);
+	backTransform();
+		glColor4f(rand()%100/100.0,rand()%100/100.0,rand()%100/100.0,1);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_QUADS);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(-0.5f,0.0f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(0.5f,0.0f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(0.5f,1.0f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(-0.5f,1.0f);
+		glEnd();
+	
+	glPopMatrix();
+}
+
+void drawNpcs(){
+	int i;
+	for(i=0;i<config.map.npc_max;i++)
+		if (config.map.npc_array[i].id!=0)
+			drawNpc(&config.map.npc_array[i]);
+}
+
+void drawTower(tower* t){
+	glPushMatrix();
+	glTranslatef(t->position.x,t->position.y,0);
+	backTransform();
+		glColor4f(rand()%100/100.0,rand()%100/100.0,rand()%100/100.0,1);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_QUADS);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(-0.5f,-0.5f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(0.5f,-0.5f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(0.5f,0.5f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(-0.5f,0.5f);
+		glEnd();
+	
+	glPopMatrix();
+}
+
+void drawTowers(){
+	int i;
+	for(i=0;i<config.map.tower_max;i++)
+		if (config.map.tower_array[i].id!=0)
+			drawTower(&config.map.tower_array[i]);
+}
 
 
 void drawScene(){
@@ -166,9 +225,11 @@ void drawScene(){
 	glPushMatrix();
 		globalTransform();
 		glDisable(GL_DEPTH_TEST);
-		//draw map
 		drawMap();
+		//draw map
 		glEnable(GL_DEPTH_TEST);
+		drawNpcs();
+		drawTowers();
 		//draw map egain
 	glPopMatrix();
 	glDisable(GL_DEPTH_TEST);

@@ -35,6 +35,43 @@ struct color3{
 	float b;
 } color3;
 
+//////////
+typedef
+struct tower{
+	int id;
+	int bit_mask;
+	vec2 position;
+	int type;
+	int health;
+	int shield;
+	int energy;
+	
+}tower;
+
+typedef
+struct npc{
+	int id;
+	int status;
+	vec2 position;
+	vec2 destination;
+	vec2 direction;
+	int type;
+	int health;
+	int shield;
+	
+}npc;
+
+typedef
+struct bullet{
+	int id;
+	vec2 position;
+	vec2 destination;
+	vec2 direction;
+	vec2 source;
+	int detonate;
+}bullet;
+
+/////////////
 typedef 
 struct g_params{
 	float scale;
@@ -82,15 +119,6 @@ struct menu{
 } menu;
 
 typedef
-struct menu_conf{
-	int enable;
-	int depth;
-	int path[10];
-	menu root;
-	object* selected;
-}menu_conf;
-
-typedef
 struct gnode{
 	int id;
 	int tex;
@@ -98,17 +126,6 @@ struct gnode{
 	int buildable;
 	int tower_id;
 } gnode;
-
-
-typedef
-struct map_conf{
-	int enable;
-	int grid_size;
-	int focus;
-	gnode * grid;
-	g_params transform;
-	object * objects;
-} map_conf;
 
 typedef 
 struct cur{
@@ -118,6 +135,32 @@ struct cur{
 	color3 color;
 	float sens;
 } cur;
+
+typedef
+struct menu_conf{
+	int enable;
+	int depth;
+	int path[10];
+	menu root;
+	object* selected;
+}menu_conf;
+
+typedef
+struct map_conf{
+	int enable;
+	int grid_size;
+	int focus;
+	gnode * grid;
+	g_params transform;
+	object * objects;
+	int tower_max;
+	tower * tower_array;
+	int npc_max;
+	npc * npc_array;
+	int bullet_max;
+	bullet * bullet_array;
+	
+} map_conf;
 
 typedef
 struct global_conf{
