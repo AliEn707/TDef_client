@@ -5,7 +5,7 @@
 
 
 
-void loadMenu(char* path){
+void loadMenu(menu* root,char* path){
 	FILE* file=0;
 	printf("load menu....");
 	if((file=fopen(path,"r"))==0)
@@ -19,7 +19,7 @@ void loadMenu(char* path){
 			fscanf(file,"%d\n",&d);
 			fscanf(file,"%s ",buf);
 			fscanf(file,"%s\n",buf);
-			m=&config.menu.root;
+			m=root;
 			for(i=0;i<d;i++)
 				m=&m->submenu[ctoi(buf[i])];
 			continue;
@@ -105,14 +105,16 @@ void loadMenu(char* path){
 								continue;
 							}
 							if(strcmp(buf,"color")==0){
-								fscanf(file,"%f %f %f\n",&m->objects[i].elements[j].color.r,
+								fscanf(file,"%f %f %f %f\n",&m->objects[i].elements[j].color.r,
 												&m->objects[i].elements[j].color.g,
-												&m->objects[i].elements[j].color.b);
+												&m->objects[i].elements[j].color.b,
+												&m->objects[i].elements[j].color.a);
 								}
 							if(strcmp(buf,"fcolor")==0){
-								fscanf(file,"%f %f %f\n",&m->objects[i].elements[j].fcolor.r,
+								fscanf(file,"%f %f %f %f\n",&m->objects[i].elements[j].fcolor.r,
 												&m->objects[i].elements[j].fcolor.g,
-												&m->objects[i].elements[j].fcolor.b);
+												&m->objects[i].elements[j].fcolor.b,
+												&m->objects[i].elements[j].fcolor.a);
 								}
 							if(strcmp(buf,"xpos")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].position.x);
@@ -122,9 +124,13 @@ void loadMenu(char* path){
 							}
 							if(strcmp(buf,"xsize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.x);
+								if (m->objects[i].elements[j].size.x==0)
+									m->objects[i].elements[j].size.x=config.window_width;
 							}
 							if(strcmp(buf,"ysize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.y);
+								if (m->objects[i].elements[j].size.y==0)
+									m->objects[i].elements[j].size.y=config.window_height;
 							}
 							if(strcmp(buf,"tex")==0){
 								fscanf(file,"%s\n",&buf);
@@ -268,7 +274,7 @@ void realizeMap(){
 }
 
 void loadFiles(){
-	loadMenu("../data/menu.cfg");
+	loadMenu(&config.menu.root,"../data/menu.cfg");
 	
 	loadMap("../maps/test.mp");
 }

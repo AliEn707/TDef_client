@@ -36,6 +36,8 @@ void processEvent(SDL_Event event){
 			config.global.mouse[event.button.button]=1;
 			if (config.menu.enable!=0)
 				processMouseMenu(event);
+			else
+				processMouseMap(event);
 			break;
 		case SDL_MOUSEBUTTONUP:
 			config.global.mouse[event.button.button]=0;
@@ -57,7 +59,8 @@ void processKeyboard(){
 	//
 
 	if (config.menu.enable==0)
-		processContKeysMap();
+		if (config.map.enable!=0)
+			processContKeysMap();
 				
 };
 
@@ -107,7 +110,7 @@ void mouseMotion(){
 int checkMouseState(){
 //	mouseMotion();
 	if (config.menu.enable!=0)
-		checkMouseMenu();
+		checkMouseMenu(&config.menu.root);
 	else
 		if (config.map.enable!=0)
 			checkMouseMap();
@@ -180,9 +183,9 @@ void graficsInit(){
 	glOrtho(0,config.window_width,0,config.window_height,-10000,10000);
 	glMatrixMode(GL_MODELVIEW); 
 	
-	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POLYGON_SMOOTH);
+//	glEnable(GL_POINT_SMOOTH);
+//	glEnable(GL_LINE_SMOOTH);
+//	glEnable(GL_POLYGON_SMOOTH);
 	
 	
 }

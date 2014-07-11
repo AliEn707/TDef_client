@@ -1,4 +1,4 @@
-int checkMouseMenu();
+int checkMouseMenu(menu * root);
 
 void processMouseMenu(SDL_Event event);
 

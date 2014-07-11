@@ -14,8 +14,32 @@ void checkMouseMap(){
 	config.map.focus=to2di(x,y);
 }
 
+void processMouseMap(SDL_Event event){	
+	switch(event.button.button){
+				case SDL_BUTTON_LEFT:
+					//priority on screen buttons
+					if(config.menu.selected!=0)
+						printf("select some object\n");
+					else
+						if (config.map.focus>=0)
+							printf("action on %d node\n",config.map.focus);
+					break;
+			}
+}
+
+
 void processKeysMap(SDL_Event event){
-	
+	switch(event.key.keysym.sym){ 
+		case SDLK_RETURN: 
+		case SDLK_SPACE: 
+			if(config.menu.selected!=0)
+				printf("select some object\n");
+			else
+				if (config.map.focus>=0)
+					printf("action on %d node\n",config.map.focus);
+			break;
+	}
+			
 }
 
 

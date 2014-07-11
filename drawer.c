@@ -20,21 +20,17 @@ void drawElement(element * e,int focus){
 	else
 		glDisable(GL_TEXTURE_2D);
 	if (focus==0)
-		glColor4f(e->color.r,e->color.g,e->color.b,1.0);
+		glColor4f(e->color.r,e->color.g,e->color.b,e->color.a);
 	else
-		glColor4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,1.0);
+		glColor4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,e->fcolor.a);
 	e->wire==0?glBegin(GL_QUADS):glBegin(GL_LINE_LOOP);
-		if (e->tex!=0)
-			glTexCoord2f(0.0f, 0.0f);
+		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(e->position.x,e->position.y);
-		if (e->tex!=0)
-			glTexCoord2f(0.0f, 1.0f);
+		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(e->position.x,e->position.y+e->size.y);
-		if (e->tex!=0)
-			glTexCoord2f(1.0f, 1.0f);
+		glTexCoord2f(1.0f, 1.0f);
 		glVertex2f(e->position.x+e->size.x,e->position.y+e->size.y);
-		if (e->tex!=0)
-			glTexCoord2f(1.0f, 0.0f);
+		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(e->position.x+e->size.x,e->position.y);
 	glEnd();
 }
@@ -59,18 +55,11 @@ void drawObject(object * o){
 	glPopMatrix();
 }
 
-void drawMenu(){
+void drawMenu(menu * root){
 	menu* m=0;
-	m=&config.menu.root;
+	m=root;
 	int i;
 	glDisable(GL_TEXTURE_2D);
-	glColor4f(0,0,0,0.8);
-	glBegin(GL_QUADS);
-		glVertex2f(0,0);
-		glVertex2f(config.window_width,0);
-		glVertex2f(config.window_width,config.window_height);
-		glVertex2f(0,config.window_height);
-	glEnd();
 	for(i=0;i<config.menu.depth;i++)
 		m=&m->submenu[config.menu.path[i]];
 	for(i=0;i<m->objects_size;i++)
@@ -237,7 +226,7 @@ void drawScene(){
 	
 	
 	if (config.menu.enable!=0){
-		drawMenu();
+		drawMenu(&config.menu.root);
 	}
 	//must be the last
 	drawCursor(); 

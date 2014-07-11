@@ -1,6 +1,8 @@
 
 void checkMouseMap();
 
+void processMouseMap(SDL_Event event);
+
 void processKeysMap(SDL_Event event);
 
 int loadMapTexture(char * path);

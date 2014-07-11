@@ -3,9 +3,9 @@
 #include "engine.h"
 
 
-int checkMouseMenu(){
+int checkMouseMenu(menu* root){
 	menu* m=0;
-	m=&config.menu.root;
+	m=root;
 	int i;
 	int o=0;
 	config.menu.selected=0;

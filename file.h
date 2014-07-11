@@ -1,4 +1,4 @@
-void loadMenu(char* path);
+void loadMenu(menu * root,char* path);
 
 void loadFiles();
 

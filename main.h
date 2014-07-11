@@ -10,7 +10,7 @@
 
 #define MAX_TEXTURES 10000
 //texture global
-#define MAX_TEX_GLOBAL 10
+#define MAX_TEX_GLOBAL 100
 #define CURSOR 0
 #define WALKABLE 1
 #define BUILDABLE 2
@@ -33,6 +33,7 @@ struct color3{
 	float r;
 	float g;
 	float b;
+	float a;
 } color3;
 
 //////////
@@ -152,7 +153,9 @@ struct map_conf{
 	int focus;
 	gnode * grid;
 	g_params transform;
-	object * objects;
+	menu screen_menu;
+	menu tower_menu;
+	menu npc_menu;
 	int tower_max;
 	tower * tower_array;
 	int npc_max;
