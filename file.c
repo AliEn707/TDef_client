@@ -1,6 +1,7 @@
 #include "main.h"
 #include "file.h"
 #include "menu.h"
+#include "map.h"
 
 
 
@@ -8,8 +9,10 @@
 void loadMenu(menu* root,char* path){
 	FILE* file=0;
 	printf("load menu....");
-	if((file=fopen(path,"r"))==0)
+	if((file=fopen(path,"r"))==0){
 		perror("fopen loadMenu");
+		return;
+	}
 	char buf[100];
 	menu* m;
 	while(feof(file)==0){
@@ -68,24 +71,26 @@ void loadMenu(menu* root,char* path){
 								break;
 						}
 					}
-					if(strcmp(buf,"xsize")==0){
-						fscanf(file,"%f\n",&m->objects[i].size.x);
-					}
-					if(strcmp(buf,"ysize")==0){
-						fscanf(file,"%f\n",&m->objects[i].size.y);
-					}
 					if(strcmp(buf,"touch")==0){
 						fscanf(file,"%d\n",&m->objects[i].touch);
 					}
 					if(strcmp(buf,"focus")==0){
 						fscanf(file,"%d\n",&m->objects[i].focus);
 					}
+					if(strcmp(buf,"single")==0){
+						fscanf(file,"%d\n",&m->objects[i].single);
+					}
 					if(strcmp(buf,"arg")==0){
-						fscanf(file,"%s\n",buf);
+						fscanf(file,"%d %d\n",&m->objects[i].arg[0],
+										&m->objects[i].arg[1]);
 						continue;
 					}
 					if(strcmp(buf,"action")==0){
-						fscanf(file,"%s\n",buf);
+						fscanf(file,"%s\n",buf); 
+						if(strcmp(buf,"movemap")==0)
+							m->objects[i].action=actionMoveMap;
+						if(strcmp(buf,"menu")==0)
+							m->objects[i].action=actionToggleMenu;
 						if(strcmp(buf,"test")==0)
 							m->objects[i].action=actionTestMenu;
 						continue;
@@ -124,13 +129,13 @@ void loadMenu(menu* root,char* path){
 							}
 							if(strcmp(buf,"xsize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.x);
-								if (m->objects[i].elements[j].size.x==0)
-									m->objects[i].elements[j].size.x=config.window_width;
+								if (m->objects[i].elements[j].size.x<=0)
+									m->objects[i].elements[j].size.x=config.window_width+m->objects[i].elements[j].size.x;
 							}
 							if(strcmp(buf,"ysize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.y);
-								if (m->objects[i].elements[j].size.y==0)
-									m->objects[i].elements[j].size.y=config.window_height;
+								if (m->objects[i].elements[j].size.y<=0)
+									m->objects[i].elements[j].size.y=config.window_height+m->objects[i].elements[j].size.y;
 							}
 							if(strcmp(buf,"tex")==0){
 								fscanf(file,"%s\n",&buf);
@@ -275,11 +280,15 @@ void realizeMap(){
 
 void loadFiles(){
 	loadMenu(&config.menu.root,"../data/menu.cfg");
+	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
+	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
 	loadMap("../maps/test.mp");
 }
 
 void cleanAll(){
 	realizeMenu(&config.menu.root);
+	realizeMenu(&config.map.screen_menu);
+	realizeMenu(&config.map.action_menu);
 	realizeMap();
 }

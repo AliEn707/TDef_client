@@ -15,31 +15,15 @@ void checkMouseMap(){
 }
 
 void processMouseMap(SDL_Event event){	
-	switch(event.button.button){
-				case SDL_BUTTON_LEFT:
-					//priority on screen buttons
-					if(config.menu.selected!=0)
-						printf("select some object\n");
-					else
-						if (config.map.focus>=0)
-							printf("action on %d node\n",config.map.focus);
-					break;
-			}
+	//priority on screen buttons
+	if(event.button.button==SDL_BUTTON_LEFT)
+		processNodeAction();
 }
 
 
 void processKeysMap(SDL_Event event){
-	switch(event.key.keysym.sym){ 
-		case SDLK_RETURN: 
-		case SDLK_SPACE: 
-			if(config.menu.selected!=0)
-				printf("select some object\n");
-			else
-				if (config.map.focus>=0)
-					printf("action on %d node\n",config.map.focus);
-			break;
-	}
-			
+	if(event.key.keysym.sym==SDLK_SPACE) 
+		processNodeAction();
 }
 
 
@@ -57,6 +41,11 @@ void processContKeysMap(){
 	if (config.global.keys[SDLK_x]!=0)
 		setZoom(-0.8);
 	//add another
+		if(config.global.mouse[SDL_BUTTON_LEFT]==1 ||
+				config.global.keys[SDLK_SPACE]==1)
+			if(config.menu.selected!=0)
+				processObjectAction(config.global.mouse[SDL_BUTTON_LEFT]==1?MOUSE:KEYBOARD,
+								config.global.mouse[SDL_BUTTON_LEFT]==1?SDL_BUTTON_LEFT:SDLK_SPACE);
 }
 
 
@@ -152,4 +141,10 @@ float screenToGridY(float x, float y){
 #undef ty
 #undef sx
 #undef sy
+
+void actionMoveMap(void * arg){
+	int * p=(int*)arg;
+//	printf("%g %g\n",(float)p[0],(float)p[1]);
+	setMove((float)p[0],(float)p[1]);
+}
 

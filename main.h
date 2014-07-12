@@ -15,6 +15,9 @@
 #define WALKABLE 1
 #define BUILDABLE 2
 
+//process object
+#define MOUSE 1
+#define KEYBOARD 2
 
 typedef
 struct vec2{
@@ -102,8 +105,8 @@ struct object{
 	int focus;
 	int in_focus;
 	int touch;
+	int single;
 	vec2 position;
-	vec2 size;
 	element * elements;
 	int elements_size;
 	char text[25];
@@ -154,7 +157,7 @@ struct map_conf{
 	gnode * grid;
 	g_params transform;
 	menu screen_menu;
-	menu tower_menu;
+	menu action_menu;
 	menu npc_menu;
 	int tower_max;
 	tower * tower_array;

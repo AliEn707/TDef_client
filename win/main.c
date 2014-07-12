@@ -21,8 +21,10 @@ void frameSync(unsigned int *time){
 		return;
 	}
 		unsigned int t=config.time_per_frame-(timeGetTime()-*time);
-	if (t<0)
+	if (t<0){
+		perror("Time");
 		t=0;
+	}
 	Sleep(t<=config.time_per_frame?t:0);
 	*time=timeGetTime();
 }
@@ -37,8 +39,8 @@ void tickSync(unsigned int *time){
 int main(int argc, char *argv[]){   
 	printf("Initializing.....");
 	memset(&config,0,sizeof(config));
-	config.window_width=640;
-	config.window_height=480;
+	config.window_width=800;
+	config.window_height=600;
 	config.time_per_frame=1000/60;
 	graficsInit(); // инициализация
 	printf("done\n");

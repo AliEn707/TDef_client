@@ -39,16 +39,6 @@ void drawObject(object * o){
 	int i;
 //	printf("%g %g|%g %g\n",o->position.x,o->position.y,o->size.x,o->size.y);
 	glPushMatrix();
-		if(1){ 
-			glDisable(GL_TEXTURE_2D);
-			glColor4f(1,1,1,1);
-			glBegin(GL_LINE_LOOP);
-				glVertex2f(o->position.x,o->position.y);
-				glVertex2f(o->position.x,o->position.y+o->size.y+1);
-				glVertex2f(o->position.x+o->size.x+1,o->position.y+o->size.y+1);
-				glVertex2f(o->position.x+o->size.x+1,o->position.y);
-			glEnd();
-		}
 		glTranslatef(o->position.x,o->position.y,0);
 		for(i=0;i<o->elements_size;i++)
 			drawElement(&o->elements[i],o->in_focus);
@@ -134,11 +124,42 @@ void drawMap(){
 	for(i=0;i<config.map.grid_size;i++)
 		for(j=0;j<config.map.grid_size;j++)
 			drawNode(&config.map.grid[to2d(i,j)]);
+	//draw non working zone
+	glMatrixMode(GL_MODELVIEW);
+	for(i=-1;i>-(config.map.grid_size/2+config.map.grid_size%2+1);i--)
+		for(j=-i-1;j<config.map.grid_size+(-i-1);j++){
+			glPushMatrix();
+				glTranslatef(i,j,0);
+				drawNode(&config.map.grid[0]);
+			glPopMatrix();
+		}
+	for(j=0;j<(config.map.grid_size/2+config.map.grid_size%2+1);j++)
+		for(i=j;i<config.map.grid_size-j;i++){
+			glPushMatrix();
+				glTranslatef(i,config.map.grid_size+j,0);
+				drawNode(&config.map.grid[0]);
+			glPopMatrix();
+		}
+	for(i=0;i<(config.map.grid_size/2+config.map.grid_size%2+1);i++)
+		for(j=i;j<config.map.grid_size-i;j++){
+			glPushMatrix();
+				glTranslatef(config.map.grid_size+i,j,0);
+				drawNode(&config.map.grid[0]);
+			glPopMatrix();
+		}
+	for(j=-1;j>-(config.map.grid_size/2+config.map.grid_size%2+1);j--)
+		for(i=-j-1;i<config.map.grid_size+(-j-1);i++){
+			glPushMatrix();
+				glTranslatef(i,j,0);
+				drawNode(&config.map.grid[0]);
+			glPopMatrix();
+		}
+	
 }
 
 void globalTransform(){
 	
-	glTranslatef(config.map.transform.translate.x,config.map.transform.translate.y,0);
+	glTranslatef(config.map.transform.translate.x,config.map.transform.translate.y,-100);
 	glRotatef(-60,1,0,0);
 	glScalef(config.map.transform.scale,config.map.transform.scale,1);
 	//glScalef(1,0.5,1);
@@ -227,6 +248,9 @@ void drawScene(){
 	
 	if (config.menu.enable!=0){
 		drawMenu(&config.menu.root);
+	}else{
+		drawMenu(&config.map.screen_menu);
+		drawMenu(&config.map.action_menu);
 	}
 	//must be the last
 	drawCursor(); 

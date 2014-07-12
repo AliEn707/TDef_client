@@ -1,4 +1,8 @@
 
+void processNodeAction();
+
+void processObjectAction();
+
 int checkMouseState();
 
 void cursorMove(int xrel,int yrel);

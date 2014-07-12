@@ -21,3 +21,7 @@ float screenToGridX(float x, float y);
 
 float screenToGridY(float x, float y);
 
+//actions
+
+void actionMoveMap(void * arg);
+

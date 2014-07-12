@@ -23,17 +23,19 @@ int checkMouseMenu(menu* root){
 
 
 void processMouseMenu(SDL_Event event){	
-	switch(event.button.button){
-				case SDL_BUTTON_LEFT:
-					if(config.menu.selected!=0)
-						if(config.menu.selected->touch!=0)
-							config.menu.selected->action(&config.menu.selected->arg);
-					break;
-			}
+	if (event.button.button==SDL_BUTTON_LEFT){
+		if(config.menu.selected!=0)
+			processObjectAction();
+		config.global.mouse[event.button.button]=0;
+	}
 }
 
 void processKeysMenu(SDL_Event event){
-	
+	if (event.key.keysym.sym==SDLK_SPACE){
+		if(config.menu.selected!=0)
+			processObjectAction();
+		config.global.keys[event.key.keysym.sym]=0;
+	}
 }
 
 
