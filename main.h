@@ -87,13 +87,14 @@ typedef
 struct texture{
 	int tex[25];
 	int frames;
+	int current_frame;
 } texture;
 
 typedef
 struct element{
 	vec2 position;
 	vec2 size;
-	int tex;
+	texture tex;
 	int wire;
 	color3 color;
 	color3 fcolor;
@@ -106,6 +107,7 @@ struct object{
 	int in_focus;
 	int touch;
 	int single;
+	int hide;
 	vec2 position;
 	element * elements;
 	int elements_size;
@@ -125,7 +127,7 @@ struct menu{
 typedef
 struct gnode{
 	int id;
-	int tex;
+	texture tex;
 	int walkable;
 	int buildable;
 	int tower_id;
@@ -205,7 +207,7 @@ struct g_config{
 
 
 
-
+#define textureFrameNext(t) if (++t->current_frame==t->frames) t->current_frame=0
 
 
 #define cursor config.global.cursor

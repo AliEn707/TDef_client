@@ -14,11 +14,20 @@ void drawCursor(){
 	
 }
 
-void drawElement(element * e,int focus){
-	if (e->tex!=0)
-		glEnable(GL_TEXTURE_2D);
-	else
+void setTexture(texture * t){
+	if (t->frames==0){
 		glDisable(GL_TEXTURE_2D);
+		return;
+	}
+	//add some stuff
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, t->tex[t->current_frame]);
+	if (0) //check next texture
+		textureFrameNext(t);
+}
+
+void drawElement(element * e,int focus){
+	setTexture(&e->tex);
 	if (focus==0)
 		glColor4f(e->color.r,e->color.g,e->color.b,e->color.a);
 	else
@@ -60,6 +69,7 @@ void drawMenu(menu * root){
 void drawNode(gnode * n){
 //	glBindTexture(GL_TEXTURE_2D, n->tex);
 //	glEnable(GL_TEXTURE_2D);
+	setTexture(&n->tex);
 	glColor4f(1,1,1,1);
 	glPushMatrix();
 		glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
