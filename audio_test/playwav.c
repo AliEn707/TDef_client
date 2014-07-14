@@ -11,7 +11,6 @@ void my_audio_callback(void *userdata, Uint8 *stream, int len);
 static Uint8 *audio_pos; // global pointer to the audio buffer to be played
 static Uint32 audio_len; // remaining length of the sample we have to play
 
-
 /*
 ** PLAYING A SOUND IS MUCH MORE COMPLICATED THAN IT SHOULD BE
 */
@@ -38,9 +37,9 @@ int main(int argc, char* argv[]){
 	wav_spec.callback = my_audio_callback;
 	wav_spec.userdata = NULL;
 	// set our global static variables
-	audio_pos = wav_buffer; // copy sound buffer
+	audio_pos = wav_buffer+100; // copy sound buffer
 	audio_len = wav_length; // copy file length
-	
+	printf("audio length: %d\n",wav_length);
 	/* Open the audio device */
 	if ( SDL_OpenAudio(&wav_spec, NULL) < 0 ){
 	  fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
@@ -71,8 +70,10 @@ void my_audio_callback(void *userdata, Uint8 *stream, int len) {
 		return;
 	
 	len = ( len > audio_len ? audio_len : len );
-	SDL_memcpy (stream, audio_pos, len); 					// simply copy from one buffer into the other
-//	SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);// mix from one buffer into another
+//	printf("%d\n",len);
+//	SDL_memcpy (stream, audio_pos, len); 	// simply copy from one buffer into the other
+	SDL_memset(stream, 0, len);
+	SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);// mix from one buffer into another
 	
 	audio_pos += len;
 	audio_len -= len;
