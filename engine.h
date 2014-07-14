@@ -11,7 +11,9 @@ void checkCursorBorder();
 
 int getNewTexture();
 
-int loadTexture(char * path);
+int loadGlobalTexture(char * path);
+
+int loadMapTexture(char * path);
 
 void processEvent(SDL_Event event);
 

@@ -5,15 +5,19 @@
 #include <SDL2/SDL.h>
 #include <GL/gl.h>
  
-
-
+// screen frames per texture frames
+#define FpF 3 
 
 #define MAX_TEXTURES 10000
 //texture global
 #define MAX_TEX_GLOBAL 100
-#define CURSOR 0
+
+//textures map
+#define MAP_COMON_TEXTURES_MAX 100
 #define WALKABLE 1
 #define BUILDABLE 2
+#define NO_SEE 3
+#define COMON_TEXTURES_START 4
 
 //process object
 #define MOUSE 1
@@ -127,7 +131,7 @@ struct menu{
 typedef
 struct gnode{
 	int id;
-	texture tex;
+	int tex;
 	int walkable;
 	int buildable;
 	int tower_id;
@@ -139,6 +143,7 @@ struct cur{
 	vec2i pos;
 	vec2i prev;
 	color3 color;
+	texture tex;
 	float sens;
 } cur;
 
@@ -158,6 +163,7 @@ struct map_conf{
 	int focus;
 	gnode * grid;
 	gnode * grid_out[4]; //non working map zone 
+	texture tex[MAP_COMON_TEXTURES_MAX];
 	g_params transform;
 	menu screen_menu;
 	menu action_menu;
@@ -168,7 +174,8 @@ struct map_conf{
 	npc * npc_array;
 	int bullet_max;
 	bullet * bullet_array;
-	
+	int textures_size;
+	int textures[MAX_TEXTURES];
 } map_conf;
 
 typedef
@@ -190,7 +197,6 @@ struct g_config{
 	global_conf global;
 	menu_conf menu;
 	map_conf map;
-	
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	int global_tex[MAX_TEX_GLOBAL];
@@ -205,7 +211,9 @@ struct g_config{
 
 
 
+#define sqr(a) ((a)*(a))
 
+#define mapTex(a) ((int)((a-'a')+COMON_TEXTURES_START))
 
 #define textureFrameNext(t) if (++t->current_frame==t->frames) t->current_frame=0
 

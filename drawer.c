@@ -1,17 +1,20 @@
 #include "main.h"
+#include "drawer.h"
 
 void drawCursor(){
 	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_TEXTURE_2D);
-	glBegin(GL_LINE_LOOP);
-	glVertex2f(cursor.state.x+20,cursor.state.y);
+	setTexture(&cursor.tex);
+	glBegin(GL_QUADS);
+	glVertex2f(cursor.state.x+40,cursor.state.y-40);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex2f(cursor.state.x,cursor.state.y-40);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex2f(cursor.state.x,cursor.state.y);
-	glVertex2f(cursor.state.x,cursor.state.y-20);
-	
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex2f(cursor.state.x+40,cursor.state.y);
+	glTexCoord2f(1.0f, 0.0f);
 	glEnd();
-	
-	
 }
 
 void setTexture(texture * t){
@@ -22,7 +25,7 @@ void setTexture(texture * t){
 	//add some stuff
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, t->tex[t->current_frame]);
-	if (0) //check next texture
+	if (config.global_count%FpF==0) //check next texture
 		textureFrameNext(t);
 }
 
@@ -69,51 +72,16 @@ void drawMenu(menu * root){
 void drawNode(gnode * n){
 //	glBindTexture(GL_TEXTURE_2D, n->tex);
 //	glEnable(GL_TEXTURE_2D);
-	setTexture(&n->tex);
-	glColor4f(1,1,1,1);
-	glPushMatrix();
-		glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
-		glBegin(GL_LINE_LOOP);
-//		glBegin(GL_QUADS);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(0.0f,0.0f);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(1.0f,0.0f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(1.0f,1.0f);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(0.0f,1.0f);
-		glEnd();
-		if (n->walkable!=0){
-/*			glBindTexture(GL_TEXTURE_2D, config.global_tex[WALKABLE]);
-			glBegin(GL_QUADS);
-				glTexCoord2f (0.0f, 0.0f);
-				glVertex2f(0.0f,0.0f);
-				glTexCoord2f (1.0f, 0.0f);
-				glVertex2f(1.0f,0.0f);
-				glTexCoord2f (1.0f, 1.0f);
-				glVertex2f(1.0f,1.0f);
-				glTexCoord2f (0.0f, 1.0f);
-				glVertex2f(0.0f,1.0f);
-			glEnd();
-*/		}
-		if (n->buildable!=0){
-/*			glBindTexture(GL_TEXTURE_2D, config.global_tex[BUILDABLE]);
-			glBegin(GL_QUADS);
-				glTexCoord2f (0.0f, 0.0f);
-				glVertex2f(0.0f,0.0f);
-				glTexCoord2f (1.0f, 0.0f);
-				glVertex2f(1.0f,0.0f);
-				glTexCoord2f (1.0f, 1.0f);
-				glVertex2f(1.0f,1.0f);
-				glTexCoord2f (0.0f, 1.0f);
-				glVertex2f(0.0f,1.0f);
-			glEnd();
-*/		}
-	if (n->id==config.map.focus){
+	setTexture(&config.map.tex[n->tex]);
+	if (n->id==config.map.focus)
 		glColor4f(0,1,0,1);
-		glBegin(GL_LINE_LOOP);
-//		glBegin(GL_QUADS);
+	else
+		glColor4f(1,1,1,1);
+	glPushMatrix();
+		if (n->id>=0)
+			glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_QUADS);
 			glTexCoord2f (0.0f, 0.0f);
 			glVertex2f(0.0f,0.0f);
 			glTexCoord2f (1.0f, 0.0f);
@@ -123,7 +91,35 @@ void drawNode(gnode * n){
 			glTexCoord2f (0.0f, 1.0f);
 			glVertex2f(0.0f,1.0f);
 		glEnd();
-	}
+		if (n->walkable<1){
+			if (n->walkable==0)
+				setTexture(&config.map.tex[WALKABLE]);
+			else
+				setTexture(&config.map.tex[NO_SEE]);
+			glBegin(GL_QUADS);
+				glTexCoord2f (0.0f, 0.0f);
+				glVertex2f(0.0f,0.0f);
+				glTexCoord2f (1.0f, 0.0f);
+				glVertex2f(1.0f,0.0f);
+				glTexCoord2f (1.0f, 1.0f);
+				glVertex2f(1.0f,1.0f);
+				glTexCoord2f (0.0f, 1.0f);
+				glVertex2f(0.0f,1.0f);
+			glEnd();
+		}
+		if (n->buildable!=0){
+			setTexture(&config.map.tex[BUILDABLE]);
+			glBegin(GL_QUADS);
+				glTexCoord2f (0.0f, 0.0f);
+				glVertex2f(0.0f,0.0f);
+				glTexCoord2f (1.0f, 0.0f);
+				glVertex2f(1.0f,0.0f);
+				glTexCoord2f (1.0f, 1.0f);
+				glVertex2f(1.0f,1.0f);
+				glTexCoord2f (0.0f, 1.0f);
+				glVertex2f(0.0f,1.0f);
+			glEnd();
+		}
 	glPopMatrix();	
 	glDisable(GL_TEXTURE_2D);
 }
@@ -135,36 +131,43 @@ void drawMap(){
 		for(j=0;j<config.map.grid_size;j++)
 			drawNode(&config.map.grid[to2d(i,j)]);
 	//draw non working zone
-	glMatrixMode(GL_MODELVIEW);
+	int k;
+	k=0;
 	for(i=-1;i>-(config.map.grid_size/2+config.map.grid_size%2+1);i--)
 		for(j=-i-1;j<config.map.grid_size-(-i-1);j++){
 			glPushMatrix();
 				glTranslatef(i,j,0);
-				drawNode(&config.map.grid[0]);
+				drawNode(&config.map.grid_out[0][k]);
 			glPopMatrix();
+			k++;
 		}
+	k=0;
 	for(j=0;j<(config.map.grid_size/2+config.map.grid_size%2+1);j++)
 		for(i=j;i<config.map.grid_size-j;i++){
 			glPushMatrix();
 				glTranslatef(i,config.map.grid_size+j,0);
-				drawNode(&config.map.grid[0]);
+				drawNode(&config.map.grid_out[1][k]);
 			glPopMatrix();
+			k++;
 		}
+	k=0;
 	for(i=0;i<(config.map.grid_size/2+config.map.grid_size%2+1);i++)
 		for(j=i;j<config.map.grid_size-i;j++){
 			glPushMatrix();
 				glTranslatef(config.map.grid_size+i,j,0);
-				drawNode(&config.map.grid[0]);
+				drawNode(&config.map.grid_out[2][k]);
 			glPopMatrix();
+			k++;
 		}
+	k=0;
 	for(j=-1;j>-(config.map.grid_size/2+config.map.grid_size%2+1);j--)
-		for(i=-j-1;i<config.map.grid_size+(-j-1);i++){
+		for(i=-j-1;i<config.map.grid_size-(-j-1);i++){
 			glPushMatrix();
 				glTranslatef(i,j,0);
-				drawNode(&config.map.grid[0]);
+				drawNode(&config.map.grid_out[3][k]);
 			glPopMatrix();
+			k++;
 		}
-	
 }
 
 void globalTransform(){

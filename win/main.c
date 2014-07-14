@@ -59,6 +59,7 @@ int main(int argc, char *argv[]){
 	config.main_running=1;
 	while(config.main_running){ 
 		frameSync(&time);
+		config.global_count++;
 //		SDL_Delay(100);
 		SDL_Event event;
 		SDL_GetMouseState(&cursor.pos.x,&cursor.pos.y);

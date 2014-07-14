@@ -180,14 +180,6 @@ void realizeMenu(menu* m){
 	//clean all mallocs
 }
 
-void loadTowerMenu(){
-	
-	
-}
-
-void realizeTowerMenu(){
-	
-}
 
 
 void loadMap(char* path){
@@ -195,7 +187,7 @@ void loadMap(char* path){
 	FILE * file;
 	char fullpath[300];
 	printf("load map...");
-	sprintf(fullpath,"%s",path);
+	sprintf(fullpath,"../maps/%s.mp",path);
 	if ((file=fopen(fullpath,"r"))==0) 
 		perror("fopen loadMap");
 	char buf[100];
@@ -215,7 +207,16 @@ void loadMap(char* path){
 	int i;
 	for(i=0;i<size*size;i++){
 		grid[i].id=i;
+		/*
+		1  walk see
+		0 no walk see
+		-1 no see no walk
+		*/
 		grid[i].walkable= walk[i]=='1'?(char)1:walk[i]=='0'?(char)0:(char)-1;
+		/*
+		1 build
+		>1 no build
+		*/
 		grid[i].buildable= build[i]=='1'?(char)1:build[i]=='0'?(char)0:(char)-1;
 	}
 	free(walk);
@@ -261,6 +262,54 @@ void loadMap(char* path){
 		}
 */		
 	}
+	fclose(file);
+	
+	config.map.grid=grid;
+	config.map.grid_size=size;
+	
+	sprintf(fullpath,"../maps/%s.mg",path);
+	if ((file=fopen(fullpath,"r"))==0) 
+		perror("fopen loadMap");
+	
+	while(1){
+		char c;
+		fscanf(file,"%c",&c);
+		if(c=='-'){
+			break;
+		}
+		fscanf(file,"%s\n",buf);
+		loadMTexture(&config.map.tex[mapTex(c)],buf);
+	}
+	int grid_out_size=(1+(config.map.grid_size+1)%2+config.map.grid_size)/2*(config.map.grid_size/2+config.map.grid_size%2);
+	char * map;
+	if ((map=malloc(sizeof(char)*config.map.grid_size*config.map.grid_size))==0)
+		perror("malloc map loadMap");
+	memset(map,0,sizeof(char)*config.map.grid_size*config.map.grid_size);
+	fscanf(file,"%s\n",map);
+	for(i=0;i<sqr(config.map.grid_size);i++){
+			config.map.grid[i].tex=mapTex(map[i]);
+			printf("%d\n",config.map.grid[i].tex);
+		}
+	for(i=0;i<4;i++){
+		if((config.map.grid_out[i]=malloc(sizeof(gnode)*grid_out_size))==0)
+			perror("malloc grid_out[]"); 
+		memset(config.map.grid_out[i],0,sizeof(gnode)*grid_out_size);
+		fscanf(file,"%s\n",map);
+		int j;
+		for(j=0;j<grid_out_size;j++){
+			config.map.grid_out[i][j].id=-2;
+//			config.map.grid_out[i][j].walkable=1;
+			config.map.grid_out[i][j].tex=mapTex(map[j]);
+		}
+	}
+	free(map);
+	fclose(file);
+	
+	
+	config.map.enable=1;
+	setDefaultTransform();
+	printf("done\n");
+	
 	////test
 	config.map.npc_array[1].position.x=1.5;
 	config.map.npc_array[1].position.y=1.5;
@@ -270,11 +319,7 @@ void loadMap(char* path){
 	config.map.npc_array[0].id=200;
 	/////
 	
-	config.map.grid=grid;
-	config.map.grid_size=size;
-	config.map.enable=1;
-	setDefaultTransform();
-	printf("done\n");
+	
 } 
 
 void realizeMap(){
@@ -284,17 +329,79 @@ void realizeMap(){
 	free(config.map.bullet_array);
 }
 
+int loadTexture(texture * t, char * path){
+	FILE* file;
+	char fullpath[200];
+	//try to load cfg
+	sprintf(fullpath,"../textures/%s.cfg",path);
+	if ((file=fopen(fullpath,"r"))!=0){
+		//add loader
+		fclose(file);
+		return 1;
+	}
+	//try to load tga
+	sprintf(fullpath,"../textures/%s.tga",path);
+	int tex;
+	if ((tex=loadGlobalTexture(fullpath))!=0){
+		t->frames=1;
+		t->tex[0]=tex;
+		return 1;
+	}
+	return 0;
+}
+
+
+int loadMTexture(texture * t, char * path){
+	FILE* file;
+	char fullpath[200];
+	//try to load cfg
+	sprintf(fullpath,"../textures/%s.cfg",path);
+	if ((file=fopen(fullpath,"r"))!=0){
+		//add loader
+		fclose(file);
+		return 1;
+	}
+	//try to load tga
+	sprintf(fullpath,"../textures/%s.tga",path);
+	int tex;
+	if ((tex=loadMapTexture(fullpath))!=0){
+		t->frames=1;
+		t->tex[0]=tex;
+		return 1;
+	}
+	return 0;
+}
+
+
 void loadFiles(){
 	loadMenu(&config.menu.root,"../data/menu.cfg");
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
+	//set to config file
+	loadTexture(&cursor.tex,"global/cursor");
+	loadTexture(&config.map.tex[BUILDABLE],"global/build");
+	loadTexture(&config.map.tex[WALKABLE],"global/walk");
+	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	
-	loadMap("../maps/test.mp");
+	loadMap("test");
+}
+
+void cleanMap(){
+	int i;
+	realizeMap();
+	
+	for(i=0;i<4;i++)
+		free(config.map.grid_out[i]);
+	glDeleteTextures (config.map.textures_size,config.map.textures);
+	
 }
 
 void cleanAll(){
 	realizeMenu(&config.menu.root);
 	realizeMenu(&config.map.screen_menu);
 	realizeMenu(&config.map.action_menu);
-	realizeMap();
+	
+	glDeleteTextures (config.textures_size,config.textures);
+	
+	cleanMap();
 }

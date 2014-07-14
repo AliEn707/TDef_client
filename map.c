@@ -49,11 +49,6 @@ void processContKeysMap(){
 }
 
 
-int loadMapTexture(char * path){
-//	config.textures[config.textures_size]=loadTGATexture(path);
-//	return config.textures[config.textures_size++];
-}
-
 void globalTransformCorrection(){
 	float xl=gridToScreenX(0,0);
 	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size);

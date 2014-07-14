@@ -167,9 +167,15 @@ void cursorInit(){
 
 
 
-int loadTexture(char * path){
+int loadGlobalTexture(char * path){
 	config.textures[config.textures_size]=loadTGATexture(path);
 	return config.textures[config.textures_size++];
+}
+
+
+int loadMapTexture(char * path){
+	config.textures[config.map.textures_size]=loadTGATexture(path);
+	return config.textures[config.map.textures_size++];
 }
 
 
@@ -177,6 +183,7 @@ int getNewTexture(){
 	glGenTextures(1,config.textures+config.textures_size);
 	return config.textures[config.textures_size++];
 }
+
 
 
 void graficsInit(){
