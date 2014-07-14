@@ -89,8 +89,12 @@ void loadMenu(menu* root,char* path){
 						fscanf(file,"%s\n",buf); 
 						if(strcmp(buf,"movemap")==0)
 							m->objects[i].action=actionMoveMap;
+						if(strcmp(buf,"zoommap")==0)
+							m->objects[i].action=actionZoomMap;
 						if(strcmp(buf,"menu")==0)
 							m->objects[i].action=actionToggleMenu;
+						if(strcmp(buf,"exit")==0)
+							m->objects[i].action=actionExit;
 						if(strcmp(buf,"test")==0)
 							m->objects[i].action=actionTestMenu;
 						continue;
@@ -189,8 +193,10 @@ void realizeTowerMenu(){
 void loadMap(char* path){
 	gnode * grid;
 	FILE * file;
+	char fullpath[300];
 	printf("load map...");
-	if ((file=fopen(path,"r"))==0) 
+	sprintf(fullpath,"%s",path);
+	if ((file=fopen(fullpath,"r"))==0) 
 		perror("fopen loadMap");
 	char buf[100];
 	int size;

@@ -25,3 +25,7 @@ float screenToGridY(float x, float y);
 
 void actionMoveMap(void * arg);
 
+void actionZoomMap(void * arg);
+
+
+

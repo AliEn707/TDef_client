@@ -155,6 +155,7 @@ struct map_conf{
 	int grid_size;
 	int focus;
 	gnode * grid;
+	gnode * grid_out[4]; //non working map zone 
 	g_params transform;
 	menu screen_menu;
 	menu action_menu;

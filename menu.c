@@ -48,3 +48,7 @@ void actionTestMenu(void * arg){
 void actionToggleMenu(void * arg){
 	config.menu.enable=config.menu.enable==0?1:0;
 }
+
+void actionExit(void * arg){
+	config.main_running=0;
+}

@@ -127,7 +127,7 @@ void drawMap(){
 	//draw non working zone
 	glMatrixMode(GL_MODELVIEW);
 	for(i=-1;i>-(config.map.grid_size/2+config.map.grid_size%2+1);i--)
-		for(j=-i-1;j<config.map.grid_size+(-i-1);j++){
+		for(j=-i-1;j<config.map.grid_size-(-i-1);j++){
 			glPushMatrix();
 				glTranslatef(i,j,0);
 				drawNode(&config.map.grid[0]);

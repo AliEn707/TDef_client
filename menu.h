@@ -10,3 +10,5 @@ void processKeysMenu(SDL_Event event);
 void actionTestMenu(void * arg); //test
 
 void actionToggleMenu(void * arg); //toggle
+
+void actionExit(void * arg); //toggle

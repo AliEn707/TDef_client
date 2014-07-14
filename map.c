@@ -148,3 +148,7 @@ void actionMoveMap(void * arg){
 	setMove((float)p[0],(float)p[1]);
 }
 
+void actionZoomMap(void * arg){
+	int * p=(int*)arg;
+	setZoom(p[0]*1.0/p[1]);
+}
