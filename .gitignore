@@ -16,6 +16,7 @@
 *.lib
 
 # Executables
+audio_test/*.exe
 win/*.exe
 *.out
 *.app
