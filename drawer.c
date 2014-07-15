@@ -1,6 +1,17 @@
 #include "main.h"
 #include "drawer.h"
 
+int textureFrameNext(texture *t){
+	if (config.texture_no_change!=0)
+		t->current_frame+=Df;
+	if (t->current_frame>=t->frames){
+		t->current_frame=0;
+		return 1;
+	}		
+	return 0;
+}
+
+
 void drawCursor(){
 	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
 	glDisable(GL_DEPTH_TEST);
@@ -24,8 +35,8 @@ void setTexture(texture * t){
 	}
 	//add some stuff
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, t->tex[t->current_frame]);
-	if (config.global_count%FpF==0) //check next texture
+	glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
+	//if (config.global_count%FpF==0) //check next texture
 		textureFrameNext(t);
 }
 
@@ -193,7 +204,10 @@ void drawNpc(npc* n){
 	glPushMatrix();
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
-		glColor4f(rand()%100/100.0,rand()%100/100.0,rand()%100/100.0,1);
+	if (n->tex[n->current_tex].frames==0)
+		loadTexture(&n->tex[n->current_tex],config.npc_types[n->type].tex[n->current_tex]);
+	setTexture(&n->tex[n->current_tex]);
+		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
 			glTexCoord2f (0.0f, 0.0f);
@@ -252,8 +266,12 @@ void drawScene(){
 		globalTransform();
 		glDisable(GL_DEPTH_TEST);
 		drawMap();
+		config.texture_no_change=0;
+		drawNpcs();
+		drawTowers();
 		//draw map
 		glEnable(GL_DEPTH_TEST);
+		config.texture_no_change=1;
 		drawNpcs();
 		drawTowers();
 		//draw map egain

@@ -6,7 +6,9 @@
 #include <GL/gl.h>
  
 // screen frames per texture frames
-#define FpF 3 
+#define FpF 5
+//write to config
+#define Df 0.29f
 
 #define MAX_TEXTURES 10000
 //texture global
@@ -22,6 +24,10 @@
 //process object
 #define MOUSE 1
 #define KEYBOARD 2
+
+//textures npc
+#define TEX_IDLE 0
+
 
 typedef
 struct vec2{
@@ -43,7 +49,72 @@ struct color3{
 	float a;
 } color3;
 
+typedef 
+struct texture{
+	int tex[25];
+	int frames;
+	float current_frame;
+} texture;
+
+
 //////////
+
+typedef 
+struct effect{ //модификаторы свойств > 0
+	float speed;
+	float shield;
+	float damage;
+	int time;
+	int status; //вероятность срабатывания в %
+} effect;
+
+typedef
+struct tower_type{
+	int id;
+	int health;
+	int damage;
+	int energy;
+	int shield;
+	int distanse;
+	int attack_speed; //ticks to attack
+	int cost;
+	int ignor_type;
+	int prior_type;
+	int bullet_type;
+	int support;
+//	effect effects;   //наносимые эффекты
+}tower_type;
+
+typedef
+struct npc_type{
+	int id;
+	int health;
+	int damage;
+	int shield;
+	int attack_distanse;
+	int see_distanse;
+	int attack_speed;
+	float move_speed;
+	int cost;
+	int type;
+	int ignor_type;
+	int prior_type;
+	int bullet_type;
+	int support;
+	int receive;
+	char tex[10][100];
+//	effect effects;  //наносимые эффекты
+}npc_type;
+
+typedef
+struct bullet_type{
+	int id;
+	float speed;
+	int attack_type;
+	int move_type;
+	int area;
+}bullet_type;
+
 typedef
 struct tower{
 	int id;
@@ -66,7 +137,8 @@ struct npc{
 	int type;
 	int health;
 	int shield;
-	
+	int current_tex;
+	texture tex[10];
 }npc;
 
 typedef
@@ -86,13 +158,6 @@ struct g_params{
 	int scale_push;
 	vec2 translate;
 } g_params;
-
-typedef 
-struct texture{
-	int tex[25];
-	int frames;
-	int current_frame;
-} texture;
 
 typedef
 struct element{
@@ -194,14 +259,24 @@ struct g_config{
 	int window_width; 
 	int window_height; 
 	int main_running;
+	int texture_no_change;
 	
 	global_conf global;
 	menu_conf menu;
 	map_conf map;
+	
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	int global_tex[MAX_TEX_GLOBAL];
 	int global_count;
+	
+	unsigned int tower_types_size;
+		tower_type* tower_types;
+	unsigned int npc_types_size;
+		npc_type* npc_types;
+	unsigned int bullet_types_size;
+		bullet_type* bullet_types;
+	
 }g_config;
 
 
@@ -216,7 +291,6 @@ struct g_config{
 
 #define mapTex(a) ((int)((a-'a')+COMON_TEXTURES_START))
 
-#define textureFrameNext(t) if (++t->current_frame==t->frames) t->current_frame=0
 
 
 #define cursor config.global.cursor

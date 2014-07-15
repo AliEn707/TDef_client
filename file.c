@@ -2,6 +2,7 @@
 #include "file.h"
 #include "menu.h"
 #include "map.h"
+#include "engine.h"
 
 
 
@@ -312,15 +313,6 @@ void loadMap(char* path){
 	setDefaultTransform();
 	printf("done\n");
 	
-	////test
-	config.map.npc_array[1].position.x=1.5;
-	config.map.npc_array[1].position.y=1.5;
-	config.map.npc_array[1].id=100;
-	config.map.npc_array[0].position.x=2.0;
-	config.map.npc_array[0].position.y=1.5;
-	config.map.npc_array[0].id=200;
-	/////
-	
 	
 } 
 
@@ -331,20 +323,248 @@ void realizeMap(){
 	free(config.map.bullet_array);
 }
 
-int loadTexture(texture * t, char * path){
+
+void loadTypes(char * filepath){
+	FILE * file;
+//	printf("loading configuration\n");
+	int TPS=40;
+	if ((file=fopen(filepath,"r"))==0) 
+		perror("fopen loadTypes");
+	char buf[100];
+	int i=1;
+	while(feof(file)==0){
+		memset(buf,0,sizeof(buf));
+		fscanf(file,"%s ",buf);
+//		printf("%s  ||\n",buf);
+		if (strcmp(buf,"TOWER_TYPE")==0){
+			int tmp;
+			fscanf(file,"%d\n",&tmp);
+			if((config.tower_types=malloc(sizeof(tower_type)*(tmp+1)))==0)
+				perror("malloc tower loadTypes");
+			continue;
+		}
+		if (strcmp(buf,"NPC_TYPE")==0){
+			int tmp;
+			fscanf(file,"%d\n",&tmp);
+			if((config.npc_types=malloc(sizeof(npc_type)*(tmp+1)))==0)
+				perror("malloc npc loadTypes");
+			break;
+		}
+		if (strcmp(buf,"//-")==0){
+			fscanf(file,"%s\n",buf);
+			i++;
+			continue;
+		}
+		if (strcmp(buf,"name")==0){
+			fscanf(file,"%s\n",buf);
+			continue;
+		}
+		if (strcmp(buf,"id")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].id);
+			continue;
+		}
+		if (strcmp(buf,"health")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].health);
+			continue;
+		}
+		if (strcmp(buf,"damage")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].damage);
+			continue;
+		}
+		if (strcmp(buf,"energy")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].energy);
+			continue;
+		}
+		if (strcmp(buf,"shield")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].shield);
+			continue;
+		}
+		if (strcmp(buf,"attack_distanse")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].distanse);
+			continue;
+		}
+		if (strcmp(buf,"attack_speed")==0){
+			float tmp;
+			fscanf(file,"%f\n",&tmp);
+			config.tower_types[i].attack_speed=TPS/tmp;
+			continue;
+		}
+		if (strcmp(buf,"cost")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].cost);
+			continue;
+		}
+		if (strcmp(buf,"ignor_type")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].ignor_type);
+			continue;
+		}
+		if (strcmp(buf,"prior_type")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].prior_type);
+			continue;
+		}
+		if (strcmp(buf,"bullet_type")==0){
+			fscanf(file,"%d\n",&config.tower_types[i].bullet_type);
+			continue;
+		}
+		
+	}
+	config.tower_types_size=i;
+//	printf("\t\t%d\n",config.tower_types_size);
+	i=1;
+	while(feof(file)==0){
+		memset(buf,0,sizeof(buf));
+		fscanf(file,"%s ",buf);
+//		printf("%s  ||\n",buf);
+		if (strcmp(buf,"BULLET_TYPE")==0){
+			int tmp;
+			fscanf(file,"%d\n",&tmp);
+			if((config.bullet_types=malloc(sizeof(bullet_type)*(tmp+1)))==0)
+				perror("malloc tower loadTypes");
+			break;
+		}
+		if (strcmp(buf,"texidle")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex[TEX_IDLE]);
+		}
+		if (strcmp(buf,"//-")==0){
+			fscanf(file,"%s\n",buf);
+			i++;
+			continue;
+		}
+		if (strcmp(buf,"name")==0){
+			fscanf(file,"%s\n",buf);
+			continue;
+		}
+		if (strcmp(buf,"id")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].id);
+			continue;
+		}
+		if (strcmp(buf,"health")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].health);
+			continue;
+		}
+		if (strcmp(buf,"damage")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].damage);
+			continue;
+		}
+		if (strcmp(buf,"shield")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].shield);
+			continue;
+		}
+		if (strcmp(buf,"support")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].support);
+			continue;
+		}
+		if (strcmp(buf,"see_distanse")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].see_distanse);
+			continue;
+		}
+		if (strcmp(buf,"attack_distanse")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].attack_distanse);
+			continue;
+		}
+		if (strcmp(buf,"attack_speed")==0){
+			float tmp;
+			fscanf(file,"%f\n",&tmp);
+			config.npc_types[i].attack_speed=TPS/tmp;
+			continue;
+		}
+		if (strcmp(buf,"move_speed")==0){
+			float tmp;
+			fscanf(file,"%f\n",&tmp);
+			config.npc_types[i].move_speed=tmp/TPS;
+			continue;
+		}
+		if (strcmp(buf,"cost")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].cost);
+			continue;
+		}
+		if (strcmp(buf,"receive")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].receive);
+			continue;
+		}
+		if (strcmp(buf,"bullet_type")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].bullet_type);
+			continue;
+		}
+		if (strcmp(buf,"type")==0){
+			fscanf(file,"%d\n",&config.npc_types[i].type);
+			continue;
+		}
+		
+	}
+	config.npc_types_size=i;
+	i=1;
+	while(feof(file)==0){
+		memset(buf,0,sizeof(buf));
+		fscanf(file,"%s ",buf);
+//		printf("%s  ||\n",buf);
+		if (strcmp(buf,"name")==0){
+			fscanf(file,"%s\n",buf);
+			continue;
+		}
+		if (strcmp(buf,"//-")==0){
+			fscanf(file,"%s\n",buf);
+			i++;
+			continue;
+		}
+		if (strcmp(buf,"id")==0){
+			fscanf(file,"%d\n",&config.bullet_types[i].id);
+			continue;
+		}
+		if (strcmp(buf,"speed")==0){
+			float tmp;
+			fscanf(file,"%f\n",&tmp);
+			config.bullet_types[i].speed=tmp/TPS;
+			continue;
+		}
+		if (strcmp(buf,"attack_type")==0){
+			fscanf(file,"%d\n",&config.bullet_types[i].attack_type);
+			continue;
+		}
+		if (strcmp(buf,"move_type")==0){
+			fscanf(file,"%d\n",&config.bullet_types[i].move_type);
+			continue;
+		}
+		
+	}
+	config.bullet_types_size=i;
+//	printf("%d %d\n",config.tower_types_size,config.npc_types_size);
+	fclose(file);
+}
+
+
+void realizeTypes(){
+	free(config.bullet_types);
+	free(config.tower_types);
+	free(config.npc_types);
+}
+
+
+int loadTex(texture * t, char * path, int(load)(char * path)){
 	FILE* file;
 	char fullpath[200];
 	//try to load cfg
 	sprintf(fullpath,"../textures/%s.cfg",path);
 	if ((file=fopen(fullpath,"r"))!=0){
 		//add loader
+		char buf[150];
+		int i;
+		while(feof(file)==0){
+			fscanf(file,"%s ",buf);
+			if (strcmp(buf,"frames")==0)
+				fscanf(file,"%d\n",&t->frames);
+			//another stuff
+		}
+		for(i=0;i<t->frames;i++){
+			sprintf(buf,"../textures/%s%d.tga",path,i+1);
+			t->tex[i]=load(buf);
+		}
 		fclose(file);
 		return 1;
 	}
 	//try to load tga
 	sprintf(fullpath,"../textures/%s.tga",path);
 	int tex;
-	if ((tex=loadGlobalTexture(fullpath))!=0){
+	if ((tex=load(fullpath))!=0){
 		t->frames=1;
 		t->tex[0]=tex;
 		return 1;
@@ -352,26 +572,13 @@ int loadTexture(texture * t, char * path){
 	return 0;
 }
 
+int loadTexture(texture * t, char * path){
+	return loadTex(t,path,loadGlobalTexture);
+}
+
 
 int loadMTexture(texture * t, char * path){
-	FILE* file;
-	char fullpath[200];
-	//try to load cfg
-	sprintf(fullpath,"../textures/%s.cfg",path);
-	if ((file=fopen(fullpath,"r"))!=0){
-		//add loader
-		fclose(file);
-		return 1;
-	}
-	//try to load tga
-	sprintf(fullpath,"../textures/%s.tga",path);
-	int tex;
-	if ((tex=loadMapTexture(fullpath))!=0){
-		t->frames=1;
-		t->tex[0]=tex;
-		return 1;
-	}
-	return 0;
+	return loadTex(t,path,loadMapTexture);
 }
 
 
@@ -379,6 +586,8 @@ void loadFiles(){
 	loadMenu(&config.menu.root,"../data/menu.cfg");
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
+	
+	loadTypes("../data/types.cfg");
 	//set to config file
 	loadTexture(&cursor.tex,"global/cursor");
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
@@ -386,6 +595,17 @@ void loadFiles(){
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	
 	loadMap("test");
+	
+	////test
+	config.map.npc_array[1].position.x=1.5;
+	config.map.npc_array[1].position.y=1.5;
+	config.map.npc_array[1].id=100;
+	config.map.npc_array[1].type=1;
+	config.map.npc_array[0].position.x=2.0;
+	config.map.npc_array[0].position.y=1.5;
+	config.map.npc_array[0].id=200;
+	config.map.npc_array[0].type=1;
+	/////
 }
 
 void cleanMap(){
@@ -402,6 +622,8 @@ void cleanAll(){
 	realizeMenu(&config.menu.root);
 	realizeMenu(&config.map.screen_menu);
 	realizeMenu(&config.map.action_menu);
+	
+	realizeTypes();
 	
 	glDeleteTextures (config.textures_size,config.textures);
 	

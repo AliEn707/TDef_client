@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 	memset(&config,0,sizeof(config));
 	config.window_width=800;
 	config.window_height=600;
-	config.time_per_frame=1000/60;
+	config.time_per_frame=1000/50;
 	graficsInit(); // инициализация
 	printf("done\n");
 	loadFiles();
