@@ -47,7 +47,11 @@ void processEvent(SDL_Event event){
 			break;
 		case SDL_MOUSEMOTION:
 //			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
-			cursorMove(event.motion.xrel,-event.motion.yrel);
+			if (event.motion.xrel!=0||event.motion.yrel!=0){
+				cursor.state.x=event.motion.x;
+				cursor.state.y=config.window_height-event.motion.y;
+			}
+			//cursorMove(event.motion.xrel,-event.motion.yrel);
 			checkCursorBorder();
 			break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -206,8 +210,9 @@ void graficsInit(){
 		exit(1);
 	}
 	
-	cursorInit();
 	
+	cursorInit();
+	SDL_ShowCursor(0);
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); 
 	glClearDepth(1.0);

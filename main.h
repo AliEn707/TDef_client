@@ -161,6 +161,7 @@ struct map_conf{
 	int enable;
 	int grid_size;
 	int focus;
+	int show_walk;
 	gnode * grid;
 	gnode * grid_out[4]; //non working map zone 
 	texture tex[MAP_COMON_TEXTURES_MAX];

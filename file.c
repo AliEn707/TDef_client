@@ -87,6 +87,8 @@ void loadMenu(menu* root,char* path){
 					}
 					if(strcmp(buf,"action")==0){
 						fscanf(file,"%s\n",buf); 
+						if(strcmp(buf,"showwalk")==0)
+							m->objects[i].action=actionShowWalkMap;
 						if(strcmp(buf,"movemap")==0)
 							m->objects[i].action=actionMoveMap;
 						if(strcmp(buf,"zoommap")==0)
@@ -288,7 +290,7 @@ void loadMap(char* path){
 	fscanf(file,"%s\n",map);
 	for(i=0;i<sqr(config.map.grid_size);i++){
 			config.map.grid[i].tex=mapTex(map[i]);
-			printf("%d\n",config.map.grid[i].tex);
+//			printf("%d\n",config.map.grid[i].tex);
 		}
 	for(i=0;i<4;i++){
 		if((config.map.grid_out[i]=malloc(sizeof(gnode)*grid_out_size))==0)

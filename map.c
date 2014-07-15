@@ -11,7 +11,11 @@ void checkMouseMap(){
 		config.map.focus=-1;
 		return;
 	}
-	config.map.focus=to2di(x,y);
+	if (config.map.grid[to2di(x,y)].buildable>0){
+		config.map.focus=to2di(x,y);
+		return;
+	}
+	config.map.focus=-1;
 }
 
 void processMouseMap(SDL_Event event){	
@@ -24,6 +28,9 @@ void processMouseMap(SDL_Event event){
 void processKeysMap(SDL_Event event){
 	if(event.key.keysym.sym==SDLK_SPACE) 
 		processNodeAction();
+	if(event.key.keysym.sym==SDLK_z) 
+		actionShowWalkMap(0);
+	
 }
 
 
@@ -36,10 +43,11 @@ void processContKeysMap(){
 		setMove(0,-2);
 	if (config.global.keys[SDLK_a]!=0)
 		setMove(0,2);
-	if (config.global.keys[SDLK_z]!=0)
+	if (config.global.keys[SDLK_q]!=0)
 		setZoom(0.8);
-	if (config.global.keys[SDLK_x]!=0)
+	if (config.global.keys[SDLK_e]!=0)
 		setZoom(-0.8);
+	
 	//add another
 		if(config.global.mouse[SDL_BUTTON_LEFT]==1 ||
 				config.global.keys[SDLK_SPACE]==1)
@@ -136,6 +144,10 @@ float screenToGridY(float x, float y){
 #undef ty
 #undef sx
 #undef sy
+
+void actionShowWalkMap(void * arg){
+	config.map.show_walk=config.map.show_walk==1?0:1;
+}
 
 void actionMoveMap(void * arg){
 	int * p=(int*)arg;

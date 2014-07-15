@@ -73,7 +73,7 @@ void drawNode(gnode * n){
 //	glBindTexture(GL_TEXTURE_2D, n->tex);
 //	glEnable(GL_TEXTURE_2D);
 	setTexture(&config.map.tex[n->tex]);
-	if (n->id==config.map.focus)
+	if (n->id==config.map.focus && config.menu.selected==0)
 		glColor4f(0,1,0,1);
 	else
 		glColor4f(1,1,1,1);
@@ -91,22 +91,6 @@ void drawNode(gnode * n){
 			glTexCoord2f (0.0f, 1.0f);
 			glVertex2f(0.0f,1.0f);
 		glEnd();
-		if (n->walkable<1){
-			if (n->walkable==0)
-				setTexture(&config.map.tex[WALKABLE]);
-			else
-				setTexture(&config.map.tex[NO_SEE]);
-			glBegin(GL_QUADS);
-				glTexCoord2f (0.0f, 0.0f);
-				glVertex2f(0.0f,0.0f);
-				glTexCoord2f (1.0f, 0.0f);
-				glVertex2f(1.0f,0.0f);
-				glTexCoord2f (1.0f, 1.0f);
-				glVertex2f(1.0f,1.0f);
-				glTexCoord2f (0.0f, 1.0f);
-				glVertex2f(0.0f,1.0f);
-			glEnd();
-		}
 		if (n->buildable!=0){
 			setTexture(&config.map.tex[BUILDABLE]);
 			glBegin(GL_QUADS);
@@ -119,6 +103,25 @@ void drawNode(gnode * n){
 				glTexCoord2f (0.0f, 1.0f);
 				glVertex2f(0.0f,1.0f);
 			glEnd();
+		}
+		if (config.map.show_walk!=0){
+			glColor4f(1,1,1,1);
+			if (n->walkable<1){
+				if (n->walkable==0)
+					setTexture(&config.map.tex[WALKABLE]);
+				else
+					setTexture(&config.map.tex[NO_SEE]);
+				glBegin(GL_QUADS);
+					glTexCoord2f (0.0f, 0.0f);
+					glVertex2f(0.0f,0.0f);
+					glTexCoord2f (1.0f, 0.0f);
+					glVertex2f(1.0f,0.0f);
+					glTexCoord2f (1.0f, 1.0f);
+					glVertex2f(1.0f,1.0f);
+					glTexCoord2f (0.0f, 1.0f);
+					glVertex2f(0.0f,1.0f);
+				glEnd();
+			}
 		}
 	glPopMatrix();	
 	glDisable(GL_TEXTURE_2D);

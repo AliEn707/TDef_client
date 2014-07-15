@@ -1,7 +1,7 @@
 
 void processNodeAction();
 
-void processObjectAction();
+void processObjectAction(int type,int key);
 
 int checkMouseState();
 
