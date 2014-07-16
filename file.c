@@ -350,6 +350,9 @@ void loadTypes(char * filepath){
 				perror("malloc npc loadTypes");
 			break;
 		}
+		if (strcmp(buf,"texidle")==0){
+			fscanf(file,"%s\n",config.tower_types[i].tex[TEX_IDLE]);
+		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			i++;
@@ -569,6 +572,7 @@ int loadTex(texture * t, char * path, int(load)(char * path)){
 		t->tex[0]=tex;
 		return 1;
 	}
+	memcpy(t,&config.map.tex[ERROR],sizeof(texture));
 	return 0;
 }
 
@@ -590,6 +594,7 @@ void loadFiles(){
 	loadTypes("../data/types.cfg");
 	//set to config file
 	loadTexture(&cursor.tex,"global/cursor");
+	loadTexture(&config.map.tex[ERROR],"global/error");
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
@@ -605,6 +610,12 @@ void loadFiles(){
 	config.map.npc_array[0].position.y=1.5;
 	config.map.npc_array[0].id=200;
 	config.map.npc_array[0].type=1;
+	
+	config.map.tower_array[0].id=1;
+	config.map.tower_array[0].type=1;
+	config.map.tower_array[0].position.x=2.5;
+	config.map.tower_array[0].position.y=2.5;
+	
 	/////
 }
 

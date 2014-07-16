@@ -16,6 +16,7 @@
 
 //textures map
 #define MAP_COMON_TEXTURES_MAX 100
+#define ERROR 0
 #define WALKABLE 1
 #define BUILDABLE 2
 #define NO_SEE 3
@@ -82,6 +83,7 @@ struct tower_type{
 	int prior_type;
 	int bullet_type;
 	int support;
+	char tex[10][100];
 //	effect effects;   //наносимые эффекты
 }tower_type;
 
@@ -124,7 +126,8 @@ struct tower{
 	int health;
 	int shield;
 	int energy;
-	
+	int current_tex;
+	texture tex[10];
 }tower;
 
 typedef

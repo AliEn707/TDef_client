@@ -2,7 +2,7 @@
 #include "drawer.h"
 
 int textureFrameNext(texture *t){
-	if (config.texture_no_change!=0)
+	if (config.texture_no_change==0)
 		t->current_frame+=Df;
 	if (t->current_frame>=t->frames){
 		t->current_frame=0;
@@ -196,7 +196,7 @@ void globalTransform(){
 void backTransform(){
 	glRotatef(45,0,0,1);
 	glRotatef(60,1,0,0);
-	glScalef(0.8,4*0.8,1);
+	glScalef(1,4*1,1);
 }
 
 
@@ -204,8 +204,9 @@ void drawNpc(npc* n){
 	glPushMatrix();
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
+	glScalef(0.8,0.8,1);
 	if (n->tex[n->current_tex].frames==0)
-		loadTexture(&n->tex[n->current_tex],config.npc_types[n->type].tex[n->current_tex]);
+		loadMTexture(&n->tex[n->current_tex],config.npc_types[n->type].tex[n->current_tex]);
 	setTexture(&n->tex[n->current_tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
@@ -234,7 +235,11 @@ void drawTower(tower* t){
 	glPushMatrix();
 	glTranslatef(t->position.x,t->position.y,0);
 	backTransform();
-		glColor4f(rand()%100/100.0,rand()%100/100.0,rand()%100/100.0,1);
+	glTranslatef(0,0.2,0);
+	if (t->tex[t->current_tex].frames==0)
+		loadMTexture(&t->tex[t->current_tex],config.tower_types[t->type].tex[t->current_tex]);
+	setTexture(&t->tex[t->current_tex]);
+		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
 			glTexCoord2f (0.0f, 0.0f);
@@ -266,12 +271,12 @@ void drawScene(){
 		globalTransform();
 		glDisable(GL_DEPTH_TEST);
 		drawMap();
-		config.texture_no_change=0;
+		config.texture_no_change=1;
 		drawNpcs();
 		drawTowers();
 		//draw map
 		glEnable(GL_DEPTH_TEST);
-		config.texture_no_change=1;
+		config.texture_no_change=0;
 		drawNpcs();
 		drawTowers();
 		//draw map egain
