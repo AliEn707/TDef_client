@@ -10,6 +10,8 @@ void processNodeAction(){
 }
 
 void processObjectAction(int type,int key){
+	if(config.menu.selected==0)
+		return;
 	if(config.menu.selected->touch!=0)
 		if(config.menu.selected->action!=0)
 			config.menu.selected->action(&config.menu.selected->arg);

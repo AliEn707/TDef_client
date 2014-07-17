@@ -20,8 +20,10 @@ void checkMouseMap(){
 
 void processMouseMap(SDL_Event event){	
 	//priority on screen buttons
-	if(event.button.button==SDL_BUTTON_LEFT)
+	if(event.button.button==SDL_BUTTON_LEFT){
 		processNodeAction();
+		processObjectAction(MOUSE,SDL_BUTTON_LEFT);
+	}
 }
 
 
