@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include "stb_vorbis.h"
 
 #define MUS_PATH "test.wav"
 
@@ -10,6 +11,7 @@ void my_audio_callback(void *userdata, Uint8 *stream, int len);
 // variable declarations
 static Uint8 *audio_pos; // global pointer to the audio buffer to be played
 static Uint32 audio_len; // remaining length of the sample we have to play
+static Uint32 audio_len2; // remaining length of the sample we have to play
 
 /*
 ** PLAYING A SOUND IS MUCH MORE COMPLICATED THAN IT SHOULD BE
@@ -22,26 +24,34 @@ int main(int argc, char* argv[]){
 			return 1;
 
 	// local variables
-	
-	static Uint32 wav_length; // length of our sample
+	static Uint32 wav_length=0; // length of our sample
+	static Uint32 channels=0; // length of our sample
 	static Uint8 *wav_buffer; // buffer containing our audio file
 	static SDL_AudioSpec wav_spec; // the specs of our piece of music
-	
-	
+	int shift1,shift2;
+//	file=stb_vorbis_open_filename(argv[1], NULL, NULL);
 	/* Load the WAV */
 	// the specs, length and buffer of our wav are filled
-	if( SDL_LoadWAV(argv[1], &wav_spec, &wav_buffer, &wav_length) == NULL ){
-	  return 1;
-	}
+//	if((
+		wav_length=stb_vorbis_decode_filename(argv[1], &channels, (short**)&wav_buffer);
+//	)<0){
+//	if( SDL_LoadWAV(argv[1], &wav_spec, &wav_buffer, &wav_length) == NULL ){
+//		printf("OK\n");
+//	  return 1;
+//	}
 	// set the callback function
+	
 	wav_spec.freq = 44100;
-	wav_spec.format = AUDIO_F32;
+	wav_spec.format = AUDIO_S16SYS;
 	wav_spec.callback = my_audio_callback;
 	wav_spec.userdata = NULL;
+	wav_spec.channels = channels;
+	
 	// set our global static variables
-	audio_pos = wav_buffer+100; // copy sound buffer
-	audio_len = wav_length; // copy file length
-	printf("audio length: %d\n",wav_length);
+	audio_pos = wav_buffer;//+100; // copy sound buffer
+	audio_len = wav_length*channels*2; // copy file length, why 4 dont now
+	printf("audio length: %d\n",audio_len);
+	printf("channels: %d\n",channels);
 	/* Open the audio device */
 	if ( SDL_OpenAudio(&wav_spec, NULL) < 0 ){
 	  fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
@@ -59,6 +69,7 @@ int main(int argc, char* argv[]){
 	// shut everything down
 	SDL_CloseAudio();
 	SDL_FreeWAV(wav_buffer);
+	//SDL_Free(wav_buffer);
 
 }
 
