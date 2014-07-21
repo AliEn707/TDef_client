@@ -32,7 +32,7 @@ int main(void) {
 	// ***** Подключение к серверу
 	printf("Connecting to server...\n");
 
-	if (connect(Sock, (struct sockaddr_in*)&sin, sizeof(sin)) == SOCKET_ERROR) {
+	if (connect(Sock, (struct sockaddr*)&sin, sizeof(sin)) == SOCKET_ERROR) {
 		printf("Connection error!\n");
 		goto End;
 	}
@@ -46,8 +46,10 @@ int main(void) {
 		
 			printf("Enter message: ");
 			scanf("%s\n", Message);
-			while (1)if (send(Sock, Message, strlen(Message) + 1, 0) != SOCKET_ERROR) printf("Sent!\n");
-			else printf("Error of sending!\n");
+			//while (1)
+				if (send(Sock, Message, strlen(Message) + 1, 0) != SOCKET_ERROR) 
+					printf("Sent!\n");
+				else printf("Error of sending!\n");
 		printf("\n");
 	} while (1);
 

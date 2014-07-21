@@ -19,7 +19,7 @@ DWORD WINAPI thread( LPVOID lpParam ){
 	send(Client, PCName, strlen(PCName) + 1, 0); // Отправка имени этого компьютера (сервера)
 
 	printf("Client ( \"%s\" ) has connected!\n", ClientName);
-
+	
 	// ***** Меню
 	while (1){
 			// Приём сообщения от клиента
@@ -53,13 +53,13 @@ void main(void) {
 	sin.sin_addr.s_addr = 0;  // IP-адрес сервера (пори создании сервера можно 0)
 	sin.sin_port = htons(2803); // Номер порта сервера
 	Sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); // Создание сокета
-	bind(Sock, (struct sockaddr_in*)&sin, sizeof(sin)); // Связывание созданного сокета с адресом sin
+	bind(Sock, (struct sockaddr*)&sin, sizeof(sin)); // Связывание созданного сокета с адресом sin
 while (1){
 	// ***** Ожиданеи клиента
 	printf("Wait of client...\n");
 	
 	listen(Sock, SOMAXCONN); // Прослушивание сокета сервером (для подключения клиента)
-	thr.Client = accept(Sock, (struct sockaddr_in*)&sin, 0); // Ожидание клиента
+	thr.Client = accept(Sock, (struct sockaddr*)&sin, 0); // Ожидание клиента
 //=====================
   handle_of_comp = CreateThread(NULL,0,thread,&thr, 0,NULL);
   }
