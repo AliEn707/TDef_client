@@ -22,13 +22,14 @@ DWORD WINAPI thread( LPVOID lpParam ){
 	
 	// ***** Меню
 	while (1){
+			send(Client, "qwedr", 5, 0);
 			// Приём сообщения от клиента
 			if (recv(Client, Message, 200, 0) != SOCKET_ERROR) { 
 				printf("%d %s\n",Client, Message);
 				//getch();
 			}
 			else {printf("Error of getting!\n");return 1;}
-	
+			Sleep(1000);
 		}
 //==============
   return 0;
