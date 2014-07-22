@@ -30,6 +30,20 @@
 #define TEX_IDLE 0
 
 
+//bit mask
+#define setMask(z,x) z->bit_mask|=x
+#define checkMask(z,x) z->bit_mask&x
+
+#define NPC_POSITION 1
+#define NPC_HEALTH 2
+
+#define TOWER_HEALTH 1
+
+#define BULLET_POSITION 1
+#define BULLET_DETONATE 2
+
+
+
 typedef
 struct vec2{
 	float x;
@@ -126,6 +140,7 @@ struct tower{
 	int health;
 	int shield;
 	int energy;
+	
 	int current_tex;
 	texture tex[10];
 }tower;
@@ -133,13 +148,15 @@ struct tower{
 typedef
 struct npc{
 	int id;
-	int status;
+	char status;
+	char isfriend;
 	vec2 position;
 	vec2 destination;
 	vec2 direction;
 	int type;
 	int health;
 	int shield;
+	
 	int current_tex;
 	texture tex[10];
 }npc;
@@ -151,7 +168,14 @@ struct bullet{
 	vec2 destination;
 	vec2 direction;
 	vec2 source;
+	char isfriend;
+	char support;
+	char type;
 	int detonate;
+	int owner;
+	
+	int current_tex;
+	texture tex[10];
 }bullet;
 
 /////////////

@@ -263,6 +263,38 @@ void drawTowers(){
 }
 
 
+void drawBullet(bullet* b){
+	glPushMatrix();
+	glTranslatef(b->position.x,b->position.y,0);
+	backTransform();
+	glTranslatef(0,0.2,0);
+	if (b->tex[b->current_tex].frames==0)
+		loadMTexture(&b->tex[b->current_tex],config.tower_types[b->type].tex[b->current_tex]);
+	setTexture(&b->tex[b->current_tex]);
+		glColor4f(1,1,1,1);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_QUADS);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(-0.5f,-0.5f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(0.5f,-0.5f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(0.5f,0.5f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(-0.5f,0.5f);
+		glEnd();
+	
+	glPopMatrix();
+}
+
+void drawBullets(){
+	int i;
+	for(i=0;i<config.map.bullet_max;i++)
+		if (config.map.bullet_array[i].id!=0)
+			drawBullet(&config.map.bullet_array[i]);
+}
+
+
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
