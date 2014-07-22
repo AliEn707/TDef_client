@@ -239,6 +239,12 @@ struct cur{
 	float sens;
 } cur;
 
+
+typedef
+struct netw{
+	int socket;
+} netw;
+
 typedef
 struct menu_conf{
 	int enable;
@@ -269,6 +275,7 @@ struct map_conf{
 	bullet * bullet_array;
 	int textures_size;
 	int textures[MAX_TEXTURES];
+	netw network;
 } map_conf;
 
 typedef
@@ -277,6 +284,13 @@ struct global_conf{
 	int keys[5000];
 	int mouse[100];
 }global_conf;
+
+
+typedef
+struct public_conf{
+	netw network;
+}public_conf;
+
 
 typedef
 struct g_config{
@@ -291,6 +305,7 @@ struct g_config{
 	global_conf global;
 	menu_conf menu;
 	map_conf map;
+	public_conf public;
 	
 	int textures_size;
 	int textures[MAX_TEXTURES];
