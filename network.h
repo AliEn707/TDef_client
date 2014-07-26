@@ -12,3 +12,6 @@ int networkSetNonBlock(int sock);
 
 int networkSetBlock(int sock);
 
+int sendData(int socket,void * buf,int size);
+
+int recvData(int socket,void * buf,int size);

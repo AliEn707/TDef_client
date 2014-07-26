@@ -62,3 +62,11 @@ int networkSetBlock(int sock){
 		return -1;
 	return 0;
 }
+
+int sendData(int socket,void * buf,int size){
+	return send(socket,buf,size,0);
+}
+
+int recvData(int socket,void * buf,int size){
+	return recv(socket,buf,size,0);
+}
