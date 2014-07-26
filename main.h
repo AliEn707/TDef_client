@@ -149,10 +149,12 @@ struct tower{
 	int id;
 	int bit_mask;
 	vec2 position;
+	int target;
 	int type;
 	int health;
 	int shield;
 	int energy;
+	int owner;
 	
 	int current_tex;
 	texture tex[10];
@@ -256,6 +258,7 @@ struct cur{
 typedef
 struct netw{
 	int socket;
+	int err;
 } netw;
 
 typedef

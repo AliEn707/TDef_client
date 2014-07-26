@@ -17,16 +17,16 @@ void drawCube(float xrf, float yrf, float zrf);
 
 void frameSync(unsigned int *time){
 	if (*time==0){
-		*time=timeGetTime();
+		*time=SDL_GetTicks();//timeGetTime();
 		return;
 	}
-		unsigned int t=config.time_per_frame-(timeGetTime()-*time);
+		unsigned int t=config.time_per_frame-(SDL_GetTicks()-*time);
 	if (t<0){
 		perror("Time");
 		t=0;
 	}
-	Sleep(t<=config.time_per_frame?t:0);
-	*time=timeGetTime();
+	SDL_Delay(t<=config.time_per_frame?t:0);
+	*time=SDL_GetTicks();
 }
 
 void tickSync(unsigned int *time){
