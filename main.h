@@ -15,7 +15,7 @@
 #define MAX_TEX_GLOBAL 100
 
 //textures map
-#define MAP_COMON_TEXTURES_MAX 100
+#define MAP_COMON_TEXTURES_MAX 500
 #define ERROR 0
 #define WALKABLE 1
 #define BUILDABLE 2
@@ -26,9 +26,11 @@
 #define MOUSE 1
 #define KEYBOARD 2
 
+
+#define TEXTURES 20
 //textures npc
 #define TEX_IDLE 0
-
+#define TEX_DESTROY 1
 
 //bit mask
 #define setMask(z,x) z->bit_mask|=x
@@ -110,7 +112,9 @@ struct tower_type{
 	int prior_type;
 	int bullet_type;
 	int support;
-	char tex[10][100];
+	
+	char tex_path[TEXTURES][100];
+	texture tex[TEXTURES];
 //	effect effects;   //наносимые эффекты
 }tower_type;
 
@@ -131,7 +135,9 @@ struct npc_type{
 	int bullet_type;
 	int support;
 	int receive;
-	char tex[10][100];
+	
+	char tex_path[TEXTURES][100];
+	texture tex[TEXTURES];
 //	effect effects;  //наносимые эффекты
 }npc_type;
 
@@ -142,6 +148,9 @@ struct bullet_type{
 	int attack_type;
 	int move_type;
 	int area;
+	
+	char tex_path[TEXTURES][100];
+	texture tex[TEXTURES];
 }bullet_type;
 
 typedef
@@ -157,7 +166,8 @@ struct tower{
 	int owner;
 	
 	int current_tex;
-	texture tex[10];
+	texture tex[TEXTURES];
+	color3 color;
 }tower;
 
 typedef
@@ -173,7 +183,9 @@ struct npc{
 	int shield;
 	
 	int current_tex;
-	texture tex[10];
+	texture tex[TEXTURES];
+	short anim_ended;
+	color3 color;
 }npc;
 
 typedef
@@ -190,7 +202,7 @@ struct bullet{
 	int owner;
 	
 	int current_tex;
-	texture tex[10];
+	texture tex[TEXTURES];
 }bullet;
 
 /////////////
@@ -242,6 +254,7 @@ struct gnode{
 	int walkable;
 	int buildable;
 	int tower_id;
+	texture blood;
 } gnode;
 
 typedef 
@@ -292,6 +305,7 @@ struct map_conf{
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	netw network;
+	SDL_Thread* worker;
 } map_conf;
 
 typedef

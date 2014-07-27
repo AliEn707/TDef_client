@@ -351,7 +351,7 @@ void loadTypes(char * filepath){
 			break;
 		}
 		if (strcmp(buf,"texidle")==0){
-			fscanf(file,"%s\n",config.tower_types[i].tex[TEX_IDLE]);
+			fscanf(file,"%s\n",config.tower_types[i].tex_path[TEX_IDLE]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
@@ -425,7 +425,7 @@ void loadTypes(char * filepath){
 			break;
 		}
 		if (strcmp(buf,"texidle")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex[TEX_IDLE]);
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_IDLE]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
@@ -503,6 +503,9 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"name")==0){
 			fscanf(file,"%s\n",buf);
 			continue;
+		}
+		if (strcmp(buf,"texidle")==0){
+			fscanf(file,"%s\n",config.bullet_types[i].tex_path[TEX_IDLE]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
@@ -604,14 +607,16 @@ void loadFiles(){
 	////test
 	config.map.npc_array[1].position.x=1.5;
 	config.map.npc_array[1].position.y=1.5;
-	config.map.npc_array[1].id=100;
+	config.map.npc_array[1].id=-100;
 	config.map.npc_array[1].type=1;
+	config.map.npc_array[1].health=36;
 	config.map.npc_array[0].position.x=2.0;
 	config.map.npc_array[0].position.y=1.5;
-	config.map.npc_array[0].id=200;
+	config.map.npc_array[0].id=-200;
 	config.map.npc_array[0].type=1;
+	config.map.npc_array[0].health=87;
 	
-	config.map.tower_array[0].id=1;
+	config.map.tower_array[0].id=-1;
 	config.map.tower_array[0].type=1;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;

@@ -1,5 +1,4 @@
-
-void setTexture(texture * t);
+int setTexture(texture * t);
 
 void drawCursor();
 

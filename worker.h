@@ -1,0 +1,2 @@
+
+SDL_Thread* workerMapStart();

@@ -28,16 +28,16 @@ void drawCursor(){
 	glEnd();
 }
 
-void setTexture(texture * t){
+int setTexture(texture * t){
 	if (t->frames==0){
 		glDisable(GL_TEXTURE_2D);
 		return;
 	}
 	//add some stuff
-	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
+	glEnable(GL_TEXTURE_2D);
 	//if (config.global_count%FpF==0) //check next texture
-		textureFrameNext(t);
+	return textureFrameNext(t);
 }
 
 void drawElement(element * e,int focus){
@@ -199,15 +199,38 @@ void backTransform(){
 	glScalef(1,4*1,1);
 }
 
+void drawHealth(vec2 pos,vec2 size,float p){
+	glDisable(GL_TEXTURE_2D);
+	glColor4f(0,0,0,0.8);
+	glBegin(GL_TRIANGLE_STRIP);
+		glVertex2f(pos.x+size.x*p,pos.y);
+		glVertex2f(pos.x+size.x,pos.y);
+		glVertex2f(pos.x+size.x*p,pos.y+size.y);
+		glVertex2f(pos.x+size.x,pos.y+size.y);
+	glEnd();
+	glColor4f(1.2*(1-p),0.8*p,0,1);
+	glBegin(GL_TRIANGLE_STRIP);
+		glVertex2f(pos.x,pos.y);
+		glVertex2f(pos.x+size.x*p,pos.y);
+		glVertex2f(pos.x,pos.y+size.y);
+		glVertex2f(pos.x+size.x*p,pos.y+size.y);
+		
+	glEnd();
+}
 
 void drawNpc(npc* n){
 	glPushMatrix();
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
+//	printf("n->type - %d\n",n->type);
 	glScalef(0.8,0.8,1);
-	if (n->tex[n->current_tex].frames==0)
-		loadMTexture(&n->tex[n->current_tex],config.npc_types[n->type].tex[n->current_tex]);
-	setTexture(&n->tex[n->current_tex]);
+		if (n->tex[n->current_tex].frames==0){
+			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
+				loadMTexture(&config.npc_types[n->type].tex[n->current_tex],config.npc_types[n->type].tex_path[n->current_tex]);
+			memcpy(&n->tex[n->current_tex],&config.npc_types[n->type].tex[n->current_tex],sizeof(texture));
+		}
+		if(setTexture(&n->tex[n->current_tex]))
+			n->anim_ended=1;
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
@@ -220,7 +243,10 @@ void drawNpc(npc* n){
 			glTexCoord2f (0.0f, 1.0f);
 			glVertex2f(-0.5f,1.0f);
 		glEnd();
-	
+		//draw health
+		float health=1.0*n->health/config.npc_types[n->type].health;
+		if (health<0.95)
+			drawHealth((vec2){-0.5,1.0},(vec2){1.0,0.09},health);
 	glPopMatrix();
 }
 
@@ -236,8 +262,11 @@ void drawTower(tower* t){
 	glTranslatef(t->position.x,t->position.y,0);
 	backTransform();
 	glTranslatef(0,0.2,0);
-	if (t->tex[t->current_tex].frames==0)
-		loadMTexture(&t->tex[t->current_tex],config.tower_types[t->type].tex[t->current_tex]);
+	if (t->tex[t->current_tex].frames==0){
+		if (config.tower_types[t->type].tex[t->current_tex].frames==0)
+			loadMTexture(&config.tower_types[t->type].tex[t->current_tex],config.tower_types[t->type].tex_path[t->current_tex]);
+		memcpy(&t->tex[t->current_tex],&config.tower_types[t->type].tex[t->current_tex],sizeof(texture));
+	}
 	setTexture(&t->tex[t->current_tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
@@ -268,8 +297,11 @@ void drawBullet(bullet* b){
 	glTranslatef(b->position.x,b->position.y,0);
 	backTransform();
 	glTranslatef(0,0.2,0);
-	if (b->tex[b->current_tex].frames==0)
-		loadMTexture(&b->tex[b->current_tex],config.tower_types[b->type].tex[b->current_tex]);
+	if (b->tex[b->current_tex].frames==0){
+		if (config.bullet_types[b->type].tex[b->current_tex].frames==0)
+			loadMTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);
+		memcpy(&b->tex[b->current_tex],&config.bullet_types[b->type].tex[b->current_tex],sizeof(texture));
+	}
 	setTexture(&b->tex[b->current_tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);

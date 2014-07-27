@@ -7,6 +7,7 @@
 #include "../drawer.h"
 #include "../engine.h"
 #include "../file.h"
+#include "../worker.h"
 
 
 
@@ -14,25 +15,6 @@
 
 void drawCube(float xrf, float yrf, float zrf);
 
-
-void frameSync(unsigned int *time){
-	if (*time==0){
-		*time=SDL_GetTicks();//timeGetTime();
-		return;
-	}
-		unsigned int t=config.time_per_frame-(SDL_GetTicks()-*time);
-	if (t<0){
-		perror("Time");
-		t=0;
-	}
-	SDL_Delay(t<=config.time_per_frame?t:0);
-	*time=SDL_GetTicks();
-}
-
-void tickSync(unsigned int *time){
-	Sleep(config.time_per_tick-(SDL_GetTicks()-*time));
-	*time=SDL_GetTicks();
-}
 
 
 #undef main
@@ -42,6 +24,7 @@ int main(int argc, char *argv[]){
 	config.window_width=800;
 	config.window_height=600;
 	config.time_per_frame=1000/50;
+	config.time_per_tick=1000/40;
 	graficsInit(); // инициализация
 	printf("done\n");
 	loadFiles();
@@ -57,6 +40,12 @@ int main(int argc, char *argv[]){
 	float xrf = 0, yrf = 0, zrf = 0; // углы поворота
 	Uint32 time=0;
 	config.main_running=1;
+	
+	networkInit();
+	config.map.enable=1;
+	if (networkConnMap("localhost",3333)!=0)
+		config.map.worker=workerMapStart();
+	
 	while(config.main_running){ 
 		frameSync(&time);
 		config.global_count++;
@@ -104,9 +93,11 @@ int main(int argc, char *argv[]){
 		SDL_GL_SwapWindow(config.window);
 	}
 	
-	
+	config.map.enable=0;
+	SDL_WaitThread(config.map.worker, 0);
 	glFontDestroy(&font);
 	cleanAll();
+	networkExit();
 	SDL_Quit(); // завершаем работу SDL и выходим
 	return 0;
 }

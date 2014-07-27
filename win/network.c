@@ -33,12 +33,13 @@ int networkConn(char * addr,int port){
 
 	
 	// ***** Подключение к серверу
-	printf("Connecting to server...\n");
+	printf("Connecting to server....");
 
 	if (connect(sock, (struct sockaddr*)&sin, sizeof(sin)) == SOCKET_ERROR) {
-		printf("Connection error!\n");
+		printf("fail\n");
 		return 0;
 	}
+	printf("done\n");
 	return sock;
 }
 
