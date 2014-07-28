@@ -5,7 +5,10 @@ int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
 		t->current_frame+=Df;
 	if (t->current_frame>=t->frames){
-		t->current_frame=0;
+		if (t->loop==0)
+			t->current_frame=t->frames-1;
+		else
+			t->current_frame=0;
 		return 1;
 	}		
 	return 0;

@@ -83,6 +83,7 @@ typedef
 struct texture{
 	int tex[25];
 	int frames;
+	short loop;
 	float current_frame;
 } texture;
 
