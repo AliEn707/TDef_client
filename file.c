@@ -146,9 +146,10 @@ void loadMenu(menu* root,char* path){
 							}
 							if(strcmp(buf,"tex")==0){
 								fscanf(file,"%s\n",&buf);
-								if (buf[0]=='0')
+								if (strcmp(buf,"0")==0)
 									continue;
 								//add tex load
+								loadTexture(&m->objects[i].elements[j].tex,buf);
 							}
 							//somesing else
 						}
@@ -592,10 +593,6 @@ int loadMTexture(texture * t, char * path){
 
 
 void loadFiles(){
-	loadMenu(&config.menu.root,"../data/menu.cfg");
-	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
-	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
-	
 	loadTypes("../data/types.cfg");
 	//set to config file
 	loadTexture(&cursor.tex,"global/cursor");
@@ -603,6 +600,12 @@ void loadFiles(){
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
+	
+	loadMenu(&config.menu.root,"../data/menu.cfg");
+	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
+	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
+	
+	
 	
 	loadMap("test");
 	
