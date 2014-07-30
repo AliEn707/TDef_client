@@ -5,10 +5,7 @@ int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
 		t->current_frame+=Df;
 	if (t->current_frame>=t->frames){
-		if (t->loop==0)
-			t->current_frame=t->frames-1;
-		else
-			t->current_frame=0;
+		t->current_frame=0;
 		return 1;
 	}		
 	return 0;
@@ -44,11 +41,16 @@ int setTexture(texture * t){
 }
 
 void drawElement(element * e,int focus){
-	setTexture(&e->tex);
-	if (focus==0)
+	if (focus==0){
 		glColor4f(e->color.r,e->color.g,e->color.b,e->color.a);
-	else
+		if (e->focus_tex!=0)
+			setTexture(&e->ftex);
+		else
+			setTexture(&e->tex);
+	}else{
 		glColor4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,e->fcolor.a);
+		setTexture(&e->tex);
+	}
 	e->wire==0?glBegin(GL_QUADS):glBegin(GL_LINE_LOOP);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(e->position.x,e->position.y);

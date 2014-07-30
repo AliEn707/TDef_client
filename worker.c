@@ -8,6 +8,28 @@ struct worker_arg{
 	int q;
 }worker_arg;
 
+float dirToAngle(vec2 v){
+	float length=sqrt(sqr(v.x)+sqr(v.y));
+	if (length==0)
+		return 0;
+	float cos=v.x/length;
+	float angle=acosf(cos);
+	if (v.y<0)
+		angle=M_PI*2-angle;
+	return angle;
+}
+
+int getWalkTex(vec2 v){
+	float ang=dirToAngle(v);
+	float p8=M_PI/8;
+	//need to correct
+	if (ang>14*p8 || ang<=6*p8)
+		return TEX_WALK_RIGHT;
+	if (ang>6*p8 && ang<=14*p8)
+		return TEX_WALK_LEFT;
+	
+}
+
 int workerMap(void *ptr){
 	worker_arg * arg=ptr;
 	int socket=config.map.network.socket;
@@ -21,6 +43,7 @@ int workerMap(void *ptr){
 		int i;
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0){
+				config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
 				config.map.npc_array[i].position.x+=config.map.npc_array[i].direction.x;
 				config.map.npc_array[i].position.y+=config.map.npc_array[i].direction.y;
 				if (config.map.npc_array[i].health<=0 &&

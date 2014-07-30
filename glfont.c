@@ -114,8 +114,7 @@ void glFontEnd (void)
 }
 */
 //*********************************************************
-void glFontTextOut (GLFONT *glFont,char *String, float x, float y, 
-	float z)
+void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 {
 	int Length, i;
 	GLFONTCHAR *Char;
@@ -155,6 +154,31 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,
 	glEnd();
 }
 //*********************************************************
+
+float glFontWigth(GLFONT *glFont,char *String){
+	int Length, i;
+	float x=0;
+	GLFONTCHAR *Char;
+	
+	//Return if we don't have a valid glFont 
+	if (glFont == NULL)
+		return;
+	//Get length of string
+	Length = strlen(String);
+	
+	//Loop through characters
+	for (i = 0; i < Length; i++)
+	{
+		//Get pointer to glFont character
+		Char = &glFont->Char[(int)String[i] -
+			glFont->IntStart];
+		
+		//Move to next character
+		x += Char->dx;
+	}
+
+	return x;
+}
 
 //End of file
 

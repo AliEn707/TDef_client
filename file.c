@@ -190,7 +190,7 @@ void loadMap(char* path){
 	gnode * grid;
 	FILE * file;
 	char fullpath[300];
-	printf("load map...");
+	printf("load map....");
 	sprintf(fullpath,"../maps/%s.mp",path);
 	if ((file=fopen(fullpath,"r"))==0) 
 		perror("fopen loadMap");
@@ -428,6 +428,12 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"texidle")==0){
 			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_IDLE]);
 		}
+		if (strcmp(buf,"texwalkleft")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT]);
+		}
+		if (strcmp(buf,"texwalkright")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT]);
+		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			i++;
@@ -549,6 +555,10 @@ void realizeTypes(){
 int loadTex(texture * t, char * path, int(load)(char * path)){
 	FILE* file;
 	char fullpath[200];
+	if (path==0)
+		goto out;
+	if (*path==0)
+		goto out;
 	//try to load cfg
 	sprintf(fullpath,"../textures/%s.cfg",path);
 	if ((file=fopen(fullpath,"r"))!=0){
@@ -578,6 +588,7 @@ int loadTex(texture * t, char * path, int(load)(char * path)){
 		t->tex[0]=tex;
 		return 1;
 	}
+out:
 	memcpy(t,&config.map.tex[ERROR],sizeof(texture));
 	return 0;
 }

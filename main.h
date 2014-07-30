@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <math.h>
 #include <SDL2/SDL.h>
 #include <GL/gl.h>
  
@@ -28,9 +29,13 @@
 
 
 #define TEXTURES 20
+#define TEXTURE_FRAMES 25
+
 //textures npc
 #define TEX_IDLE 0
 #define TEX_DESTROY 1
+#define TEX_WALK_LEFT 2
+#define TEX_WALK_RIGHT 3
 
 //bit mask
 #define setMask(z,x) z->bit_mask|=x
@@ -81,7 +86,7 @@ struct color3{
 
 typedef 
 struct texture{
-	int tex[25];
+	int tex[TEXTURE_FRAMES];
 	int frames;
 	short loop;
 	float current_frame;
@@ -219,6 +224,8 @@ struct element{
 	vec2 position;
 	vec2 size;
 	texture tex;
+	texture ftex;
+	short focus_tex;
 	int wire;
 	color3 color;
 	color3 fcolor;
