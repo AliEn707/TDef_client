@@ -1,4 +1,6 @@
 
+float dirToAngle(vec2 v);
+
 void processNodeAction();
 
 void processObjectAction(int type,int key);

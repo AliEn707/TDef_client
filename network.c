@@ -89,6 +89,7 @@ int recvTowerMap(){
 		recvMap(t->owner);
 		int position;
 		recvMap(position);
+		//add
 	}
 	if (checkMask(bit_mask,TOWER_TARGET) || checkMask(bit_mask,TOWER_CREATE))
 		recvMap(t->target);
@@ -101,7 +102,20 @@ int recvTowerMap(){
 
 int recvBulletMap(){
 	bullet * b;
-	int id;
+	int id,bit_mask;
+	recvMap(id);
+	//find npc by id
+	b=getBulletId(id);
+	recvMap(bit_mask);
+	if (checkMask(bit_mask,BULLET_CREATE)){
+		recvMap(b->type);
+		recvMap(b->owner);
+		recvMap(b->source);
+	}
+	if (checkMask(bit_mask,BULLET_POSITION) || checkMask(bit_mask,BULLET_CREATE))
+		recvMap(b->position);
+	if(checkMask(bit_mask,BULLET_DETONATE))
+		recvMap(b->detonate);
 	if (b->id==0)
 		b->id=id;
 	return 0;

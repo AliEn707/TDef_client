@@ -4,6 +4,8 @@
 #include "map.h"
 
 
+
+
 void frameSync(unsigned int *time){
 	if (*time==0){
 		*time=SDL_GetTicks();//timeGetTime();

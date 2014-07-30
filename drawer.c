@@ -1,11 +1,16 @@
 #include "main.h"
 #include "drawer.h"
+#include "map.h"
+#include "engine.h"
 
 int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
 		t->current_frame+=Df;
 	if (t->current_frame>=t->frames){
-		t->current_frame=0;
+		if (t->loop==0)
+			t->current_frame=t->frames-1;
+		else
+			t->current_frame=0;
 		return 1;
 	}		
 	return 0;
@@ -299,9 +304,34 @@ void drawTowers(){
 
 void drawBullet(bullet* b){
 	glPushMatrix();
-	glTranslatef(b->position.x,b->position.y,0);
+	vec2* pos;
+	if (config.bullet_types[b->type].solid!=0)
+		pos=&b->source;
+	else
+		pos=&b->position;
+	
+	glTranslatef(pos->x,pos->y,0);
 	backTransform();
-	glTranslatef(0,0.2,0);
+	glTranslatef(0,0.2,0.01);
+	
+	float ang;
+	float length=0.95*sqrt(sqr(b->destination.x-pos->x)+
+					sqr(b->destination.y-pos->y));
+	
+	float x;
+	float y;
+	x=gridToScreenX(b->destination.x,b->destination.y);
+	y=gridToScreenY(b->destination.x,b->destination.y);
+	x-=gridToScreenX(pos->x,pos->y);
+	y-=gridToScreenY(pos->x,pos->y);
+
+	float cos=x/sqrt(sqr(x)+sqr(y));
+	ang=acosf(cos);
+	ang=ang*180/M_PI;
+	if (y<0)
+		ang*=-1;
+
+	glRotatef(ang,0,0,1);
 	if (b->tex[b->current_tex].frames==0){
 		if (config.bullet_types[b->type].tex[b->current_tex].frames==0)
 			loadMTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);
@@ -312,15 +342,24 @@ void drawBullet(bullet* b){
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
 			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(-0.5f,-0.5f);
+			glVertex2f(0.0f,-0.1f);
 			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(0.5f,-0.5f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(0.5f,0.5f);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(-0.5f,0.5f);
+			glVertex2f(0.0f,0.1f);
+			if (config.bullet_types[b->type].solid!=0){ 
+				glTexCoord2f (1.0f, length/0.8);
+				glVertex2f(length,0.1f);
+				glTexCoord2f (0.0f, length/0.8);
+				glVertex2f(length,-0.1f);
+				//texture 1:4
+			}else{
+				glTexCoord2f (1.0f, 1.0f);
+				glVertex2f(0.4,0.1f);
+				glTexCoord2f (0.0f, 1.0f);
+				glVertex2f(0.4,-0.1f);
+				//texture 1:2
+			}
 		glEnd();
-	
+		
 	glPopMatrix();
 }
 
@@ -343,11 +382,13 @@ void drawScene(){
 		config.texture_no_change=1;
 		drawNpcs();
 		drawTowers();
+		drawBullets();
 		//draw map
 		glEnable(GL_DEPTH_TEST);
 		config.texture_no_change=0;
 		drawNpcs();
 		drawTowers();
+		drawBullets();
 		//draw map egain
 	glPopMatrix();
 	glDisable(GL_DEPTH_TEST);

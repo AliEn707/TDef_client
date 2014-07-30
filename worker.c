@@ -8,6 +8,8 @@ struct worker_arg{
 	int q;
 }worker_arg;
 
+
+
 float dirToAngle(vec2 v){
 	float length=sqrt(sqr(v.x)+sqr(v.y));
 	if (length==0)
@@ -18,6 +20,7 @@ float dirToAngle(vec2 v){
 		angle=M_PI*2-angle;
 	return angle;
 }
+
 
 int getWalkTex(vec2 v){
 	float ang=dirToAngle(v);

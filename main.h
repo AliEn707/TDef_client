@@ -154,6 +154,7 @@ struct bullet_type{
 	int attack_type;
 	int move_type;
 	int area;
+	short solid;
 	
 	char tex_path[TEXTURES][100];
 	texture tex[TEXTURES];

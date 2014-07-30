@@ -621,13 +621,19 @@ void loadFiles(){
 	loadMap("test");
 	
 	////test
-	config.map.npc_array[1].position.x=1.5;
-	config.map.npc_array[1].position.y=1.5;
+	#define x1 4
+	#define y1 7
+	
+	#define x2 2
+	#define y2 2
+	
+	config.map.npc_array[1].position.x=x1;
+	config.map.npc_array[1].position.y=y1;
 	config.map.npc_array[1].id=-100;
 	config.map.npc_array[1].type=1;
 	config.map.npc_array[1].health=36;
-	config.map.npc_array[0].position.x=2.0;
-	config.map.npc_array[0].position.y=1.5;
+	config.map.npc_array[0].position.x=x2;
+	config.map.npc_array[0].position.y=y2;
 	config.map.npc_array[0].id=-200;
 	config.map.npc_array[0].type=1;
 	config.map.npc_array[0].health=87;
@@ -636,6 +642,14 @@ void loadFiles(){
 	config.map.tower_array[0].type=1;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
+	
+	config.map.bullet_array[0].id=-1;
+	config.map.bullet_array[0].position.x=x1;
+	config.map.bullet_array[0].position.y=y1;
+	config.map.bullet_array[0].destination.x=x2;
+	config.map.bullet_array[0].destination.y=y2;
+	config.map.bullet_array[0].direction.x=x2-x1;
+	config.map.bullet_array[0].direction.y=y2-y1;
 	
 	/////
 }
