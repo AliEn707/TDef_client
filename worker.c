@@ -35,13 +35,27 @@ int getWalkTex(vec2 v){
 
 int workerMap(void *ptr){
 	worker_arg * arg=ptr;
-	int socket=config.map.network.socket;
+	TCPsocket sock=config.map.network.socket;
 	Uint32 time=0;
+	int numready;
+	SDLNet_SocketSet set;
+	
+	if((set=SDLNet_AllocSocketSet(1))==0)
+		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
+	if(SDLNet_TCP_AddSocket(set,sock)<0)
+		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
+	
 	printf("done\n");
 	while(config.map.enable){
 		tickSync(&time);
 		//get data from server
-		while (recvMesMap()!=-1);
+		while(1){
+			numready=SDLNet_CheckSockets(set, 0);
+			if(numready && SDLNet_SocketReady(sock))
+				recvMesMap();
+			else 
+				break;
+		}
 		//process data on client
 		int i;
 		for(i=0;i<config.map.npc_max;i++)

@@ -4,6 +4,7 @@
 #include <strings.h>
 #include <math.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_net.h>
 #include <GL/gl.h>
  
 // screen frames per texture frames
@@ -279,7 +280,7 @@ struct cur{
 
 typedef
 struct netw{
-	int socket;
+	TCPsocket socket;
 	int err;
 } netw;
 

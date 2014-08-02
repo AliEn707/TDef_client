@@ -5,14 +5,49 @@
 
 #define checkMask(x,y) x&y
 
-#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<0) return -1
+#define recvMap(x) if(SDLNet_TCP_Recv(config.map.network.socket,&x,sizeof(x))<0) return -1
 
 
 
-int networkConnMap(char * addr,int port){
+int networkInit(){
+	if(SDLNet_Init()==-1)
+	{
+		printf("SDLNet_Init: %s\n",SDLNet_GetError());
+		return -1;
+	}
+}
+
+void networkExit(){
+	SDLNet_Quit();
+}
+
+TCPsocket networkConn(char * addr,int port){
+	IPaddress ip;
+	TCPsocket sock;
+	printf("connect to server....");
+	if(SDLNet_ResolveHost(&ip,addr,port)==-1)
+	{
+		printf("SDLNet_ResolveHost: %s\n",SDLNet_GetError());
+		return 0;
+	}
+	if((sock=SDLNet_TCP_Open(&ip))==0){
+		printf("fail\n");
+		return 0;
+	}
+	printf("done\n");
+	return sock;
+}
+
+
+int networkClose(TCPsocket sock){
+	SDLNet_TCP_Close(sock);
+}
+
+TCPsocket networkConnMap(char * addr,int port){
 	config.map.network.socket=networkConn(addr,port);
 	return config.map.network.socket;
 }
+
 
 
 npc* getNpcId(int id){
@@ -124,9 +159,9 @@ int recvBulletMap(){
 int recvMesMap(){
 	char mes;
 	int err;
-	networkSetNonBlock(config.map.network.socket);
+//	networkSetNonBlock(config.map.network.socket);
 	recvMap(mes);
-	networkSetBlock(config.map.network.socket);
+//	networkSetBlock(config.map.network.socket);
 	if (mes==MSG_NPC){
 		return recvNpcMap();
 	}

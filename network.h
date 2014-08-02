@@ -1,10 +1,12 @@
-void networkInit();
+int networkInit();
 
 void networkExit();
 
-int networkConn(char * addr,int port);
+TCPsocket networkConn(char * addr,int port);
 
-int networkClose(int sock);
+TCPsocket networkConnMap(char * addr,int port);
+
+int networkClose(TCPsocket sock);
 
 int networkCheck(int sock);
 
