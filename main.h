@@ -37,6 +37,9 @@
 #define TEX_DESTROY 1
 #define TEX_WALK_LEFT 2
 #define TEX_WALK_RIGHT 3
+#define TEX_ATTACK 4
+#define TEX_ATTACK_LEFT 5
+#define TEX_ATTACK_RIGHT 6
 
 //bit mask
 #define setMask(z,x) z->bit_mask|=x
@@ -166,7 +169,7 @@ struct tower{
 	int id;
 	int bit_mask;
 	vec2 position;
-	int target;
+	short target;
 	int type;
 	int health;
 	int shield;
@@ -205,7 +208,7 @@ struct bullet{
 	vec2 source;
 	char isfriend;
 	char support;
-	char type;
+	int type;
 	int detonate;
 	int owner;
 	

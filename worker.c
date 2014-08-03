@@ -30,8 +30,20 @@ int getWalkTex(vec2 v){
 		return TEX_WALK_RIGHT;
 	if (ang>6*p8 && ang<=14*p8)
 		return TEX_WALK_LEFT;
-	
+	return 0;
 }
+
+int getAttackTex(vec2 v){
+	float ang=dirToAngle(v);
+	float p8=M_PI/8;
+	//need to correct
+	if (ang>14*p8 || ang<=6*p8)
+		return TEX_ATTACK_RIGHT;
+	if (ang>6*p8 && ang<=14*p8)
+		return TEX_ATTACK_LEFT;
+	return 0;
+}
+
 
 int workerMap(void *ptr){
 	worker_arg * arg=ptr;
@@ -60,19 +72,38 @@ int workerMap(void *ptr){
 		int i;
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0){
-				config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
-				config.map.npc_array[i].position.x+=config.map.npc_array[i].direction.x;
-				config.map.npc_array[i].position.y+=config.map.npc_array[i].direction.y;
+				///////////////////////////
+				if (config.map.npc_array[i].current_tex==TEX_ATTACK){
+//					printf("attack");
+					config.map.npc_array[i].current_tex=getAttackTex(config.map.npc_array[i].direction);
+					memset(&config.map.npc_array[i].direction,0,sizeof(vec2));
+					continue;
+				}
+				if ((config.map.npc_array[i].current_tex==TEX_ATTACK_LEFT ||
+						config.map.npc_array[i].current_tex==TEX_ATTACK_RIGHT) &&
+						config.map.npc_array[i].anim_ended!=0){
+					config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
+					continue;
+				}
 				if (config.map.npc_array[i].health<=0 &&
 						config.map.npc_array[i].current_tex!=TEX_DESTROY){
 					config.map.npc_array[i].anim_ended=0;
 					config.map.npc_array[i].id=0; 
 //					config.map.npc_array[i].current_tex=TEX_DESTROY; 
+					continue;
 				}
 				if (config.map.npc_array[i].current_tex==TEX_DESTROY && 
-						config.map.npc_array[i].anim_ended!=0)
+						config.map.npc_array[i].anim_ended!=0){
 					config.map.npc_array[i].id=0; 
+				}
+				if (config.map.npc_array[i].current_tex==TEX_WALK_LEFT || 
+						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT  ){
+//				config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
+				config.map.npc_array[i].position.x+=config.map.npc_array[i].direction.x;
+				config.map.npc_array[i].position.y+=config.map.npc_array[i].direction.y;
+				}
 			}
+		//tower
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0){
 				if (config.map.tower_array[i].health<=0){
@@ -80,12 +111,14 @@ int workerMap(void *ptr){
 					//change to set animation
 				}
 			}
+		//bullet
 		for(i=0;i<config.map.bullet_max;i++)
 			if(config.map.bullet_array[i].id!=0){
 				config.map.bullet_array[i].position.x+=config.map.bullet_array[i].direction.x;
 				config.map.bullet_array[i].position.y+=config.map.bullet_array[i].direction.y;
-				if (config.map.bullet_array[i].detonate!=0)
+				if (config.map.bullet_array[i].detonate!=0){
 					config.map.bullet_array[i].id=0;
+				}
 			}
 		
 	}

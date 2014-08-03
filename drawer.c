@@ -304,7 +304,10 @@ void drawTowers(){
 
 void drawBullet(bullet* b){
 	glPushMatrix();
+//	printf("%g %g| %g %g %d\n",b->position.x,b->position.y,b->direction.x,b->direction.y,b->type);
 	vec2* pos;
+	float length=1;
+//	config.bullet_types[b->type].solid=1;
 	if (config.bullet_types[b->type].solid!=0)
 		pos=&b->source;
 	else
@@ -314,24 +317,29 @@ void drawBullet(bullet* b){
 	backTransform();
 	glTranslatef(0,0.2,0.01);
 	
-	float ang;
-	float length=0.95*sqrt(sqr(b->destination.x-pos->x)+
-					sqr(b->destination.y-pos->y));
-	
-	float x;
-	float y;
-	x=gridToScreenX(b->destination.x,b->destination.y);
-	y=gridToScreenY(b->destination.x,b->destination.y);
-	x-=gridToScreenX(pos->x,pos->y);
-	y-=gridToScreenY(pos->x,pos->y);
+	if (b->destination.x==pos->x && b->destination.y==pos->y)
+		pos=&b->source;
+	else{
+		float ang;
+		vec2 dir={b->destination.x-pos->x,b->destination.y-pos->y};
+		length=sqrt(sqr(dir.x)+sqr(dir.y));
+		float x;
+		float y;
+		x=gridToScreenX(b->destination.x,b->destination.y);
+		y=gridToScreenY(b->destination.x,b->destination.y);
+		x-=gridToScreenX(pos->x,pos->y);
+		y-=gridToScreenY(pos->x,pos->y);
 
-	float cos=x/sqrt(sqr(x)+sqr(y));
-	ang=acosf(cos);
-	ang=ang*180/M_PI;
-	if (y<0)
-		ang*=-1;
-
-	glRotatef(ang,0,0,1);
+		float cos=x/sqrt(sqr(x)+sqr(y));
+		ang=acosf(cos);
+		ang=ang*180/M_PI;
+		if (y<0)
+			ang*=-1;
+		
+		length*=0.5+0.5*cos;
+		
+		glRotatef(ang,0,0,1);
+	}
 	if (b->tex[b->current_tex].frames==0){
 		if (config.bullet_types[b->type].tex[b->current_tex].frames==0)
 			loadMTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);

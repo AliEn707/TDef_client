@@ -519,6 +519,10 @@ void loadTypes(char * filepath){
 			i++;
 			continue;
 		}
+		if (strcmp(buf,"solid")==0){
+			fscanf(file,"%hd\n",&config.bullet_types[i].solid);
+			continue;
+		}
 		if (strcmp(buf,"id")==0){
 			fscanf(file,"%d\n",&config.bullet_types[i].id);
 			continue;
@@ -621,11 +625,10 @@ void loadFiles(){
 	loadMap("test");
 	
 	////test
-	#define x1 4
-	#define y1 7
-	
-	#define x2 2
-	#define y2 2
+	#define x1 4 
+	#define y1 2 //9	
+	#define x2 7.5
+	#define y2 5.5
 	
 	config.map.npc_array[1].position.x=x1;
 	config.map.npc_array[1].position.y=y1;
@@ -644,8 +647,11 @@ void loadFiles(){
 	config.map.tower_array[0].position.y=2.5;
 	
 	config.map.bullet_array[0].id=-1;
+	config.map.bullet_array[0].type=1;
 	config.map.bullet_array[0].position.x=x1;
 	config.map.bullet_array[0].position.y=y1;
+	config.map.bullet_array[0].source.x=x1;
+	config.map.bullet_array[0].source.y=y1;
 	config.map.bullet_array[0].destination.x=x2;
 	config.map.bullet_array[0].destination.y=y2;
 	config.map.bullet_array[0].direction.x=x2-x1;

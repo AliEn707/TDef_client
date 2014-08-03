@@ -58,6 +58,7 @@ npc* getNpcId(int id){
 	for(i=0;i<config.map.npc_max;i++)
 		if (config.map.npc_array[i].id==0)
 			return &config.map.npc_array[i];
+	return 0;
 }
 
 tower* getTowerId(int id){
@@ -68,6 +69,7 @@ tower* getTowerId(int id){
 	for(i=0;i<config.map.tower_max;i++)
 		if (config.map.tower_array[i].id==0)
 			return &config.map.tower_array[i];
+	return 0;
 }
 
 bullet* getBulletId(int id){
@@ -78,6 +80,7 @@ bullet* getBulletId(int id){
 	for(i=0;i<config.map.bullet_max;i++)
 		if (config.map.bullet_array[i].id==0)
 			return &config.map.bullet_array[i];
+	return 0;
 }
 
 int recvNpcMap(){
@@ -85,8 +88,13 @@ int recvNpcMap(){
 	int id,bit_mask;
 	recvMap(id);
 	//find npc by id
-	n=getNpcId(id);
+	if ((n=getNpcId(id))==0){
+		perror("getNpcId recvNpcMap");
+		return 0;
+	}
 	recvMap(bit_mask);
+	if (id==0 && !checkMask(bit_mask,NPC_CREATE))
+		return 0;
 	if (checkMask(bit_mask,NPC_CREATE)){
 		recvMap(n->isfriend);
 		recvMap(n->type);
@@ -95,14 +103,18 @@ int recvNpcMap(){
 	}
 //	if (checkMask(bit_mask,NPC_POSITION)){
 	recvMap(n->destination);
-	if (checkMask(bit_mask,NPC_CREATE))
-		memcpy(&n->position,&n->destination,sizeof(vec2));
-	float length;
-	vec2 dir={n->destination.x-n->position.x,n->destination.y-n->position.y};
-	length=sqrt(sqr(dir.x)+sqr(dir.y));
-	dir.x/=5;
-	dir.y/=5;
-	memcpy(&n->direction,&dir,sizeof(vec2));
+	if (n->current_tex!=TEX_ATTACK &&
+			n->current_tex!=TEX_ATTACK_LEFT &&
+			n->current_tex!=TEX_ATTACK_RIGHT){
+		if (checkMask(bit_mask,NPC_CREATE))
+			memcpy(&n->position,&n->destination,sizeof(vec2));
+		vec2 dir={n->destination.x-n->position.x,n->destination.y-n->position.y};
+		dir.x/=5;
+		dir.y/=5;
+		memcpy(&n->direction,&dir,sizeof(vec2));
+		n->current_tex=getWalkTex(n->direction);
+		
+	}
 //	}
 	if(checkMask(bit_mask,NPC_HEALTH) || checkMask(bit_mask,NPC_CREATE))
 		recvMap(n->health);
@@ -117,14 +129,23 @@ int recvTowerMap(){
 	int id,bit_mask;
 	recvMap(id);
 	//find npc by id
-	t=getTowerId(id);
+	if((t=getTowerId(id))==0){
+		perror("getTowerId recvTowerMap");
+		return 0;
+	}
 	recvMap(bit_mask);
+	if (id==0 && !checkMask(bit_mask,TOWER_CREATE))
+		return 0;
 	if (checkMask(bit_mask,TOWER_CREATE)){
 		recvMap(t->type);
 		recvMap(t->owner);
 		int position;
 		recvMap(position);
 		//add
+		t->position.x=position/config.map.grid_size+0.5;
+		t->position.y=position%config.map.grid_size+0.5;
+		printf("tower on %g %g\n",t->position.x,t->position.y);
+		
 	}
 	if (checkMask(bit_mask,TOWER_TARGET) || checkMask(bit_mask,TOWER_CREATE))
 		recvMap(t->target);
@@ -140,15 +161,36 @@ int recvBulletMap(){
 	int id,bit_mask;
 	recvMap(id);
 	//find npc by id
-	b=getBulletId(id);
+	if((b=getBulletId(id))==0){
+		perror("getBulletId recvBulletMap");
+		return 0;
+	}
 	recvMap(bit_mask);
+	if (id==0 && !checkMask(bit_mask,BULLET_CREATE))
+		return 0;
+	recvMap(b->destination);
+	if (checkMask(bit_mask,BULLET_CREATE))
+		memcpy(&b->position,&b->destination,sizeof(vec2));
+//	printf("\t%g %g\n",b->position.x,b->position.y);
+	vec2 dir={b->destination.x-b->position.x,b->destination.y-b->position.y};
+	dir.x/=5;
+	dir.y/=5;
+	memcpy(&b->direction,&dir,sizeof(vec2));
 	if (checkMask(bit_mask,BULLET_CREATE)){
+		npc* n;
 		recvMap(b->type);
 		recvMap(b->owner);
+	
+		n=getNpcId(b->owner);
+		n->current_tex=TEX_ATTACK;
+		vec2 dir={b->position.x-n->position.x,b->position.y-n->position.y};
+		dir.x/=5;
+		dir.y/=5;
+		memcpy(&n->direction,&dir,sizeof(vec2));
+	
 		recvMap(b->source);
+//		recvMap(b->destination);
 	}
-	if (checkMask(bit_mask,BULLET_POSITION) || checkMask(bit_mask,BULLET_CREATE))
-		recvMap(b->position);
 	if(checkMask(bit_mask,BULLET_DETONATE))
 		recvMap(b->detonate);
 	if (b->id==0)
