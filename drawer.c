@@ -7,9 +7,13 @@ int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
 		t->current_frame+=Df;
 	if (t->current_frame>=t->frames){
-		if (t->loop==0)
+		if (t->loop==0){
 			t->current_frame=t->frames-1;
-		else
+			if (t->lf_delay_counter<=t->lf_delay){
+				t->lf_delay_counter++;
+				return 0;
+			}
+		}else
 			t->current_frame=0;
 		return 1;
 	}		
@@ -316,6 +320,7 @@ void drawBullet(bullet* b){
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
 	glTranslatef(0,0.2,0.01);
+	float x;
 	
 	if (b->destination.x==pos->x && b->destination.y==pos->y)
 		pos=&b->source;
@@ -323,7 +328,7 @@ void drawBullet(bullet* b){
 		float ang;
 		vec2 dir={b->destination.x-pos->x,b->destination.y-pos->y};
 		length=sqrt(sqr(dir.x)+sqr(dir.y));
-		float x;
+		
 		float y;
 		x=gridToScreenX(b->destination.x,b->destination.y);
 		y=gridToScreenY(b->destination.x,b->destination.y);
@@ -336,7 +341,7 @@ void drawBullet(bullet* b){
 		if (y<0)
 			ang*=-1;
 		
-		length*=0.5+0.5*cos;
+		length*=0.5+0.5*fabs(cos);
 		
 		glRotatef(ang,0,0,1);
 	}
@@ -345,27 +350,40 @@ void drawBullet(bullet* b){
 			loadMTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);
 		memcpy(&b->tex[b->current_tex],&config.bullet_types[b->type].tex[b->current_tex],sizeof(texture));
 	}
+	float tx1,ty1,tx2,ty2,vx;
+	if (config.bullet_types[b->type].solid==0){
+		tx1=0;
+		ty1=0;
+		tx2=1;
+		ty2=1;
+		vx=0.4;
+	}else{
+		tx1=0;
+		ty1=0;
+		tx2=length/0.8;
+		ty2=1;
+		vx=length;
+	}
+	if (x<0){
+		x=ty1;
+		ty1=ty2;
+		ty2=x;
+	}
 	setTexture(&b->tex[b->current_tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
-			glTexCoord2f (0.0f, 0.0f);
+			glTexCoord2f (tx1, ty1);
 			glVertex2f(0.0f,-0.1f);
-			glTexCoord2f (1.0f, 0.0f);
+			glTexCoord2f (tx1, ty2);
 			glVertex2f(0.0f,0.1f);
-			if (config.bullet_types[b->type].solid!=0){ 
-				glTexCoord2f (1.0f, length/0.8);
-				glVertex2f(length,0.1f);
-				glTexCoord2f (0.0f, length/0.8);
-				glVertex2f(length,-0.1f);
-				//texture 1:4
-			}else{
-				glTexCoord2f (1.0f, 1.0f);
-				glVertex2f(0.4,0.1f);
-				glTexCoord2f (0.0f, 1.0f);
-				glVertex2f(0.4,-0.1f);
-				//texture 1:2
-			}
+			glTexCoord2f (tx2, ty2);
+			glVertex2f(vx,0.1f);
+			glTexCoord2f (tx2, ty1);
+			glVertex2f(vx,-0.1f);
+			//texture 1:2
+			//texture solid 1:4
+			
 		glEnd();
 		
 	glPopMatrix();

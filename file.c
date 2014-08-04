@@ -575,6 +575,8 @@ int loadTex(texture * t, char * path, int(load)(char * path)){
 				fscanf(file,"%d\n",&t->frames);
 			if (strcmp(buf,"loop")==0)
 				fscanf(file,"%hd\n",&t->loop);
+			if (strcmp(buf,"lfdelay")==0)
+				fscanf(file,"%hd\n",&t->lf_delay);
 			//another stuff
 		}
 		for(i=0;i<t->frames;i++){

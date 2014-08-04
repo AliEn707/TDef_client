@@ -93,6 +93,8 @@ struct texture{
 	int tex[TEXTURE_FRAMES];
 	int frames;
 	short loop;
+	short lf_delay;
+	short lf_delay_counter;
 	float current_frame;
 } texture;
 
