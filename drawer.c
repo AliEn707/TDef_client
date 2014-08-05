@@ -13,6 +13,7 @@ int textureFrameNext(texture *t){
 				t->lf_delay_counter++;
 				return 0;
 			}
+				
 		}else
 			t->current_frame=0;
 		return 1;
@@ -245,6 +246,8 @@ void drawNpc(npc* n){
 		}
 		if(setTexture(&n->tex[n->current_tex]))
 			n->anim_ended=1;
+//		else
+//			n->anim_ended=0;
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
@@ -369,7 +372,10 @@ void drawBullet(bullet* b){
 		ty1=ty2;
 		ty2=x;
 	}
-	setTexture(&b->tex[b->current_tex]);
+	if (setTexture(&b->tex[b->current_tex]))
+		b->anim_ended=1;
+//	else
+//		b->anim_ended=0;
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);

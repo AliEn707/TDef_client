@@ -76,6 +76,9 @@ int workerMap(void *ptr){
 				if (config.map.npc_array[i].current_tex==TEX_ATTACK){
 //					printf("attack");
 					config.map.npc_array[i].current_tex=getAttackTex(config.map.npc_array[i].direction);
+					config.map.npc_array[i].tex[config.map.npc_array[i].current_tex].current_frame=0;
+					config.map.npc_array[i].tex[config.map.npc_array[i].current_tex].lf_delay_counter=0;
+					config.map.npc_array[i].anim_ended=0;
 					memset(&config.map.npc_array[i].direction,0,sizeof(vec2));
 					continue;
 				}
@@ -108,7 +111,8 @@ int workerMap(void *ptr){
 		//tower
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0){
-				if (config.map.tower_array[i].health<=0){
+				if (config.map.tower_array[i].health<=0 && 
+						config.map.tower_array[i].anim_ended!=0){
 					config.map.tower_array[i].id=0;
 					memset(&config.map.tower_array[i],0,sizeof(tower));
 					//change to set animation
@@ -119,7 +123,8 @@ int workerMap(void *ptr){
 			if(config.map.bullet_array[i].id!=0){
 				config.map.bullet_array[i].position.x+=config.map.bullet_array[i].direction.x;
 				config.map.bullet_array[i].position.y+=config.map.bullet_array[i].direction.y;
-				if (config.map.bullet_array[i].detonate!=0){
+				if (config.map.bullet_array[i].detonate!=0 && 
+						config.map.bullet_array[i].anim_ended!=0){
 					config.map.bullet_array[i].id=0;
 					memset(&config.map.bullet_array[i],0,sizeof(bullet));
 				}

@@ -169,7 +169,6 @@ struct bullet_type{
 typedef
 struct tower{
 	int id;
-	int bit_mask;
 	vec2 position;
 	short target;
 	int type;
@@ -180,6 +179,7 @@ struct tower{
 	
 	int current_tex;
 	texture tex[TEXTURES];
+	short anim_ended;
 	color3 color;
 }tower;
 
@@ -211,11 +211,12 @@ struct bullet{
 	char isfriend;
 	char support;
 	int type;
-	int detonate;
+	char detonate;
 	int owner;
 	
 	int current_tex;
 	texture tex[TEXTURES];
+	short anim_ended;
 }bullet;
 
 /////////////

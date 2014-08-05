@@ -111,7 +111,6 @@ int recvNpcMap(){
 		dir.y/=5;
 		memcpy(&n->direction,&dir,sizeof(vec2));
 		n->current_tex=getWalkTex(n->direction);
-		
 	}
 //	}
 	if(checkMask(bit_mask,NPC_HEALTH) || checkMask(bit_mask,NPC_CREATE))
@@ -208,6 +207,6 @@ int recvMesMap(){
 	if (mes==MSG_BULLET){
 		return recvBulletMap();
 	}
-	
+	printf("unnown message\n");
 	return 0;
 }

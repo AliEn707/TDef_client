@@ -434,6 +434,12 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"texwalkright")==0){
 			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT]);
 		}
+		if (strcmp(buf,"texattackleft")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_LEFT]);
+		}
+		if (strcmp(buf,"texattackright")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT]);
+		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			i++;
