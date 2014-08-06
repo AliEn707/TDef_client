@@ -147,6 +147,12 @@ float screenToGridY(float x, float y){
 #undef sx
 #undef sy
 
+void setActionMenu(){
+	config.map.action_menu.enable=1;
+	
+}
+//
+
 void actionShowWalkMap(void * arg){
 	config.map.show_walk=config.map.show_walk==1?0:1;
 }

@@ -19,6 +19,8 @@ float screenToGridX(float x, float y);
 
 float screenToGridY(float x, float y);
 
+void setActionMenu();
+
 //actions
 
 void actionShowWalkMap(void * arg);

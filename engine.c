@@ -36,9 +36,17 @@ void tickSync(unsigned int *time){
 
 
 void processNodeAction(){
-	if(config.menu.selected==0)
-		if (config.map.focus>=0)
-			printf("action on %d node\n",config.map.focus);
+	if(config.menu.selected==0){
+		if (config.map.focus>=0){
+			printf("action on %d node (tower %d)\n",
+								config.map.focus,
+								config.map.grid[config.map.focus].tower_id);
+			setActionMenu();
+			return;
+			
+		}
+		config.map.action_menu.enable=0;
+	}
 }
 
 void processObjectAction(int type,int key){

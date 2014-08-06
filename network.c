@@ -137,6 +137,7 @@ int recvTowerMap(){
 		int position;
 		recvMap(position);
 		//add
+		config.map.grid[position].tower_id=id;
 		t->position.x=position/config.map.grid_size+0.5;
 		t->position.y=position%config.map.grid_size+0.5;
 		printf("tower on %g %g\n",t->position.x,t->position.y);

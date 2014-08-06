@@ -431,7 +431,8 @@ void drawScene(){
 		drawMenu(&config.menu.root);
 	}else{
 		drawMenu(&config.map.screen_menu);
-		drawMenu(&config.map.action_menu);
+		if (config.map.action_menu.enable!=0)
+			drawMenu(&config.map.action_menu);
 	}
 	//must be the last
 	drawCursor(); 

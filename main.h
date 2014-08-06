@@ -257,6 +257,7 @@ struct object{
 
 typedef
 struct menu{
+	char enable;
 	int objects_size;
 	int submenu_size;
 	object * objects;
@@ -309,9 +310,11 @@ struct map_conf{
 	gnode * grid_out[4]; //non working map zone 
 	texture tex[MAP_COMON_TEXTURES_MAX];
 	g_params transform;
+	
 	menu screen_menu;
 	menu action_menu;
 	menu npc_menu;
+	
 	int tower_max;
 	tower * tower_array;
 	int npc_max;
@@ -381,6 +384,7 @@ struct g_config{
 
 
 
+#define posToId(v) (config.map.grid_size*((int)v.x)+((int)v.y))
 #define cursor config.global.cursor
 
 

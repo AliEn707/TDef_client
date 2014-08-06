@@ -114,6 +114,7 @@ int workerMap(void *ptr){
 				if (config.map.tower_array[i].health<=0 && 
 						config.map.tower_array[i].anim_ended!=0){
 					config.map.tower_array[i].id=0;
+					config.map.grid[posToId(config.map.tower_array[i].position)].tower_id=0;
 					memset(&config.map.tower_array[i],0,sizeof(tower));
 					//change to set animation
 				}
