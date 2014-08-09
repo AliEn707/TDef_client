@@ -337,8 +337,10 @@ void drawBullet(bullet* b){
 		y=gridToScreenY(b->destination.x,b->destination.y);
 		x-=gridToScreenX(pos->x,pos->y);
 		y-=gridToScreenY(pos->x,pos->y);
-
-		float cos=x/sqrt(sqr(x)+sqr(y));
+		
+		float length=sqrt(sqr(x)+sqr(y));
+		float cos=x/length;
+		
 		ang=acosf(cos);
 		ang=ang*180/M_PI;
 		if (y<0)
