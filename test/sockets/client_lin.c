@@ -18,8 +18,9 @@ int main()
     }
 
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(3425); // или любой другой порт...
-    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    addr.sin_port = htons(32056); // или любой другой порт...
+ //   addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    addr.sin_addr.s_addr = inet_addr("31.220.49.37");
     if(connect(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0)
     {
         perror("connect");

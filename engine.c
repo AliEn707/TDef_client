@@ -225,7 +225,8 @@ int checkMouseState(){
 	else
 		if (config.map.enable!=0){
 			checkMouseMap();
-			if(checkMouseMenu(&config.map.screen_menu)==0)
+			checkMouseMenu(&config.map.screen_menu);
+			if (config.map.action_menu.enable!=0)
 				checkMouseMenu(&config.map.action_menu);
 		}
 //			if (config.menu.selected!=0)
