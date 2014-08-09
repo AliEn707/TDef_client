@@ -340,6 +340,13 @@ struct public_conf{
 	netw network;
 }public_conf;
 
+typedef
+struct {
+	short enable;
+	short pos;
+	char text[200];
+	char ** text_edit;
+} text_puts;
 
 typedef
 struct g_config{
@@ -355,6 +362,11 @@ struct g_config{
 	menu_conf menu;
 	map_conf map;
 	public_conf public;
+	
+	text_puts text;
+	
+	short auth;
+	menu auth_menu;
 	
 	int textures_size;
 	int textures[MAX_TEXTURES];

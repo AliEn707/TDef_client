@@ -64,50 +64,83 @@ void processObjectAction(int type,int key){
 }
 
 void processEvent(SDL_Event event){
-	switch(event.type){
-		case SDL_QUIT: 
-			config.main_running = 0;
-			break;
-		case SDL_KEYDOWN:
-			config.global.keys[event.key.keysym.sym]=1;
+	if (config.text.enable!=0){
+		switch (event.type)
+               {
+                   case SDL_TEXTINPUT:
+                       /* Add new text onto the end of our text */
+		   printf("get %s\n",event.text.text);
+//                       strcat(text, event.text.text);
+                       break;
+                   case SDL_TEXTEDITING:
+                       /*
+                       Update the composition text.
+                       Update the cursor position.
+                       Update the selection length (if any).
+                       */
+		    printf("get2 %s\n",event.edit.text);
+// 	                    composition = event.edit.text;
+//			cursor = event.edit.start;
+//			selection_len = event.edit.length;
+                       break;
+		   case SDL_KEYDOWN:
 			switch(event.key.keysym.sym){ 
 				case SDLK_ESCAPE: 
-					config.main_running = 0; 
+					config.text.enable=0; 
+					SDL_StopTextInput();
 					break;
-				case SDLK_m:
-					actionToggleMenu(0);
+				case SDLK_RETURN:
+					config.text.enable=0; 
+					SDL_StopTextInput();
 					break;
 			}
-			if (config.menu.enable!=0)
-				processKeysMenu(event);
-			else
-				if (config.map.enable!=0)
-					processKeysMap(event);
-			break;
-		case SDL_KEYUP:
-			config.global.keys[event.key.keysym.sym]=0;
-			break;
-		case SDL_MOUSEMOTION:
-//			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
-			if (event.motion.xrel!=0||event.motion.yrel!=0){
-				cursor.state.x=event.motion.x;
-				cursor.state.y=config.window_height-event.motion.y;
-			}
-			//cursorMove(event.motion.xrel,-event.motion.yrel);
-			checkCursorBorder();
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			config.global.mouse[event.button.button]=1;
-			if (config.menu.enable!=0)
-				processMouseMenu(event);
-			else
-				if (config.map.enable!=0)
-					processMouseMap(event);
-			break;
-		case SDL_MOUSEBUTTONUP:
-			config.global.mouse[event.button.button]=0;
-			break;
+               }
 	}
+	
+		switch(event.type){
+			case SDL_QUIT: 
+				config.main_running = 0;
+				break;
+			case SDL_KEYDOWN:
+				config.global.keys[event.key.keysym.sym]=1;
+				switch(event.key.keysym.sym){ 
+					case SDLK_ESCAPE: 
+						config.main_running = 0; 
+						break;
+					case SDLK_m:
+						actionToggleMenu(0);
+						break;
+				}
+				if (config.menu.enable!=0)
+					processKeysMenu(event);
+				else
+					if (config.map.enable!=0)
+						processKeysMap(event);
+				break;
+			case SDL_KEYUP:
+				config.global.keys[event.key.keysym.sym]=0;
+				break;
+			case SDL_MOUSEMOTION:
+	//			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
+				if (event.motion.xrel!=0||event.motion.yrel!=0){
+					cursor.state.x=event.motion.x;
+					cursor.state.y=config.window_height-event.motion.y;
+				}
+				//cursorMove(event.motion.xrel,-event.motion.yrel);
+				checkCursorBorder();
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				config.global.mouse[event.button.button]=1;
+				if (config.menu.enable!=0)
+					processMouseMenu(event);
+				else
+					if (config.map.enable!=0)
+						processMouseMap(event);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				config.global.mouse[event.button.button]=0;
+				break;
+		}
 }
 
 void processKeyboard(){
@@ -183,6 +216,10 @@ void mouseMotion(){
 
 int checkMouseState(){
 //	mouseMotion();
+	if (config.auth==0){
+		checkMouseMenu(&config.auth_menu);
+		return 0;
+	}
 	if (config.menu.enable!=0)
 		checkMouseMenu(&config.menu.root);
 	else

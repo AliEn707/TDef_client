@@ -12,3 +12,7 @@ void actionTestMenu(void * arg); //test
 void actionToggleMenu(void * arg); //toggle
 
 void actionExit(void * arg); //toggle
+
+void actionAuth(void * arg);
+
+void actionTextTest(void * arg);

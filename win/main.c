@@ -42,9 +42,7 @@ int main(int argc, char *argv[]){
 	config.main_running=1;
 	
 	networkInit();
-	config.map.enable=1;
-	if (networkConnMap("localhost",3333)!=0)
-		config.map.worker=workerMapStart();
+	
 	
 	while(config.main_running){ 
 		frameSync(&time);

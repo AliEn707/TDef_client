@@ -100,6 +100,10 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionExit;
 						if(strcmp(buf,"test")==0)
 							m->objects[i].action=actionTestMenu;
+						if(strcmp(buf,"auth")==0)
+							m->objects[i].action=actionAuth;
+						if(strcmp(buf,"texttest")==0)
+							m->objects[i].action=actionTextTest;
 						continue;
 					}
 					//something else
@@ -625,6 +629,7 @@ void loadFiles(){
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	
 	loadMenu(&config.menu.root,"../data/menu.cfg");
+	loadMenu(&config.auth_menu,"../data/authmenu.cfg");
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
@@ -680,6 +685,7 @@ void cleanMap(){
 
 void cleanAll(){
 	realizeMenu(&config.menu.root);
+	realizeMenu(&config.auth_menu);
 	realizeMenu(&config.map.screen_menu);
 	realizeMenu(&config.map.action_menu);
 	

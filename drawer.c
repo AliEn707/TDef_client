@@ -407,6 +407,10 @@ void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 //	glEnable(GL_DEPTH_TEST);
+	if (config.auth==0){
+		drawMenu(&config.auth_menu);
+		goto out;
+	}
 	glPushMatrix();
 		globalTransform();
 		glDisable(GL_DEPTH_TEST);
@@ -434,6 +438,7 @@ void drawScene(){
 		if (config.map.action_menu.enable!=0)
 			drawMenu(&config.map.action_menu);
 	}
+out:
 	//must be the last
 	drawCursor(); 
 }

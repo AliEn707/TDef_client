@@ -1,9 +1,12 @@
 #include "main.h"
 #include "menu.h"
 #include "engine.h"
-
+#include "network.h"
+#include "worker.h"
 
 int checkMouseMenu(menu* root){
+	if (root==0)
+		return 0;
 	menu* m=0;
 	m=root;
 	int i;
@@ -52,3 +55,23 @@ void actionToggleMenu(void * arg){
 void actionExit(void * arg){
 	config.main_running=0;
 }
+
+void actionAuth(void * arg){
+	config.auth++;
+	config.map.enable=1;
+	if (networkConnMap("localhost",3333)!=0)
+		config.map.worker=workerMapStart();
+}
+
+void actionTextTest(void * arg){
+	config.text.enable=1;
+	SDL_StartTextInput();
+}
+
+void actionTextStart(void * arg){
+	config.text.enable=1;
+	config.text.text[0]=0;
+	config.text.pos=strlen(config.text.text);
+	SDL_StartTextInput();
+}
+
