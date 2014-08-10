@@ -179,8 +179,8 @@ int recvBulletMap(){
 		if (n->id!=0){
 			n->current_tex=TEX_ATTACK;
 			vec2 dir={b->position.x-n->position.x,b->position.y-n->position.y};
-			dir.x/=5;
-			dir.y/=5;
+			dir.x/=7;
+			dir.y/=7;
 			memcpy(&n->direction,&dir,sizeof(vec2));
 		}
 		recvMap(b->source);

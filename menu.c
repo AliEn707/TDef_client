@@ -63,6 +63,12 @@ void actionAuth(void * arg){
 		config.map.worker=workerMapStart();
 }
 
+void actionMapStart(void * arg){
+	loadMap("test");
+	if (networkConnMap("localhost",3333)!=0)
+		config.map.worker=workerMapStart();
+}
+
 void actionTextTest(void * arg){
 	config.text.enable=1;
 	SDL_StartTextInput();

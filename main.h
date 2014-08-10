@@ -95,7 +95,10 @@ struct texture{
 	short loop;
 	short lf_delay;
 	short lf_delay_counter;
+	short fd_delay;
+	short fd_delay_counter;
 	float current_frame;
+	
 } texture;
 
 

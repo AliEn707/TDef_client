@@ -43,6 +43,11 @@ int setTexture(texture * t){
 		glDisable(GL_TEXTURE_2D);
 		return;
 	}
+	if (t->fd_delay_counter<t->fd_delay){
+		t->fd_delay_counter++;
+		glColor4f(0,0,0,0);
+		return 0;
+	}
 	//add some stuff
 	glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
 	glEnable(GL_TEXTURE_2D);
@@ -337,6 +342,13 @@ void drawBullet(bullet* b){
 		y=gridToScreenY(b->destination.x,b->destination.y);
 		x-=gridToScreenX(pos->x,pos->y);
 		y-=gridToScreenY(pos->x,pos->y);
+//		printf("%g %g| %g %g\n",dir.x,b->direction.x,dir.y,b->direction.y);
+		if (sign(b->direction.x)!=sign(dir.x))
+			goto drawBulletExit;
+//			x*=-1;
+		if (sign(b->direction.y)!=sign(dir.y))
+			goto drawBulletExit;
+//			y*=-1;
 		
 		float length=sqrt(sqr(x)+sqr(y));
 		float cos=x/length;
@@ -374,11 +386,12 @@ void drawBullet(bullet* b){
 		ty1=ty2;
 		ty2=x;
 	}
-	if (setTexture(&b->tex[b->current_tex]))
-		b->anim_ended=1;
+	
 //	else
 //		b->anim_ended=0;
 		glColor4f(1,1,1,1);
+		if (setTexture(&b->tex[b->current_tex]))
+			b->anim_ended=1;
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
 			glTexCoord2f (tx1, ty1);
@@ -393,7 +406,7 @@ void drawBullet(bullet* b){
 			//texture solid 1:4
 			
 		glEnd();
-		
+drawBulletExit:		
 	glPopMatrix();
 }
 
