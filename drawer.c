@@ -243,7 +243,7 @@ void drawNpc(npc* n){
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
 //	printf("n->type - %d\n",n->type);
-	glScalef(0.8,0.8,1);
+	glScalef(0.9,0.9,1);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				loadMTexture(&config.npc_types[n->type].tex[n->current_tex],config.npc_types[n->type].tex_path[n->current_tex]);
@@ -268,7 +268,7 @@ void drawNpc(npc* n){
 		//draw health
 		float health=1.0*n->health/config.npc_types[n->type].health;
 		if (health<0.95)
-			drawHealth((vec2){-0.4,0.8},(vec2){0.8,0.07},health);
+			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
 	glPopMatrix();
 }
 
@@ -283,6 +283,7 @@ void drawTower(tower* t){
 	glPushMatrix();
 	glTranslatef(t->position.x,t->position.y,0);
 	backTransform();
+	glScalef(1.2,1.2,1);
 	glTranslatef(0,0.2,0);
 	if (t->tex[t->current_tex].frames==0){
 		if (config.tower_types[t->type].tex[t->current_tex].frames==0)

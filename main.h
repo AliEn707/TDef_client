@@ -10,7 +10,7 @@
 // screen frames per texture frames
 #define FpF 5
 //write to config
-#define Df 0.27f
+#define Df 0.26f
 
 #define MAX_TEXTURES 10000
 //texture global
