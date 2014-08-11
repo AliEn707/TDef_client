@@ -26,10 +26,14 @@ int getWalkTex(vec2 v){
 	float ang=dirToAngle(v);
 	float p8=M_PI/8;
 	//need to correct
-	if (ang>14*p8 || ang<=6*p8)
+	if (ang>0 && ang<=4*p8)
 		return TEX_WALK_RIGHT;
-	if (ang>6*p8 && ang<=14*p8)
+	if (ang>4*p8 && ang<=8*p8)
+		return TEX_WALK_UP;
+	if (ang>8*p8 && ang<=12*p8)
 		return TEX_WALK_LEFT;
+	if (ang>12*p8)
+		return TEX_WALK_DOWN;
 	return 0;
 }
 
@@ -102,7 +106,9 @@ int workerMap(void *ptr){
 					memset(&config.map.npc_array[i],0,sizeof(npc));					
 				}
 				if (config.map.npc_array[i].current_tex==TEX_WALK_LEFT || 
-						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT  ){
+						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT ||
+						config.map.npc_array[i].current_tex==TEX_WALK_UP ||
+						config.map.npc_array[i].current_tex==TEX_WALK_DOWN){
 //				config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
 				config.map.npc_array[i].position.x+=config.map.npc_array[i].direction.x;
 				config.map.npc_array[i].position.y+=config.map.npc_array[i].direction.y;

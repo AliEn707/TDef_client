@@ -10,7 +10,7 @@
 // screen frames per texture frames
 #define FpF 5
 //write to config
-#define Df 0.29f
+#define Df 0.27f
 
 #define MAX_TEXTURES 10000
 //texture global
@@ -36,10 +36,16 @@
 #define TEX_IDLE 0
 #define TEX_DESTROY 1
 #define TEX_WALK_LEFT 2
-#define TEX_WALK_RIGHT 3
-#define TEX_ATTACK 4
-#define TEX_ATTACK_LEFT 5
-#define TEX_ATTACK_RIGHT 6
+#define TEX_WALK_UP 3
+#define TEX_WALK_DOWN 4
+#define TEX_WALK_RIGHT 5
+#define TEX_WALK_RIGHT_UP 5
+#define TEX_WALK_RIGHT_DOWN 6
+#define TEX_WALK_LEFT_UP 7
+#define TEX_WALK_LEFT_DOWN 8
+#define TEX_ATTACK 9
+#define TEX_ATTACK_LEFT 10
+#define TEX_ATTACK_RIGHT 11
 
 //bit mask
 #define setMask(z,x) z->bit_mask|=x

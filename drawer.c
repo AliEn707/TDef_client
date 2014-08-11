@@ -268,7 +268,7 @@ void drawNpc(npc* n){
 		//draw health
 		float health=1.0*n->health/config.npc_types[n->type].health;
 		if (health<0.95)
-			drawHealth((vec2){-0.5,1.0},(vec2){1.0,0.09},health);
+			drawHealth((vec2){-0.4,0.8},(vec2){0.8,0.07},health);
 	glPopMatrix();
 }
 
@@ -373,11 +373,11 @@ void drawBullet(bullet* b){
 		ty1=0;
 		tx2=1;
 		ty2=1;
-		vx=0.4;
+		vx=0.32;
 	}else{
 		tx1=0;
 		ty1=0;
-		tx2=length/0.8;
+		tx2=length/0.64;
 		ty2=1;
 		vx=length;
 	}
@@ -395,13 +395,13 @@ void drawBullet(bullet* b){
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
 			glTexCoord2f (tx1, ty1);
-			glVertex2f(0.0f,-0.1f);
+			glVertex2f(0.0f,-0.08f);
 			glTexCoord2f (tx1, ty2);
-			glVertex2f(0.0f,0.1f);
+			glVertex2f(0.0f,0.08f);
 			glTexCoord2f (tx2, ty2);
-			glVertex2f(vx,0.1f);
+			glVertex2f(vx,0.08f);
 			glTexCoord2f (tx2, ty1);
-			glVertex2f(vx,-0.1f);
+			glVertex2f(vx,-0.08f);
 			//texture 1:2
 			//texture solid 1:4
 			
