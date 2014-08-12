@@ -255,15 +255,16 @@ void drawNpc(npc* n){
 //			n->anim_ended=0;
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
-		glBegin(GL_QUADS);
+//		glBegin(GL_QUADS);
+		glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f (0.0f, 0.0f);
 			glVertex2f(-0.5f,0.0f);
 			glTexCoord2f (1.0f, 0.0f);
 			glVertex2f(0.5f,0.0f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(0.5f,1.0f);
 			glTexCoord2f (0.0f, 1.0f);
 			glVertex2f(-0.5f,1.0f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(0.5f,1.0f);
 		glEnd();
 		//draw health
 		float health=1.0*n->health/config.npc_types[n->type].health;
@@ -333,7 +334,8 @@ void drawBullet(bullet* b){
 	
 	if (b->destination.x==pos->x && b->destination.y==pos->y)
 		pos=&b->source;
-	else{
+//	else
+	{
 		float ang;
 		vec2 dir={b->destination.x-pos->x,b->destination.y-pos->y};
 		length=sqrt(sqr(dir.x)+sqr(dir.y));

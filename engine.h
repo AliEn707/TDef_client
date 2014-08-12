@@ -1,6 +1,13 @@
 
 int sign(float x);
 
+//
+npc* getNpcById(int id);
+
+tower* getTowerById(int id);
+
+bullet* getBulletById(int id);
+//
 float dirToAngle(vec2 v);
 
 void processNodeAction();

@@ -97,8 +97,10 @@ int workerMap(void *ptr){
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0){
 				///////////////////////////
-				if (config.map.npc_array[i].current_tex==TEX_ATTACK){
+//				if (config.map.npc_array[i].current_tex==TEX_ATTACK){
+				if (config.map.npc_array[i].attack_prepare!=0){
 //					printf("attack");
+					config.map.npc_array[i].attack_prepare=0;
 					config.map.npc_array[i].current_tex=getAttackTex(config.map.npc_array[i].direction);
 					config.map.npc_array[i].tex[config.map.npc_array[i].current_tex].current_frame=0;
 					config.map.npc_array[i].tex[config.map.npc_array[i].current_tex].lf_delay_counter=0;
@@ -106,8 +108,7 @@ int workerMap(void *ptr){
 					memset(&config.map.npc_array[i].direction,0,sizeof(vec2));
 					continue;
 				}
-				if ((config.map.npc_array[i].current_tex==TEX_ATTACK_LEFT ||
-						config.map.npc_array[i].current_tex==TEX_ATTACK_RIGHT) &&
+				if (checkNpcTexAttack(config.map.npc_array[i].current_tex) &&
 						config.map.npc_array[i].anim_ended!=0){
 					config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
 					continue;
@@ -115,6 +116,7 @@ int workerMap(void *ptr){
 				if (config.map.npc_array[i].health<=0 &&
 						config.map.npc_array[i].current_tex!=TEX_DESTROY){
 					config.map.npc_array[i].anim_ended=0;
+					
 					config.map.npc_array[i].id=0; 
 					memset(&config.map.npc_array[i],0,sizeof(npc));
 //					config.map.npc_array[i].current_tex=TEX_DESTROY; 
@@ -125,17 +127,10 @@ int workerMap(void *ptr){
 					config.map.npc_array[i].id=0; 
 					memset(&config.map.npc_array[i],0,sizeof(npc));					
 				}
-				if (config.map.npc_array[i].current_tex==TEX_WALK_LEFT || 
-						config.map.npc_array[i].current_tex==TEX_WALK_LEFT_UP ||
-						config.map.npc_array[i].current_tex==TEX_WALK_LEFT_DOWN ||
-						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT ||
-						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT_UP ||
-						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT_DOWN ||
-						config.map.npc_array[i].current_tex==TEX_WALK_UP ||
-						config.map.npc_array[i].current_tex==TEX_WALK_DOWN){
-//				config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
-				config.map.npc_array[i].position.x+=config.map.npc_array[i].direction.x;
-				config.map.npc_array[i].position.y+=config.map.npc_array[i].direction.y;
+				if (checkNpcTexWalk(config.map.npc_array[i].current_tex)){
+//					config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
+					config.map.npc_array[i].position.x+=config.map.npc_array[i].direction.x;
+					config.map.npc_array[i].position.y+=config.map.npc_array[i].direction.y;
 				}
 			}
 		//tower

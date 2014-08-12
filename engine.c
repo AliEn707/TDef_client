@@ -12,6 +12,42 @@ int sign(float x){
 	return 0;
 }
 
+
+npc* getNpcById(int id){
+	int i;
+	for(i=0;i<config.map.npc_max;i++)
+		if (config.map.npc_array[i].id==id)
+			return &config.map.npc_array[i];
+	for(i=0;i<config.map.npc_max;i++)
+		if (config.map.npc_array[i].id==0)
+			return &config.map.npc_array[i];
+	return 0;
+}
+
+tower* getTowerById(int id){
+	int i;
+	for(i=0;i<config.map.tower_max;i++)
+		if (config.map.tower_array[i].id==id)
+			return &config.map.tower_array[i];
+	for(i=0;i<config.map.tower_max;i++)
+		if (config.map.tower_array[i].id==0)
+			return &config.map.tower_array[i];
+	return 0;
+}
+
+bullet* getBulletById(int id){
+	int i;
+	for(i=0;i<config.map.bullet_max;i++)
+		if (config.map.bullet_array[i].id==id)
+			return &config.map.bullet_array[i];
+	for(i=0;i<config.map.bullet_max;i++)
+		if (config.map.bullet_array[i].id==0)
+			return &config.map.bullet_array[i];
+	return 0;
+}
+
+
+
 void frameSync(unsigned int *time){
 	if (*time==0){
 		*time=SDL_GetTicks();//timeGetTime();

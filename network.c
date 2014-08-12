@@ -2,6 +2,7 @@
 
 #include "main.h"
 #include "network.h"
+#include "engine.h"
 
 #define checkMask(x,y) x&y
 
@@ -49,46 +50,12 @@ TCPsocket networkConnMap(char * addr,int port){
 }
 
 
-
-npc* getNpcId(int id){
-	int i;
-	for(i=0;i<config.map.npc_max;i++)
-		if (config.map.npc_array[i].id==id)
-			return &config.map.npc_array[i];
-	for(i=0;i<config.map.npc_max;i++)
-		if (config.map.npc_array[i].id==0)
-			return &config.map.npc_array[i];
-	return 0;
-}
-
-tower* getTowerId(int id){
-	int i;
-	for(i=0;i<config.map.tower_max;i++)
-		if (config.map.tower_array[i].id==id)
-			return &config.map.tower_array[i];
-	for(i=0;i<config.map.tower_max;i++)
-		if (config.map.tower_array[i].id==0)
-			return &config.map.tower_array[i];
-	return 0;
-}
-
-bullet* getBulletId(int id){
-	int i;
-	for(i=0;i<config.map.bullet_max;i++)
-		if (config.map.bullet_array[i].id==id)
-			return &config.map.bullet_array[i];
-	for(i=0;i<config.map.bullet_max;i++)
-		if (config.map.bullet_array[i].id==0)
-			return &config.map.bullet_array[i];
-	return 0;
-}
-
 int recvNpcMap(){
 	npc * n;
 	int id,bit_mask;
 	recvMap(id);
 	//find npc by id
-	if ((n=getNpcId(id))==0){
+	if ((n=getNpcById(id))==0){
 		perror("getNpcId recvNpcMap");
 		return 0;
 	}
@@ -101,14 +68,12 @@ int recvNpcMap(){
 	}
 //	if (checkMask(bit_mask,NPC_POSITION)){
 	recvMap(n->destination);
-	if (n->current_tex!=TEX_ATTACK &&
-			n->current_tex!=TEX_ATTACK_LEFT &&
-			n->current_tex!=TEX_ATTACK_RIGHT){
+	if (!checkNpcTexAttack(n->current_tex)){
 		if (checkMask(bit_mask,NPC_CREATE))
 			memcpy(&n->position,&n->destination,sizeof(vec2));
 		vec2 dir={n->destination.x-n->position.x,n->destination.y-n->position.y};
-		dir.x/=5;
-		dir.y/=5;
+		dir.x/=5.0f;
+		dir.y/=5.0f;
 		memcpy(&n->direction,&dir,sizeof(vec2));
 		n->current_tex=getWalkTex(n->direction);
 	}
@@ -126,7 +91,7 @@ int recvTowerMap(){
 	int id,bit_mask;
 	recvMap(id);
 	//find npc by id
-	if((t=getTowerId(id))==0){
+	if((t=getTowerById(id))==0){
 		perror("getTowerId recvTowerMap");
 		return 0;
 	}
@@ -157,7 +122,7 @@ int recvBulletMap(){
 	int id,bit_mask;
 	recvMap(id);
 	//find npc by id
-	if((b=getBulletId(id))==0){
+	if((b=getBulletById(id))==0){
 		perror("getBulletId recvBulletMap");
 		return 0;
 	}
@@ -175,9 +140,10 @@ int recvBulletMap(){
 		recvMap(b->type);
 		recvMap(b->owner);
 	
-		n=getNpcId(b->owner);
+		n=getNpcById(b->owner);
 		if (n->id!=0){
-			n->current_tex=TEX_ATTACK;
+//			n->current_tex=TEX_ATTACK;
+			n->attack_prepare++;
 			vec2 dir={b->position.x-n->position.x,b->position.y-n->position.y};
 			dir.x/=5;
 			dir.y/=5;
@@ -186,8 +152,10 @@ int recvBulletMap(){
 		recvMap(b->source);
 //		recvMap(b->destination);
 	}
-	if(checkMask(bit_mask,BULLET_DETONATE))
+	if(checkMask(bit_mask,BULLET_DETONATE)){
 		recvMap(b->detonate);
+		//add animation detonation set
+	}
 	if (b->id==0 && checkMask(bit_mask,BULLET_CREATE))
 		b->id=id;
 	return 0;

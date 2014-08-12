@@ -643,7 +643,7 @@ int loadTex(texture * t, char * path, int(load)(char * path)){
 		return 1;
 	}
 out:
-	memcpy(t,&config.map.tex[ERROR],sizeof(texture));
+	memcpy(t,&config.map.tex[ERROR_T],sizeof(texture));
 	return 0;
 }
 
@@ -661,7 +661,7 @@ void loadFiles(){
 	loadTypes("../data/types.cfg");
 	//set to config file
 	loadTexture(&cursor.tex,"global/cursor");
-	loadTexture(&config.map.tex[ERROR],"global/error");
+	loadTexture(&config.map.tex[ERROR_T],"global/error");
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");

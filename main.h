@@ -16,13 +16,14 @@
 //texture global
 #define MAX_TEX_GLOBAL 100
 
+
 //textures map
 #define MAP_COMON_TEXTURES_MAX 500
-#define ERROR 0
-#define WALKABLE 1
-#define BUILDABLE 2
-#define NO_SEE 3
-#define COMON_TEXTURES_START 4
+#define ERROR_T 1
+#define WALKABLE 2
+#define BUILDABLE 3
+#define NO_SEE 4
+#define COMON_TEXTURES_START 5
 
 //process object
 #define MOUSE 1
@@ -211,6 +212,7 @@ struct npc{
 	int shield;
 	
 	int current_tex;
+	char attack_prepare;
 	texture tex[TEXTURES];
 	short anim_ended;
 	color3 color;
@@ -421,6 +423,8 @@ struct g_config{
 #define ctoi(i) (i-48)
 
 
+#define checkNpcTexAttack(x) (x==TEX_ATTACK_UP || x==TEX_ATTACK_DOWN || x==TEX_ATTACK_LEFT || x==TEX_ATTACK_LEFT_UP || x==TEX_ATTACK_LEFT_DOWN || x==TEX_ATTACK_RIGHT || x==TEX_ATTACK_RIGHT_UP || x==TEX_ATTACK_RIGHT_DOWN)
+#define checkNpcTexWalk(x) (x==TEX_WALK_UP || x==TEX_WALK_DOWN || x==TEX_WALK_LEFT || x==TEX_WALK_LEFT_UP || x==TEX_WALK_LEFT_DOWN || x==TEX_WALK_RIGHT || x==TEX_WALK_RIGHT_UP || x==TEX_WALK_RIGHT_DOWN)
 
 
 g_config config;
