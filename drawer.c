@@ -350,17 +350,18 @@ void drawBullet(bullet* b){
 		if (sign(b->direction.y)!=sign(dir.y))
 			goto drawBulletExit;
 //			y*=-1;
+//		if (x==0 )
+//			goto drawBulletExit;
 		
-		float length=sqrt(sqr(x)+sqr(y));
-		float cos=x/length;
-		
+		float l=sqrt(sqr(x)+sqr(y));
+		float cos=x/l;
+		float sin=y/l;
 		ang=acosf(cos);
 		ang=ang*180/M_PI;
 		if (y<0)
 			ang*=-1;
 		
-		length*=0.5+0.5*fabs(cos);
-		
+		length*=0.5+0.5*(1-fabs(sin));
 		glRotatef(ang,0,0,1);
 	}
 	if (b->tex[b->current_tex].frames==0){

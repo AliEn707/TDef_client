@@ -167,8 +167,8 @@ int recvBulletMap(){
 		memcpy(&b->position,&b->destination,sizeof(vec2));
 //	printf("\t%g %g\n",b->position.x,b->position.y);
 	vec2 dir={b->destination.x-b->position.x,b->destination.y-b->position.y};
-	dir.x/=5;
-	dir.y/=5;
+	dir.x/=7.7f;
+	dir.y/=7.7f;
 	memcpy(&b->direction,&dir,sizeof(vec2));
 	if (checkMask(bit_mask,BULLET_CREATE)){
 		npc* n;
@@ -179,8 +179,8 @@ int recvBulletMap(){
 		if (n->id!=0){
 			n->current_tex=TEX_ATTACK;
 			vec2 dir={b->position.x-n->position.x,b->position.y-n->position.y};
-			dir.x/=7;
-			dir.y/=7;
+			dir.x/=5;
+			dir.y/=5;
 			memcpy(&n->direction,&dir,sizeof(vec2));
 		}
 		recvMap(b->source);

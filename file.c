@@ -435,8 +435,20 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"texwalkleft")==0){
 			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT]);
 		}
+		if (strcmp(buf,"texwalkleftup")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT_UP]);
+		}
+		if (strcmp(buf,"texwalkleftdown")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT_DOWN]);
+		}
 		if (strcmp(buf,"texwalkright")==0){
 			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT]);
+		}
+		if (strcmp(buf,"texwalkrightup")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT_UP]);
+		}
+		if (strcmp(buf,"texwalkrightdown")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT_DOWN]);
 		}
 		if (strcmp(buf,"texwalkup")==0){
 			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_UP]);
@@ -449,6 +461,24 @@ void loadTypes(char * filepath){
 		}
 		if (strcmp(buf,"texattackright")==0){
 			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT]);
+		}
+		if (strcmp(buf,"texattackleftup")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_LEFT_UP]);
+		}
+		if (strcmp(buf,"texattackleftdown")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_LEFT_DOWN]);
+		}
+		if (strcmp(buf,"texattackrightup")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT_UP]);
+		}
+		if (strcmp(buf,"texattackrightdown")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT_DOWN]);
+		}
+		if (strcmp(buf,"texattackup")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_UP]);
+		}
+		if (strcmp(buf,"texattackdown")==0){
+			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_DOWN]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);

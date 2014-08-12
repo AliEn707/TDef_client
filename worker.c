@@ -24,15 +24,23 @@ float dirToAngle(vec2 v){
 
 int getWalkTex(vec2 v){
 	float ang=dirToAngle(v);
-	float p8=M_PI/8;
+	float p8=M_PI/8.0f;
 	//need to correct
-	if (ang>0 && ang<=4*p8)
+	if (ang>15*p8 || ang<=p8)
+		return TEX_WALK_RIGHT_DOWN;
+	if (ang>p8 && ang<=3*p8)
 		return TEX_WALK_RIGHT;
-	if (ang>4*p8 && ang<=8*p8)
+	if (ang>3*p8 && ang<=5*p8)
+		return TEX_WALK_RIGHT_UP;
+	if (ang>5*p8 && ang<=7*p8)
 		return TEX_WALK_UP;
-	if (ang>8*p8 && ang<=12*p8)
+	if (ang>7*p8 && ang<=9*p8)
+		return TEX_WALK_LEFT_UP;
+	if (ang>9*p8 && ang<=11*p8)
 		return TEX_WALK_LEFT;
-	if (ang>12*p8)
+	if (ang>11*p8 && ang<=13*p8)
+		return TEX_WALK_LEFT_DOWN;
+	if (ang>13*p8 && ang<=15*p8)
 		return TEX_WALK_DOWN;
 	return 0;
 }
@@ -41,10 +49,22 @@ int getAttackTex(vec2 v){
 	float ang=dirToAngle(v);
 	float p8=M_PI/8;
 	//need to correct
-	if (ang>14*p8 || ang<=6*p8)
+	if (ang>15*p8 || ang<=p8)
+		return TEX_ATTACK_RIGHT_DOWN;
+	if (ang>p8 && ang<=3*p8)
 		return TEX_ATTACK_RIGHT;
-	if (ang>6*p8 && ang<=14*p8)
+	if (ang>3*p8 && ang<=5*p8)
+		return TEX_ATTACK_RIGHT_UP;
+	if (ang>5*p8 && ang<=7*p8)
+		return TEX_ATTACK_UP;
+	if (ang>7*p8 && ang<=9*p8)
+		return TEX_ATTACK_LEFT_UP;
+	if (ang>9*p8 && ang<=11*p8)
 		return TEX_ATTACK_LEFT;
+	if (ang>11*p8 && ang<=13*p8)
+		return TEX_ATTACK_LEFT_DOWN;
+	if (ang>13*p8 && ang<=15*p8)
+		return TEX_ATTACK_DOWN;
 	return 0;
 }
 
@@ -106,7 +126,11 @@ int workerMap(void *ptr){
 					memset(&config.map.npc_array[i],0,sizeof(npc));					
 				}
 				if (config.map.npc_array[i].current_tex==TEX_WALK_LEFT || 
+						config.map.npc_array[i].current_tex==TEX_WALK_LEFT_UP ||
+						config.map.npc_array[i].current_tex==TEX_WALK_LEFT_DOWN ||
 						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT ||
+						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT_UP ||
+						config.map.npc_array[i].current_tex==TEX_WALK_RIGHT_DOWN ||
 						config.map.npc_array[i].current_tex==TEX_WALK_UP ||
 						config.map.npc_array[i].current_tex==TEX_WALK_DOWN){
 //				config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);

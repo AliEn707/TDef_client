@@ -39,13 +39,19 @@
 #define TEX_WALK_UP 3
 #define TEX_WALK_DOWN 4
 #define TEX_WALK_RIGHT 5
-#define TEX_WALK_RIGHT_UP 5
-#define TEX_WALK_RIGHT_DOWN 6
-#define TEX_WALK_LEFT_UP 7
-#define TEX_WALK_LEFT_DOWN 8
-#define TEX_ATTACK 9
-#define TEX_ATTACK_LEFT 10
-#define TEX_ATTACK_RIGHT 11
+#define TEX_WALK_RIGHT_UP 6
+#define TEX_WALK_RIGHT_DOWN 7
+#define TEX_WALK_LEFT_UP 8
+#define TEX_WALK_LEFT_DOWN 9
+#define TEX_ATTACK 10
+#define TEX_ATTACK_LEFT 11
+#define TEX_ATTACK_RIGHT 12
+#define TEX_ATTACK_UP 13
+#define TEX_ATTACK_DOWN 14
+#define TEX_ATTACK_RIGHT_UP 15
+#define TEX_ATTACK_RIGHT_DOWN 16
+#define TEX_ATTACK_LEFT_UP 17
+#define TEX_ATTACK_LEFT_DOWN 18
 
 //bit mask
 #define setMask(z,x) z->bit_mask|=x
