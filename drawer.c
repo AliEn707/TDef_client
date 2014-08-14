@@ -291,7 +291,9 @@ void drawTower(tower* t){
 			loadMTexture(&config.tower_types[t->type].tex[t->current_tex],config.tower_types[t->type].tex_path[t->current_tex]);
 		memcpy(&t->tex[t->current_tex],&config.tower_types[t->type].tex[t->current_tex],sizeof(texture));
 	}
-	setTexture(&t->tex[t->current_tex]);
+	if(setTexture(&t->tex[t->current_tex]))
+		t->anim_ended=1;
+	
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
@@ -305,6 +307,9 @@ void drawTower(tower* t){
 			glVertex2f(-0.5f,0.5f);
 		glEnd();
 	
+		float health=1.0*t->health/config.tower_types[t->type].health;
+		if (health<0.95)
+			drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
 	glPopMatrix();
 }
 
