@@ -205,12 +205,6 @@ void drawMap(){
 }
 
 void globalTransform(){
-	vec2 center={config.window_width/2.0f,config.window_height/2.0};
-	
-	vec2 dest;
-	dest.x=screenToGridX(center.x,center.y);
-	dest.y=screenToGridY(center.x,center.y);
-	
 	glTranslatef(config.map.transform.translate.x,config.map.transform.translate.y,-100);
 	glScalef(config.map.transform.scale,config.map.transform.scale,1);
 	glRotatef(-60,1,0,0);
