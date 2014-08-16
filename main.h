@@ -306,6 +306,7 @@ typedef
 struct netw{
 	TCPsocket socket;
 	int err;
+	char server[40];
 } netw;
 
 typedef

@@ -63,29 +63,48 @@ void processContKeysMap(){
 }
 
 
-void globalTransformCorrection(){
+int globalTransformCorrection(){
+	int s=0;
 	float xl=gridToScreenX(0,0);
 	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size);
 	float yd=gridToScreenY(config.map.grid_size,0);
 	float yu=gridToScreenY(0,config.map.grid_size);
-	if (xl>0)
+	if (xl>0){
 		config.map.transform.translate.x-=xl;
-	if (xr<config.window_width)
+		s=2;
+	}
+	if (xr<config.window_width){
 		config.map.transform.translate.x-=xr-config.window_width;
-	if (yu<config.window_height)
+		s=3;
+	}
+	if (yu<config.window_height){
 		config.map.transform.translate.y-=yu-config.window_height;
-	if (yd>0)
+		s=4;
+	}
+	if (yd>0){
 		config.map.transform.translate.y-=yd;
+		s=5;
+	}
 	float x=xr-xl;
 	float y=yu-yd;
 	float scale=1;
-	if (x<config.window_width || y<config.window_height)
+	if (x<config.window_width || y<config.window_height){
 		if (x-config.window_width<y-config.window_height)
 			scale=config.window_width/x;
 		else
 			scale=config.window_height/y;
+		s=1;
+	}
 	config.map.transform.scale*=scale;
-	
+	return s;
+	/*
+	s is correction of 
+	1 zoom
+	2 left
+	3 right
+	4 up
+	5 down
+	*/
 }
 
 void setDefaultTransform(){
@@ -105,7 +124,11 @@ void setZoom(float x){
 	config.map.transform.scale+=x;
 	if (config.map.transform.scale<=0)
 		config.map.transform.scale=0.2;
-	globalTransformCorrection();
+	float s=-1;
+	if (x<0)
+		s*=-1;
+	if(globalTransformCorrection()!=1)
+		setMove(0,s*screenToGridX(config.window_width/2.0f,config.window_height/2.0));;
 }
 
 
@@ -122,7 +145,6 @@ void setZoom(float x){
 //  x
 
 float gridToScreenX(float x, float y){
-	
 	return sx*(0.707*(x)+0.707*(y))+tx;
 }
 

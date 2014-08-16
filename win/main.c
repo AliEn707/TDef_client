@@ -33,7 +33,11 @@ int main(int argc, char *argv[]){
 	GLFONT font;
 	glFontCreate (&font, "test.glf");
 	
-	
+	{
+		FILE * file=fopen("connect.txt","r");
+		fscanf(file,"%s\n",config.map.network.server);
+		fclose(file);
+	}
 	
 //	SetConsoleOutputCP(CP_UTF8);
 //	printf("%ls\n",L"ПРИвет");
