@@ -83,7 +83,7 @@ int workerMap(void *ptr){
 	
 	printf("done\n");
 	while(config.map.enable){
-		tickSync(&time);
+		tickSync(&config.map.time_now);
 		//get data from server
 		while(1){
 			numready=SDLNet_CheckSockets(set, 0);

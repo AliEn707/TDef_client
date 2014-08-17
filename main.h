@@ -216,6 +216,7 @@ struct npc{
 	texture tex[TEXTURES];
 	short anim_ended;
 	color3 color;
+	int prev_time;//try to use more then 1 tick
 }npc;
 
 typedef
@@ -234,6 +235,7 @@ struct bullet{
 	int current_tex;
 	texture tex[TEXTURES];
 	short anim_ended;
+	int prev_time;
 }bullet;
 
 /////////////
@@ -332,6 +334,8 @@ struct map_conf{
 	menu screen_menu;
 	menu action_menu;
 	menu npc_menu;
+	
+	int time_now;
 	
 	int tower_max;
 	tower * tower_array;

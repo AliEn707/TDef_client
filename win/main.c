@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 	config.window_width=800;
 	config.window_height=600;
 	config.time_per_frame=1000/50;
-	config.time_per_tick=1000/40;
+	config.time_per_tick=1000/30;
 	graficsInit(); // инициализация
 	printf("done\n");
 	loadFiles();

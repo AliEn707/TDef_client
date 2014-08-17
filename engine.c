@@ -60,6 +60,7 @@ void frameSync(unsigned int *time){
 	}
 	SDL_Delay(t<=config.time_per_frame?t:0);
 	*time=SDL_GetTicks();
+//	config.map.time_now=*time;
 }
 
 void tickSync(unsigned int *time){
@@ -72,6 +73,8 @@ void tickSync(unsigned int *time){
 		perror("Time");
 		t=0;
 	}
+	if (t>config.time_per_tick)
+		perror("time");
 	SDL_Delay(t<=config.time_per_tick?t:0);
 	*time=SDL_GetTicks();
 }
