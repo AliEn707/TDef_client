@@ -59,14 +59,18 @@ void actionExit(void * arg){
 void actionAuth(void * arg){
 	config.auth++;
 	config.map.enable=1;
-	if (networkConnMap(config.map.network.server,3333)!=0)
+	if (networkConnMap(config.map.network.server,3333)!=0){
 		config.map.worker=workerMapStart();
+		config.map.connector=connectorMapStart();
+	}
 }
 
 void actionMapStart(void * arg){
 	loadMap("test");
-	if (networkConnMap(config.map.network.server,3333)!=0)
+	if (networkConnMap(config.map.network.server,3333)!=0){
 		config.map.worker=workerMapStart();
+		config.map.connector=connectorMapStart();
+	}
 }
 
 void actionTextTest(void * arg){

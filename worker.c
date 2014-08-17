@@ -71,28 +71,10 @@ int getAttackTex(vec2 v){
 
 int workerMap(void *ptr){
 	worker_arg * arg=ptr;
-	TCPsocket sock=config.map.network.socket;
 	Uint32 time=0;
-	int numready;
-	SDLNet_SocketSet set;
-	
-	if((set=SDLNet_AllocSocketSet(1))==0)
-		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
-	if(SDLNet_TCP_AddSocket(set,sock)<0)
-		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
-	
 	printf("done\n");
 	while(config.map.enable){
-		tickSync(&config.map.time_now);
-		//get data from server
-		while(1){
-			numready=SDLNet_CheckSockets(set, 0);
-			if(numready && SDLNet_SocketReady(sock))
-				recvMesMap();
-			else 
-				break;
-		}
-		//process data on client
+		tickSync(&time);
 		int i;
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0){
@@ -164,4 +146,32 @@ SDL_Thread* workerMapStart(){
 	worker_arg arg;
 	printf("start worker....");
 	return SDL_CreateThread(workerMap, "WorkerMap", (void*)&arg);
+}
+
+int connectorMap(void *ptr){
+	worker_arg * arg=ptr;
+	TCPsocket sock=config.map.network.socket;
+	Uint32 time=0;
+	int numready;
+	SDLNet_SocketSet set;
+	
+	if((set=SDLNet_AllocSocketSet(1))==0)
+		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
+	if(SDLNet_TCP_AddSocket(set,sock)<0)
+		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
+	
+	printf("done\n");
+	while(config.map.enable){
+		config.map.time_now=SDL_GetTicks();
+		//get data from server
+		if(recvMesMap()<0)
+			printf("network error");
+	}
+	printf("exit workerMap\n");
+}
+
+SDL_Thread* connectorMapStart(){
+	worker_arg arg;
+	printf("start connector....");
+	return SDL_CreateThread(connectorMap, "ConnectorMap", (void*)&arg);
 }

@@ -345,8 +345,10 @@ struct map_conf{
 	bullet * bullet_array;
 	int textures_size;
 	int textures[MAX_TEXTURES];
+	
 	netw network;
 	SDL_Thread* worker;
+	SDL_Thread* connector;
 } map_conf;
 
 typedef

@@ -61,9 +61,9 @@ int recvNpcMap(){
 	}
 	float shift;
 	if (n->prev_time==0)
-		shift=18;
+		shift=8;
 	else
-		shift=10+(config.map.time_now-n->prev_time)/2/config.time_per_tick;
+		shift=7+(config.map.time_now-n->prev_time)/2/config.time_per_tick;
 //	printf("%g\n",shift);
 	n->prev_time=config.map.time_now;
 	
@@ -136,9 +136,9 @@ int recvBulletMap(){
 	}
 	float shift;
 	if (b->prev_time==0)
-		shift=15;
+		shift=8;
 	else
-		shift=12+(config.map.time_now-b->prev_time)/2/config.time_per_tick;
+		shift=7+(config.map.time_now-b->prev_time)/2/config.time_per_tick;
 //	printf("%g\n",shift);
 	b->prev_time=config.map.time_now;
 	
