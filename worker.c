@@ -164,7 +164,7 @@ int connectorMap(void *ptr){
 	
 	printf("done\n");
 	while(config.map.enable){
-		config.map.time_now=SDL_GetTicks();
+	//	config.map.time_now=SDL_GetTicks();
 		//get data from server
 		if(recvMesMap()<0)
 			printf("network error");

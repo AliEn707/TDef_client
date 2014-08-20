@@ -79,11 +79,13 @@ int recvNpcMap(){
 		return 0;
 	}
 	float shift;
-	if (n->prev_time==0)
-		shift=8;
-	else
-		shift=7+(config.map.time_now-n->prev_time)/2/config.time_per_tick;
-//	printf("%g\n",shift);
+//	if (n->prev_time==0)
+		shift=5;
+	float add;
+	if (n->prev_time!=0)
+		if ((add=(SDL_GetTicks()-n->prev_time)/config.time_per_tick)>shift)
+			shift+=add;
+//	printf("%g\n",1.0*(config.map.time_now-n->prev_time)/config.time_per_tick);
 	n->prev_time=config.map.time_now;
 	
 	recvMap(bit_mask);
@@ -154,10 +156,12 @@ int recvBulletMap(){
 		return 0;
 	}
 	float shift;
-	if (b->prev_time==0)
-		shift=8;
-	else
-		shift=7+(config.map.time_now-b->prev_time)/2/config.time_per_tick;
+//	if (b->prev_time==0)
+		shift=5;
+	float add;
+	if (b->prev_time!=0)
+		if ((add=(SDL_GetTicks()-b->prev_time)/config.time_per_tick)>shift)
+			shift+=add;
 //	printf("%g\n",shift);
 	b->prev_time=config.map.time_now;
 	
