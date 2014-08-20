@@ -11,6 +11,7 @@
 #include <string.h>
 //#include <GL/gl.h>
 #include "main.h"
+#include "engine.h"
 #include "glfont.h"
 
 
@@ -106,7 +107,7 @@ void glFontBegin (GLFONT *Font)
 	//Bind to font texture
 	glBindTexture(GL_TEXTURE_2D, Font->Tex);
 }
-//*********************************************************
+*********************************************************
 void glFontEnd (void)
 {
 	//Font no longer current
@@ -162,7 +163,7 @@ float glFontWigth(GLFONT *glFont,char *String){
 	
 	//Return if we don't have a valid glFont 
 	if (glFont == NULL)
-		return;
+		return 0;
 	//Get length of string
 	Length = strlen(String);
 	

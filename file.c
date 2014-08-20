@@ -149,7 +149,7 @@ void loadMenu(menu* root,char* path){
 									m->objects[i].elements[j].size.y=config.window_height+m->objects[i].elements[j].size.y;
 							}
 							if(strcmp(buf,"tex")==0){
-								fscanf(file,"%s\n",&buf);
+								fscanf(file,"%s\n",buf);
 								if (strcmp(buf,"0")==0)
 									continue;
 								//add tex load
@@ -717,7 +717,7 @@ void cleanMap(){
 	
 	for(i=0;i<4;i++)
 		free(config.map.grid_out[i]);
-	glDeleteTextures (config.map.textures_size,config.map.textures);
+	glDeleteTextures (config.map.textures_size,(unsigned int*)config.map.textures);
 	
 }
 
@@ -729,7 +729,7 @@ void cleanAll(){
 	
 	realizeTypes();
 	
-	glDeleteTextures (config.textures_size,config.textures);
+	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
 	
 	cleanMap();
 }

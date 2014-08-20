@@ -3,11 +3,28 @@
 #include "main.h"
 #include "network.h"
 #include "engine.h"
+#include "worker.h"
 
 #define checkMask(x,y) x&y
 
-#define recvMap(x) if(SDLNet_TCP_Recv(config.map.network.socket,&x,sizeof(x))<0) return -1
+#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<0) return -1
 
+int recvData(TCPsocket sock, void * buf, int size){
+	int need=size;
+	int get;
+	get=SDLNet_TCP_Recv(sock,buf,need);
+	if (get<0)
+		return -1;
+	if (get==need)
+		return get;
+//	printf("get not all\n");
+	while(need>0){
+		need-=get;
+		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))<0)
+			return -1;
+	}
+	return size;
+}
 
 
 int networkInit(){
@@ -16,10 +33,11 @@ int networkInit(){
 		printf("SDLNet_Init: %s\n",SDLNet_GetError());
 		return -1;
 	}
+	return 0;
 }
 
 void networkExit(){
-	SDLNet_Quit();
+	return SDLNet_Quit();
 }
 
 TCPsocket networkConn(char * addr,int port){
@@ -42,6 +60,7 @@ TCPsocket networkConn(char * addr,int port){
 
 int networkClose(TCPsocket sock){
 	SDLNet_TCP_Close(sock);
+	return 0;
 }
 
 TCPsocket networkConnMap(char * addr,int port){
@@ -180,7 +199,7 @@ int recvBulletMap(){
 
 int recvMesMap(){
 	char mes;
-	int err;
+//	int err;
 //	networkSetNonBlock(config.map.network.socket);
 	recvMap(mes);
 //	networkSetBlock(config.map.network.socket);

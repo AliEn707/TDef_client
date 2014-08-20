@@ -2,6 +2,8 @@
 #include "engine.h"
 #include "menu.h"
 #include "map.h"
+#include "file.h"
+#include "tga.h"
 
 
 int sign(float x){
@@ -309,7 +311,7 @@ int loadMapTexture(char * path){
 
 
 int getNewTexture(){
-	glGenTextures(1,config.textures+config.textures_size);
+	glGenTextures(1,(unsigned int*)(config.textures+config.textures_size));
 	return config.textures[config.textures_size++];
 }
 
@@ -328,12 +330,15 @@ void graficsInit(){
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 1);
 
 	config.window = SDL_CreateWindow("TDef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.window_width, config.window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL ); //| SDL_WINDOW_FULLSCREEN
-	
-	SDL_GLContext glcontext = SDL_GL_CreateContext(config.window); // создаем контекст OpenGL
-	
 	if(config.window == NULL){
 		exit(1);
 	}
+	
+	SDL_GLContext glcontext = SDL_GL_CreateContext(config.window); // создаем контекст OpenGL
+	if(glcontext == NULL){
+		exit(1);
+	}
+	
 	
 	
 	cursorInit();

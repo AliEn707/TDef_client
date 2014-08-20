@@ -8,11 +8,19 @@ tower* getTowerById(int id);
 
 bullet* getBulletById(int id);
 //
+void frameSync(unsigned int *time);
+
+void tickSync(unsigned int *time);
+
 float dirToAngle(vec2 v);
 
 void processNodeAction();
 
 void processObjectAction(int type,int key);
+
+void processEvent(SDL_Event event);
+
+void processKeyboard();
 
 int checkMouseState();
 

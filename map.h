@@ -5,6 +5,8 @@ void processMouseMap(SDL_Event event);
 
 void processKeysMap(SDL_Event event);
 
+void processContKeysMap();
+
 void setDefaultTransform();
 
 void setMove(float x,float y);

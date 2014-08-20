@@ -1,6 +1,7 @@
 #include "main.h"
 #include "menu.h"
 #include "engine.h"
+#include "file.h"
 #include "network.h"
 #include "worker.h"
 
@@ -59,7 +60,7 @@ void actionExit(void * arg){
 void actionAuth(void * arg){
 	config.auth++;
 	config.map.enable=1;
-	if (networkConnMap(config.map.network.server,3333)!=0){
+	if (networkConnMap(config.map.network.server,34140)!=0){
 		config.map.worker=workerMapStart();
 		config.map.connector=connectorMapStart();
 	}
@@ -67,7 +68,7 @@ void actionAuth(void * arg){
 
 void actionMapStart(void * arg){
 	loadMap("test");
-	if (networkConnMap(config.map.network.server,3333)!=0){
+	if (networkConnMap(config.map.network.server,34140)!=0){
 		config.map.worker=workerMapStart();
 		config.map.connector=connectorMapStart();
 	}

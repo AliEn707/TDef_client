@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "map.h"
 #include "network.h"
+
 typedef
 struct worker_arg{
 	int q;
@@ -70,7 +71,7 @@ int getAttackTex(vec2 v){
 
 
 int workerMap(void *ptr){
-	worker_arg * arg=ptr;
+//	worker_arg * arg=ptr;
 	Uint32 time=0;
 	printf("done\n");
 	while(config.map.enable){
@@ -140,6 +141,7 @@ int workerMap(void *ptr){
 		
 	}
 	printf("exit workerMap\n");
+	return 0;
 }
 
 SDL_Thread* workerMapStart(){
@@ -149,10 +151,10 @@ SDL_Thread* workerMapStart(){
 }
 
 int connectorMap(void *ptr){
-	worker_arg * arg=ptr;
+//	worker_arg * arg=ptr;
 	TCPsocket sock=config.map.network.socket;
-	Uint32 time=0;
-	int numready;
+//	Uint32 time=0;
+//	int numready;
 	SDLNet_SocketSet set;
 	
 	if((set=SDLNet_AllocSocketSet(1))==0)
@@ -168,6 +170,7 @@ int connectorMap(void *ptr){
 			printf("network error");
 	}
 	printf("exit workerMap\n");
+	return 0;
 }
 
 SDL_Thread* connectorMapStart(){

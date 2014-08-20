@@ -7,7 +7,10 @@
 #include "../drawer.h"
 #include "../engine.h"
 #include "../file.h"
+#include "../menu.h"
+#include "../map.h"
 #include "../worker.h"
+#include "../network.h"
 
 
 
@@ -41,7 +44,7 @@ int main(int argc, char *argv[]){
 	
 //	SetConsoleOutputCP(CP_UTF8);
 //	printf("%ls\n",L"ПРИвет");
-	float xrf = 0, yrf = 0, zrf = 0; // углы поворота
+//	float xrf = 0, yrf = 0, zrf = 0; // углы поворота
 	Uint32 time=0;
 	config.main_running=1;
 	

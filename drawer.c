@@ -1,6 +1,7 @@
 #include "main.h"
 #include "drawer.h"
 #include "map.h"
+#include "file.h"
 #include "engine.h"
 
 int textureFrameNext(texture *t){
@@ -41,7 +42,7 @@ void drawCursor(){
 int setTexture(texture * t){
 	if (t->frames==0){
 		glDisable(GL_TEXTURE_2D);
-		return;
+		return 0;
 	}
 	if (t->fd_delay_counter<t->fd_delay){
 		t->fd_delay_counter++;

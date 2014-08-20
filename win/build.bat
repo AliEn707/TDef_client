@@ -1,2 +1,2 @@
-mingw32-gcc *.c ../*.c -lSDL2main -lSDL2 -lSDL2_net -lopengl32 -lglu32 -lwinmm -lws2_32 -g -o TDef 
+mingw32-gcc *.c ../*.c -lSDL2main -lSDL2 -lSDL2_net -lopengl32 -lglu32 -lwinmm -lws2_32 -Wall -g -o TDef 
 pause
