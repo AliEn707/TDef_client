@@ -80,7 +80,7 @@ int recvNpcMap(){
 	}
 	float shift;
 //	if (n->prev_time==0)
-		shift=5;
+		shift=7;
 	float add;
 	if (n->prev_time!=0)
 		if ((add=(SDL_GetTicks()-n->prev_time)/config.time_per_tick)>shift)
@@ -157,7 +157,7 @@ int recvBulletMap(){
 	}
 	float shift;
 //	if (b->prev_time==0)
-		shift=5;
+		shift=7;
 	float add;
 	if (b->prev_time!=0)
 		if ((add=(SDL_GetTicks()-b->prev_time)/config.time_per_tick)>shift)
