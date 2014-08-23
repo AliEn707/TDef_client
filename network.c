@@ -90,7 +90,7 @@ int recvNpcMap(){
 	
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,NPC_CREATE)){
-		recvMap(n->isfriend);
+		recvMap(n->group);
 		recvMap(n->type);
 //		printf("%d\n",n->type);
 //		recvMap(n->destination);

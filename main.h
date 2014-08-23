@@ -203,7 +203,7 @@ typedef
 struct npc{
 	int id;
 	char status;
-	char isfriend;
+	char group;
 	vec2 position;
 	vec2 destination;
 	vec2 direction;
@@ -226,7 +226,7 @@ struct bullet{
 	vec2 destination;
 	vec2 direction;
 	vec2 source;
-	char isfriend;
+	char group;
 	char support;
 	int type;
 	char detonate;
