@@ -287,6 +287,7 @@ void drawTower(tower* t){
 	backTransform();
 	glScalef(1.2,1.2,1);
 	glTranslatef(0,0.2,0);
+//	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	if (t->tex[t->current_tex].frames==0){
 		if (config.tower_types[t->type].tex[t->current_tex].frames==0)
 			loadMTexture(&config.tower_types[t->type].tex[t->current_tex],config.tower_types[t->type].tex_path[t->current_tex]);

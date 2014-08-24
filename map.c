@@ -175,8 +175,17 @@ float screenToGridY(float x, float y){
 #undef sy
 
 void setActionMenu(){
+	printf("action on %d node (tower %d)\n",
+								config.map.focus,
+								config.map.grid[config.map.focus].tower_id);
+	tower* t;
+	t=getTowerById(config.map.grid[config.map.focus].tower_id);
+	if (t==0)
+		printf("no tower\n");
+	else
+		printf("have tower\n");
+	config.map.action_menu;
 	config.map.action_menu.enable=1;
-	
 }
 //
 

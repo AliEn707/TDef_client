@@ -54,15 +54,20 @@
 #define TEX_ATTACK_LEFT_UP 17
 #define TEX_ATTACK_LEFT_DOWN 18
 
-//bit mask
-#define setMask(z,x) z->bit_mask|=x
-//#define checkMask(z,x) z->bit_mask&x
-
+//msg to client
 #define MSG_TEST 0
 #define MSG_NPC 1
 #define MSG_TOWER 2
 #define MSG_BULLET 3
 #define MSG_PLAYER 4
+//msg to server
+#define MSG_SPAWN_TOWER 1
+#define MSG_SPAWN_NPC 2
+
+
+//bit mask
+#define setMask(z,x) z->bit_mask|=x
+//#define checkMask(z,x) z->bit_mask&x
 
 #define PLAYER_HEALTH 1
 
@@ -349,6 +354,7 @@ struct map_conf{
 	netw network;
 	SDL_Thread* worker;
 	SDL_Thread* connector;
+	
 } map_conf;
 
 typedef
@@ -404,6 +410,9 @@ struct g_config{
 	unsigned int bullet_types_size;
 		bullet_type* bullet_types;
 	
+	struct {
+		int tower_level;
+	} player;
 }g_config;
 
 
