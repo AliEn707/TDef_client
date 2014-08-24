@@ -183,8 +183,14 @@ void setActionMenu(){
 	tower* t; 
 	t=getTowerById(config.map.grid[config.map.focus].tower_id);
 	if (t->id==0){
+		int i;
 		sprintf(config.map.action_menu.objects[0].text,
 				"create tower");
+		for(i=0;i<config.map.action_menu.objects_size;i++){
+			config.map.action_menu.objects[i].arg[0]=config.map.focus;
+		}
+		config.map.action_menu.objects[0].arg[1]=1;
+		config.map.action_menu.objects[0].action=actionSpawnTower;
 	}else{
 		sprintf(config.map.action_menu.objects[0].text,
 				"upgrade");
@@ -208,4 +214,17 @@ void actionMoveMap(void * arg){
 void actionZoomMap(void * arg){
 	int * p=(int*)arg;
 	setZoom(p[0]*1.0/p[1]);
+}
+
+void actionSpawnTower(void * arg){
+	int * p=(int*)arg;
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_SPAWN_TOWER;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnTower");
+//	else printf("send %d %d %d",mtype,p[0],p[1]);
+	SDLNet_TCP_Send(config.map.network.socket,&p[0],sizeof(int));
+	SDLNet_TCP_Send(config.map.network.socket,&p[1],sizeof(int));
+//	send(config.map.network.socket,sizeof(mtype),0);
 }

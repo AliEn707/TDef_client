@@ -73,13 +73,15 @@
 
 #define PLAYER_HEALTH 1
 
-#define NPC_POSITION 1
-#define NPC_HEALTH 2
+#define NPC_HEALTH 1
+#define NPC_POSITION 2
 #define NPC_CREATE 4
+#define NPC_LEVEL 8
 
 #define TOWER_HEALTH 1
 #define TOWER_TARGET 2
 #define TOWER_CREATE 4
+#define TOWER_LEVEL 8
 
 #define BULLET_POSITION 1
 #define BULLET_DETONATE 2
@@ -199,6 +201,7 @@ struct tower{
 	int shield;
 	int energy;
 	int owner;
+	short level;
 	
 	int current_tex;
 	texture tex[TEXTURES];
@@ -217,6 +220,7 @@ struct npc{
 	int type;
 	int health;
 	int shield;
+	short level;
 	
 	int current_tex;
 	char attack_prepare;

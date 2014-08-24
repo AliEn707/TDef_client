@@ -109,6 +109,8 @@ int recvNpcMap(){
 //	}
 	if(checkMask(bit_mask,NPC_HEALTH) || checkMask(bit_mask,NPC_CREATE))
 		recvMap(n->health);
+	if(checkMask(bit_mask,NPC_LEVEL) || checkMask(bit_mask,NPC_CREATE))
+		recvMap(n->level);
 	if (n->id==0 && checkMask(bit_mask,NPC_CREATE))
 		n->id=id;
 	return 0;
@@ -143,6 +145,8 @@ int recvTowerMap(){
 		recvMap(t->target);
 	if(checkMask(bit_mask,TOWER_HEALTH) || checkMask(bit_mask,TOWER_CREATE))
 		recvMap(t->health);
+	if(checkMask(bit_mask,TOWER_LEVEL) || checkMask(bit_mask,TOWER_CREATE))
+		recvMap(t->level);
 	if (t->id==0 && checkMask(bit_mask,TOWER_CREATE))
 		t->id=id;
 	return 0;
