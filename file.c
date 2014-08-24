@@ -72,6 +72,9 @@ void loadMenu(menu* root,char* path){
 								break;
 						}
 					}
+					if(strcmp(buf,"text")==0){
+						fscanf(file,"%s\n",m->objects[i].text);
+					}
 					if(strcmp(buf,"touch")==0){
 						fscanf(file,"%d\n",&m->objects[i].touch);
 					}
@@ -671,6 +674,7 @@ void loadFiles(){
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
+	glFontCreate (&mainfont, "../data/main.glf");
 	
 	
 	loadMap("test");

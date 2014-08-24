@@ -27,16 +27,42 @@ void drawCursor(){
 	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
 	glDisable(GL_DEPTH_TEST);
 	setTexture(&cursor.tex);
+	float cur_size=50;
 	glBegin(GL_QUADS);
-	glVertex2f(cursor.state.x+40,cursor.state.y-40);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex2f(cursor.state.x,cursor.state.y-40);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex2f(cursor.state.x,cursor.state.y);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex2f(cursor.state.x+40,cursor.state.y);
-	glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(cursor.state.x+cur_size,cursor.state.y-cur_size);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(cursor.state.x,cursor.state.y-cur_size);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(cursor.state.x,cursor.state.y);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(cursor.state.x+cur_size,cursor.state.y);
+		glTexCoord2f(1.0f, 0.0f);
 	glEnd();
+	if (cursor.text!=0)
+		if (cursor.text[0]!=0){
+			float length;
+			float height=glFontHeight(&mainfont,cursor.text);
+			float shift=0.05f;
+			length=glFontWigth(&mainfont,cursor.text);
+			glPushMatrix();
+				glDisable(GL_TEXTURE_2D);
+				//glTranslatef(cursor.state.x,cursor.state.y,0);
+				glTranslatef(cursor.state.x+42,cursor.state.y-25,0);
+				glScalef(15,15,1); //need to correct
+				//glTranslatef(-length/2.0f,height,0);
+				glTranslatef(-length,0,0);
+				glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
+				glBegin(GL_TRIANGLE_STRIP);
+					glVertex3f(-shift,shift,0);
+					glVertex3f(-shift,-height-shift,0);
+					glVertex3f(length+shift,shift,0);
+					glVertex3f(length+shift,-height-shift,0);
+				glEnd();
+					glEnable(GL_TEXTURE_2D);
+					glColor4f(1.0f, 1.0f, 1.0f,1.0f);
+					glFontTextOut(&mainfont,cursor.text,0,0,0);
+			glPopMatrix();
+		}
 }
 
 int setTexture(texture * t){

@@ -55,6 +55,8 @@ void glFontTextOut (GLFONT *glFont, char *String, float x, float y,
 	float z);
 
 //*********************************************************
+float glFontWigth(GLFONT *glFont,char *String);
 
+float glFontHeight (GLFONT *glFont,char *String);
 //End of file
 

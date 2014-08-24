@@ -19,6 +19,10 @@ int checkMouseMenu(menu* root){
 		object* tmp;
 		if ((tmp=checkMouseOnObject(&m->objects[i]))!=0){
 			config.menu.selected=tmp;
+			if (*tmp->text!=0)
+				cursor.text=tmp->text;
+			else
+				cursor.text=tmp->dtext;
 			o++;
 		}
 	}

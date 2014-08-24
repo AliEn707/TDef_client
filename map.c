@@ -18,6 +18,8 @@ void checkMouseMap(){
 	}
 	if (config.map.grid[to2di(x,y)].buildable>0){
 		config.map.focus=to2di(x,y);
+		cursor.text=config.map.text;
+		sprintf(cursor.text,"build tower");
 		return;
 	}
 	config.map.focus=-1;
@@ -178,13 +180,17 @@ void setActionMenu(){
 	printf("action on %d node (tower %d)\n",
 								config.map.focus,
 								config.map.grid[config.map.focus].tower_id);
-	tower* t;
+	tower* t; 
 	t=getTowerById(config.map.grid[config.map.focus].tower_id);
-	if (t==0)
-		printf("no tower\n");
-	else
-		printf("have tower\n");
-	config.map.action_menu;
+	if (t->id==0){
+		sprintf(config.map.action_menu.objects[0].text,
+				"create tower");
+	}else{
+		sprintf(config.map.action_menu.objects[0].text,
+				"upgrade");
+		sprintf(config.map.action_menu.objects[config.map.action_menu.objects_size-1].text,
+				"destroy tower");
+	}
 	config.map.action_menu.enable=1;
 }
 //

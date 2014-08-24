@@ -2,7 +2,6 @@
 
 
 #include "../main.h"
-#include "../glfont.h"
 #include "../tga.h"
 #include "../drawer.h"
 #include "../engine.h"
@@ -11,7 +10,6 @@
 #include "../map.h"
 #include "../worker.h"
 #include "../network.h"
-
 
 
 
@@ -32,9 +30,24 @@ int main(int argc, char *argv[]){
 	printf("done\n");
 	loadFiles();
 	
+	
+	
 //	FreeConsole();
-	GLFONT font;
-	glFontCreate (&font, "test.glf");
+//	GLFONT font;
+	
+	
+	cursor.text="Hello";
+/*	
+	printf("locale set %s\n",setlocale( LC_ALL, "ru_ru.65001" ));
+	wchar_t wstr[100]=L"\0";
+	char str[100]="\0";
+	printf("1 %d\n",wcstombs(str,L"привет",100));
+	printf("%d\n",strlen(str));
+	printf("%s\n",str);
+	printf("2 %d\n",mbstowcs(wstr,"привет",100));
+	printf("%d\n",wcslen(wstr));
+	printf("%ls\n",wstr);
+*/	
 	
 	{
 		FILE * file=fopen("connect.txt","r");
@@ -85,13 +98,6 @@ int main(int argc, char *argv[]){
 		 
 		glPopMatrix();
 */		
-		glEnable (GL_TEXTURE_2D);
-		glTranslatef(0,config.window_height/2,0);
-			glScalef(15,15,1);
-			glColor4f(1.0f, 1.0f, 1.0f,1.0f);
-				glFontTextOut(&font,"Hello world\n my friend",0,0,30);
-				glScalef(10,10,1);
-				glTranslatef(0,0,40);
 //				drawNode();
 //.........................................................
 		glFlush();
@@ -100,7 +106,7 @@ int main(int argc, char *argv[]){
 	
 	config.map.enable=0;
 	SDL_WaitThread(config.map.worker, 0);
-	glFontDestroy(&font);
+//	glFontDestroy(&font);
 	cleanAll();
 	networkExit();
 	SDL_Quit(); // завершаем работу SDL и выходим

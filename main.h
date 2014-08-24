@@ -6,6 +6,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
 #include <GL/gl.h>
+#include <locale.h>
+#include "glfont.h"
  
 // screen frames per texture frames
 #define FpF 5
@@ -275,6 +277,7 @@ struct object{
 	element * elements;
 	int elements_size;
 	char text[25];
+	char * dtext;
 	int arg[4];
 	void (*action)(void * arg);
 } object;
@@ -306,6 +309,8 @@ struct cur{
 	color3 color;
 	texture tex;
 	float sens;
+	
+	char * text;
 } cur;
 
 
@@ -355,6 +360,7 @@ struct map_conf{
 	SDL_Thread* worker;
 	SDL_Thread* connector;
 	
+	char text[30];
 } map_conf;
 
 typedef
@@ -362,6 +368,10 @@ struct global_conf{
 	cur cursor;
 	int keys[5000];
 	int mouse[100];
+	
+	struct {
+		GLFONT all;
+	} font;
 }global_conf;
 
 
@@ -441,6 +451,8 @@ struct g_config{
 
 #define checkNpcTexAttack(x) (x==TEX_ATTACK_UP || x==TEX_ATTACK_DOWN || x==TEX_ATTACK_LEFT || x==TEX_ATTACK_LEFT_UP || x==TEX_ATTACK_LEFT_DOWN || x==TEX_ATTACK_RIGHT || x==TEX_ATTACK_RIGHT_UP || x==TEX_ATTACK_RIGHT_DOWN)
 #define checkNpcTexWalk(x) (x==TEX_WALK_UP || x==TEX_WALK_DOWN || x==TEX_WALK_LEFT || x==TEX_WALK_LEFT_UP || x==TEX_WALK_LEFT_DOWN || x==TEX_WALK_RIGHT || x==TEX_WALK_RIGHT_UP || x==TEX_WALK_RIGHT_DOWN)
+
+#define mainfont config.global.font.all
 
 
 g_config config;

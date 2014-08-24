@@ -260,6 +260,7 @@ void mouseMotion(){
 
 int checkMouseState(){
 //	mouseMotion();
+	cursor.text=0;
 	if (config.auth==0){
 		checkMouseMenu(&config.auth_menu);
 		return 0;

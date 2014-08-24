@@ -12,7 +12,7 @@
 //#include <GL/gl.h>
 #include "main.h"
 #include "engine.h"
-#include "glfont.h"
+//#include "glfont.h"
 
 
 //*********************************************************
@@ -179,6 +179,33 @@ float glFontWigth(GLFONT *glFont,char *String){
 	}
 
 	return x;
+}
+
+float glFontHeight (GLFONT *glFont,char *String)
+{
+	int Length, i;
+	float y=0;
+	GLFONTCHAR *Char;
+	
+	//Return if we don't have a valid glFont 
+	if (glFont == NULL)
+		return 0;
+	//Get length of string
+	Length = strlen(String);
+	
+	//Loop through characters
+	for (i = 0; i < Length; i++)
+	{
+		//Get pointer to glFont character
+		Char = &glFont->Char[(int)String[i] -
+			glFont->IntStart];
+	
+		//Move to next character
+		if (Char->dy>y)
+			y=Char->dy;
+	}
+
+	return y;
 }
 
 //End of file
