@@ -158,6 +158,18 @@ void loadMenu(menu* root,char* path){
 								//add tex load
 								loadTexture(&m->objects[i].elements[j].tex,buf);
 							}
+							if(strcmp(buf,"text")==0){
+								fscanf(file,"%s\n",m->objects[i].elements[j].text);
+							}
+							if(strcmp(buf,"ctext")==0){
+								fscanf(file,"%hd\n",&m->objects[i].elements[j].text_centered);
+							}
+							if(strcmp(buf,"xtext")==0){
+								fscanf(file,"%f\n",&m->objects[i].elements[j].text_position.x);
+							}
+							if(strcmp(buf,"ytext")==0){
+								fscanf(file,"%f\n",&m->objects[i].elements[j].text_position.y);
+							}
 							//somesing else
 						}
 					}

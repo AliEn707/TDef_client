@@ -267,6 +267,9 @@ struct element{
 	int wire;
 	color3 color;
 	color3 fcolor;
+	char text[24];
+	vec2 text_position;
+	short text_centered;
 } element;
 	
 typedef
@@ -280,8 +283,7 @@ struct object{
 	vec2 position;
 	element * elements;
 	int elements_size;
-	char text[25];
-	char * dtext;
+	char text[24];
 	int arg[4];
 	void (*action)(void * arg);
 } object;

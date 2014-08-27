@@ -21,8 +21,6 @@ int checkMouseMenu(menu* root){
 			config.menu.selected=tmp;
 			if (*tmp->text!=0)
 				cursor.text=tmp->text;
-			else
-				cursor.text=tmp->dtext;
 			o++;
 		}
 	}

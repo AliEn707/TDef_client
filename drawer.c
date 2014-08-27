@@ -22,6 +22,19 @@ int textureFrameNext(texture *t){
 	return 0;
 }
 
+void drawText(GLFONT *glFont,char* text){
+	//glFontHeight(glFont,text)
+	glFontTextOut(glFont,text,0,0,0);
+}
+
+void drawTextCentered(GLFONT *glFont,char* text){
+	glPushMatrix();
+	glTranslatef(-glFontWigth(glFont,text)/2,0,0);
+	glFontTextOut(glFont,text,0,0,0);
+	glPopMatrix();
+}
+
+
 
 void drawCursor(){
 	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
@@ -49,8 +62,8 @@ void drawCursor(){
 				//glTranslatef(cursor.state.x,cursor.state.y,0);
 				glTranslatef(cursor.state.x+42,cursor.state.y-25,0);
 				glScalef(15,15,1); //need to correct
-				//glTranslatef(-length/2.0f,height,0);
 				glTranslatef(-length,0,0);
+				//glTranslatef(-length/2.0f,height,0);
 				glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
 				glBegin(GL_TRIANGLE_STRIP);
 					glVertex3f(-shift,shift,0);
@@ -60,7 +73,7 @@ void drawCursor(){
 				glEnd();
 					glEnable(GL_TEXTURE_2D);
 					glColor4f(1.0f, 1.0f, 1.0f,1.0f);
-					glFontTextOut(&mainfont,cursor.text,0,0,0);
+					drawText(&mainfont,cursor.text);
 			glPopMatrix();
 		}
 }
@@ -103,6 +116,15 @@ void drawElement(element * e,int focus){
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(e->position.x+e->size.x,e->position.y);
 	glEnd();
+	if (*e->text==0)
+		return;
+	glPushMatrix();
+		glTranslatef(e->text_position.x,e->text_position.y+glFontHeight(&mainfont,e->text),0);
+		if (e->text_centered!=0)
+			drawTextCentered(&mainfont,e->text);
+		else
+			drawText(&mainfont,e->text);
+	glPopMatrix();
 }
 
 void drawObject(object * o){
@@ -247,6 +269,8 @@ void backTransform(){
 }
 
 void drawHealth(vec2 pos,vec2 size,float p){
+	glPushMatrix();
+	glTranslatef(0,0,0.03);
 	glDisable(GL_TEXTURE_2D);
 	glColor4f(0,0,0,0.8);
 	glBegin(GL_TRIANGLE_STRIP);
@@ -263,6 +287,7 @@ void drawHealth(vec2 pos,vec2 size,float p){
 		glVertex2f(pos.x+size.x*p,pos.y+size.y);
 		
 	glEnd();
+	glPopMatrix();
 }
 
 void drawNpc(npc* n){
@@ -411,7 +436,7 @@ void drawBullet(bullet* b){
 		ty1=0;
 		tx2=1;
 		ty2=1;
-		vx=height*4;
+		vx=height*8;
 	}else{
 		tx1=0;
 		ty1=0;
