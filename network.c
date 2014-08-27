@@ -80,13 +80,14 @@ int recvNpcMap(){
 	}
 	float shift;
 //	if (n->prev_time==0)
-		shift=7;
+		shift=8;
 	float add;
+	int time_now=SDL_GetTicks();
 	if (n->prev_time!=0)
-		if ((add=(SDL_GetTicks()-n->prev_time)/config.time_per_tick)>shift)
+		if ((add=(time_now-n->prev_time)/config.time_per_tick)>shift)
 			shift+=add;
-//	printf("%g\n",1.0*(config.map.time_now-n->prev_time)/config.time_per_tick);
-	n->prev_time=config.map.time_now;
+//	printf("%g %g\n",shift, add);
+	n->prev_time=time_now;
 	
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,NPC_CREATE)){
@@ -163,13 +164,14 @@ int recvBulletMap(){
 	}
 	float shift;
 //	if (b->prev_time==0)
-		shift=7;
+		shift=8;
 	float add;
+	int time_now=SDL_GetTicks();
 	if (b->prev_time!=0)
-		if ((add=(SDL_GetTicks()-b->prev_time)/config.time_per_tick)>shift)
+		if ((add=(time_now-b->prev_time)/config.time_per_tick)>shift)
 			shift+=add;
 //	printf("%g\n",shift);
-	b->prev_time=config.map.time_now;
+	b->prev_time=time_now;
 	
 	recvMap(bit_mask);
 	recvMap(b->destination);

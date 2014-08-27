@@ -405,12 +405,13 @@ void drawBullet(bullet* b){
 		memcpy(&b->tex[b->current_tex],&config.bullet_types[b->type].tex[b->current_tex],sizeof(texture));
 	}
 	float tx1,ty1,tx2,ty2,vx;
+	float height=0.08f;
 	if (config.bullet_types[b->type].solid==0){
 		tx1=0;
 		ty1=0;
 		tx2=1;
 		ty2=1;
-		vx=0.32;
+		vx=height*4;
 	}else{
 		tx1=0;
 		ty1=0;
@@ -432,13 +433,13 @@ void drawBullet(bullet* b){
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
 			glTexCoord2f (tx1, ty1);
-			glVertex2f(0.0f,-0.08f);
+			glVertex2f(0.0f,-height);
 			glTexCoord2f (tx1, ty2);
-			glVertex2f(0.0f,0.08f);
+			glVertex2f(0.0f,height);
 			glTexCoord2f (tx2, ty2);
-			glVertex2f(vx,0.08f);
+			glVertex2f(vx,height);
 			glTexCoord2f (tx2, ty1);
-			glVertex2f(vx,-0.08f);
+			glVertex2f(vx,-height);
 			//texture 1:2
 			//texture solid 1:4
 			
