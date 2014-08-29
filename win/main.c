@@ -8,7 +8,7 @@
 #include "../file.h"
 #include "../menu.h"
 #include "../map.h"
-#include "../worker.h"
+#include "../threads.h"
 #include "../network.h"
 
 

@@ -3,7 +3,7 @@
 #include "main.h"
 #include "network.h"
 #include "engine.h"
-#include "worker.h"
+#include "threads.h"
 
 #define checkMask(x,y) x&y
 

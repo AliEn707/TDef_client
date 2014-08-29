@@ -3,7 +3,7 @@
 #include "engine.h"
 #include "file.h"
 #include "network.h"
-#include "worker.h"
+#include "threads.h"
 
 int checkMouseMenu(menu* root){
 	if (root==0)

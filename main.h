@@ -250,6 +250,24 @@ struct bullet{
 	int prev_time;
 }bullet;
 
+
+typedef 
+struct {
+	int id;
+	char tex_path[100];
+	texture tex;
+} splash_type;
+
+typedef 
+struct {
+	vec2 position;
+	short type;
+	short anim_ended;
+	texture tex;
+} splash;
+
+
+
 typedef 
 struct {
 	int position;
@@ -377,6 +395,9 @@ struct map_conf{
 	npc * npc_array;
 	int bullet_max;
 	bullet * bullet_array;
+	int splash_max;
+	splash * splash_array;
+	
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	
@@ -452,6 +473,8 @@ struct g_config{
 		npc_type* npc_types;
 	unsigned int bullet_types_size;
 		bullet_type* bullet_types;
+	unsigned int splash_types_size;
+		splash_type* splash_types;
 	
 	struct {
 		int tower_level;

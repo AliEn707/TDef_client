@@ -15,6 +15,14 @@ int sign(float x){
 }
 
 
+splash* getSplashNew(){
+	int i;
+	for(i=0;i<config.map.splash_max;i++)
+		if (config.map.splash_array[i].type==0)
+			return &config.map.splash_array[i];
+	return 0;
+}
+
 npc* getNpcById(int id){
 	int i;
 	for(i=0;i<config.map.npc_max;i++)

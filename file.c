@@ -286,6 +286,10 @@ void loadMap(char* path){
 		}
 */		
 	}
+	config.map.splash_max=config.map.bullet_max*2;
+	if((config.map.splash_array=malloc(sizeof(splash)*config.map.splash_max))==0)
+		perror("malloc splash loadMap");
+	
 	fclose(file);
 	
 	config.map.grid=grid;
@@ -374,6 +378,7 @@ void realizeMap(){
 	free(config.map.tower_array);
 	free(config.map.npc_array);
 	free(config.map.bullet_array);
+	free(config.map.splash_array);
 }
 
 
@@ -474,7 +479,7 @@ void loadTypes(char * filepath){
 			int tmp;
 			fscanf(file,"%d\n",&tmp);
 			if((config.bullet_types=malloc(sizeof(bullet_type)*(tmp+1)))==0)
-				perror("malloc tower loadTypes");
+				perror("malloc bullet loadTypes");
 			break;
 		}
 		if (strcmp(buf,"texidle")==0){
@@ -601,6 +606,13 @@ void loadTypes(char * filepath){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
 //		printf("%s  ||\n",buf);
+		if (strcmp(buf,"SPLASH_TYPE")==0){
+			int tmp;
+			fscanf(file,"%d\n",&tmp);
+			if((config.splash_types=malloc(sizeof(splash_type)*(tmp+1)))==0)
+				perror("malloc splash loadTypes");
+			break;
+		}
 		if (strcmp(buf,"name")==0){
 			fscanf(file,"%s\n",buf);
 			continue;
@@ -638,6 +650,27 @@ void loadTypes(char * filepath){
 		
 	}
 	config.bullet_types_size=i;
+	i=1;
+	while(feof(file)==0){
+		memset(buf,0,sizeof(buf));
+		fscanf(file,"%s ",buf);
+//		printf("%s  ||\n",buf);
+		if (strcmp(buf,"tex")==0){
+			fscanf(file,"%s\n",config.splash_types[i].tex_path);
+		}
+		if (strcmp(buf,"//-")==0){
+//			fscanf(file,"%s\n",buf);
+			i++;
+			continue;
+		}
+		if (strcmp(buf,"id")==0){
+			fscanf(file,"%d\n",&config.splash_types[i].id);
+			continue;
+		}
+	}
+	config.splash_types_size=i;
+	
+	
 //	printf("%d %d\n",config.tower_types_size,config.npc_types_size);
 	fclose(file);
 }
@@ -647,6 +680,7 @@ void realizeTypes(){
 	free(config.bullet_types);
 	free(config.tower_types);
 	free(config.npc_types);
+	free(config.splash_types);
 }
 
 

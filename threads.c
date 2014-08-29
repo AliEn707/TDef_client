@@ -138,6 +138,14 @@ int workerMap(void *ptr){
 					memset(&config.map.bullet_array[i],0,sizeof(bullet));
 				}
 			}
+		//splash
+		for(i=0;i<config.map.splash_max;i++)
+			if(config.map.splash_array[i].type!=0){
+				if (config.map.splash_array[i].anim_ended!=0){
+					config.map.splash_array[i].type=0;
+					memset(&config.map.splash_array[i],0,sizeof(splash));
+				}
+			}
 		
 	}
 	printf("exit workerMap\n");

@@ -1,7 +1,8 @@
 
 int sign(float x);
-
 //
+splash* getSplashNew();
+
 npc* getNpcById(int id);
 
 tower* getTowerById(int id);
