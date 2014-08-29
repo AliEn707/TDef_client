@@ -22,7 +22,7 @@ void processEvent(SDL_Event event);
 
 void processKeyboard();
 
-int checkMouseState();
+int processMouse();
 
 void cursorMove(int xrel,int yrel);
 

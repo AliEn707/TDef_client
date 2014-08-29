@@ -184,6 +184,9 @@ void processEvent(SDL_Event event){
 			case SDL_MOUSEBUTTONUP:
 				config.global.mouse[event.button.button]=0;
 				break;
+			case SDL_MOUSEWHEEL:
+				setZoom(event.wheel.y*1.2f);
+				break;
 		}
 }
 
@@ -246,7 +249,6 @@ void checkCursorBorder(){
 		cursor.state.y=config.window_height;
 	if (cursor.state.x>config.window_width)
 		cursor.state.x=config.window_width;
-	
 }
 //not used
 void mouseMotion(){
@@ -261,6 +263,9 @@ void mouseMotion(){
 int checkMouseState(){
 //	mouseMotion();
 	cursor.text=0;
+	//check mouse on map, if not need it return 0
+	checkMouseMap();
+	//check menus on csreen
 	if (config.auth==0){
 		checkMouseMenu(&config.auth_menu);
 		return 0;
@@ -269,7 +274,6 @@ int checkMouseState(){
 		checkMouseMenu(&config.menu.root);
 	else
 		if (config.map.enable!=0){
-			checkMouseMap();
 			checkMouseMenu(&config.map.screen_menu);
 			if (config.map.action_menu.enable!=0)
 				checkMouseMenu(&config.map.action_menu);
@@ -283,6 +287,21 @@ int checkMouseState(){
 	return 0;
 }
 
+
+int processMouse(){
+	#define border 4
+	if (cursor.state.x<border)
+		setMove(0,CAMERA_SPEED);
+	if (cursor.state.y<border)
+		setMove(CAMERA_SPEED,0);
+	if (cursor.state.y>config.window_height-border)
+		setMove(-CAMERA_SPEED,0);
+	if (cursor.state.x>config.window_width-border)
+		setMove(0,-CAMERA_SPEED);
+	
+	checkMouseState();
+	return 0;	
+}
 
 void cursorInit(){
 	cursor.sens=1.0;

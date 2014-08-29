@@ -45,13 +45,13 @@ void processKeysMap(SDL_Event event){
 
 void processContKeysMap(){
 	if (config.global.keys[SDLK_w]!=0)
-		setMove(-2,0);
+		setMove(-CAMERA_SPEED,0);
 	if (config.global.keys[SDLK_s]!=0)
-		setMove(2,0);
+		setMove(CAMERA_SPEED,0);
 	if (config.global.keys[SDLK_d]!=0)
-		setMove(0,-2);
+		setMove(0,-CAMERA_SPEED);
 	if (config.global.keys[SDLK_a]!=0)
-		setMove(0,2);
+		setMove(0,CAMERA_SPEED);
 	if (config.global.keys[SDLK_q]!=0)
 		setZoom(0.8);
 	if (config.global.keys[SDLK_e]!=0)
@@ -73,19 +73,19 @@ int globalTransformCorrection(){
 	float yd=gridToScreenY(config.map.grid_size,0);
 	float yu=gridToScreenY(0,config.map.grid_size);
 	if (xl>0){
-		config.map.transform.translate.x-=xl;
+		config.global.transform.translate.x-=xl;
 		s=2;
 	}
 	if (xr<config.window_width){
-		config.map.transform.translate.x-=xr-config.window_width;
+		config.global.transform.translate.x-=xr-config.window_width;
 		s=3;
 	}
 	if (yu<config.window_height){
-		config.map.transform.translate.y-=yu-config.window_height;
+		config.global.transform.translate.y-=yu-config.window_height;
 		s=4;
 	}
 	if (yd>0){
-		config.map.transform.translate.y-=yd;
+		config.global.transform.translate.y-=yd;
 		s=5;
 	}
 	float x=xr-xl;
@@ -98,7 +98,7 @@ int globalTransformCorrection(){
 			scale=config.window_height/y;
 		s=1;
 	}
-	config.map.transform.scale*=scale;
+	config.global.transform.scale*=scale;
 	return s;
 	/*
 	s is correction of 
@@ -111,22 +111,22 @@ int globalTransformCorrection(){
 }
 
 void setDefaultTransform(){
-	config.map.transform.scale=100;
+	config.global.transform.scale=100;
 	globalTransformCorrection();
 }
 
 
 
 void setMove(float x,float y){
-	config.map.transform.translate.x+=y; //do not change!
-	config.map.transform.translate.y+=x;
+	config.global.transform.translate.x+=y; //do not change!
+	config.global.transform.translate.y+=x;
 	globalTransformCorrection();
 }
 
 void setZoom(float x){
-	config.map.transform.scale+=x;
-	if (config.map.transform.scale<=0)
-		config.map.transform.scale=0.2;
+	config.global.transform.scale+=x;
+	if (config.global.transform.scale<=0)
+		config.global.transform.scale=0.2;
 	float s=-1;
 	if (x<0)
 		s*=-1;
@@ -135,9 +135,9 @@ void setZoom(float x){
 }
 
 
-#define tx config.map.transform.translate.x
-#define ty config.map.transform.translate.y
-#define sx config.map.transform.scale
+#define tx config.global.transform.translate.x
+#define ty config.global.transform.translate.y
+#define sx config.global.transform.scale
 #define sy (sx/2)
 
 //take to map.c file

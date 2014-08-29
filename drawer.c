@@ -119,7 +119,11 @@ void drawElement(element * e,int focus){
 	if (*e->text==0)
 		return;
 	glPushMatrix();
-		glTranslatef(e->text_position.x,e->text_position.y+glFontHeight(&mainfont,e->text),0);
+		glTranslatef(e->position.x+e->text_position.x,
+				e->position.y+e->text_position.y,
+				0);
+		glScalef(15,15,1);
+		glTranslatef(0,glFontHeight(&mainfont,e->text),0);
 		if (e->text_centered!=0)
 			drawTextCentered(&mainfont,e->text);
 		else
@@ -254,8 +258,8 @@ void drawMap(){
 }
 
 void globalTransform(){
-	glTranslatef(config.map.transform.translate.x,config.map.transform.translate.y,-100);
-	glScalef(config.map.transform.scale,config.map.transform.scale,1);
+	glTranslatef(config.global.transform.translate.x,config.global.transform.translate.y,-100);
+	glScalef(config.global.transform.scale,config.global.transform.scale,1);
 	glRotatef(-60,1,0,0);
 	//glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
@@ -480,6 +484,74 @@ void drawBullets(){
 			drawBullet(&config.map.bullet_array[i]);
 }
 
+void drawWall(wall* w){
+	glPushMatrix();
+	glTranslatef(getGridX(w->position),getGridY(w->position),0);
+//	glTranslatef(0,0.2,0);
+//	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
+	float x=0;
+	float y=0;
+	#define size 0.65f
+	if (w->direction=='x')
+		x=size;
+	else 
+		y=size;
+	setTexture(&config.map.tex[w->tex]);
+		glColor4f(1,1,1,1);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex3f(-x,-y,0);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex3f(x,y,0);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex3f(-x,-y,2*size);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex3f(x,y,2*size);
+		glEnd();
+	glPopMatrix();
+	#undef size
+}
+
+void drawWalls(){
+	int i;
+	for(i=0;i<config.map.walls_size;i++)
+		if (config.map.walls[i].direction!=0)
+			drawWall(&config.map.walls[i]);
+}
+
+void drawMapObject(map_object* o){
+	glPushMatrix();
+	glTranslatef(o->position.x,o->position.y,0);
+	backTransform();
+	glScalef(1.415,1.415,1);
+//quad size 1.415 
+//if first 2,3 and second 3,4.1 -> |   |   |	
+//if first 2,3 and second 3,4 -> |      |	
+//	glTranslatef(0,0.2,0);
+//	printf("object on map\n");
+	setTexture(&config.map.tex[o->tex]);
+		glColor4f(1,1,1,1);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(-0.5f,0.0f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(0.5f,0.0f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(-0.5f,1.0f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(0.5f,1.0f);
+		glEnd();
+	glPopMatrix();
+}
+
+void drawMapObjects(){
+	int i;
+	for(i=0;i<config.map.map_objects_size;i++)
+		if (config.map.map_objects[i].tex!=0)
+			drawMapObject(&config.map.map_objects[i]);
+}
 
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -494,12 +566,16 @@ void drawScene(){
 		glDisable(GL_DEPTH_TEST);
 		drawMap();
 		config.texture_no_change=1;
+		drawWalls();
+		drawMapObjects();
 		drawNpcs();
 		drawTowers();
 		drawBullets();
 		//draw map
 		glEnable(GL_DEPTH_TEST);
 		config.texture_no_change=0;
+		drawWalls();
+		drawMapObjects();
 		drawNpcs();
 		drawTowers();
 		drawBullets();

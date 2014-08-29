@@ -87,7 +87,8 @@
 #define BULLET_DETONATE 2
 #define BULLET_CREATE 4
 
-
+//global controls
+#define CAMERA_SPEED 3.0f //config.global.camera.move_speed
 
 
 typedef
@@ -249,6 +250,24 @@ struct bullet{
 	int prev_time;
 }bullet;
 
+typedef 
+struct {
+	int position;
+	char direction;
+	
+	int tex;
+} wall;
+
+
+typedef 
+struct {
+	vec2 position;
+	
+	int tex;
+} map_object;
+
+
+
 /////////////
 typedef 
 struct g_params{
@@ -345,7 +364,6 @@ struct map_conf{
 	gnode * grid;
 	gnode * grid_out[4]; //non working map zone 
 	texture tex[MAP_COMON_TEXTURES_MAX];
-	g_params transform;
 	
 	menu screen_menu;
 	menu action_menu;
@@ -362,6 +380,11 @@ struct map_conf{
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	
+	int walls_size;
+	wall * walls;
+	int map_objects_size;
+	map_object* map_objects;
+	
 	netw network;
 	SDL_Thread* worker;
 	SDL_Thread* connector;
@@ -374,7 +397,11 @@ struct global_conf{
 	cur cursor;
 	int keys[5000];
 	int mouse[100];
+	g_params transform;
 	
+	struct {
+		float move_speed;
+	} camera;
 	struct {
 		GLFONT all;
 	} font;
@@ -441,8 +468,14 @@ struct g_config{
 
 #define sqr(a) ((a)*(a))
 
-#define mapTex(a) ((int)((a-'a')+COMON_TEXTURES_START))
+#define mapTex(a) ((int)((a)+COMON_TEXTURES_START))
 
+
+#define idToX(id) (id/config.map.grid_size)
+#define idToY(id) (id%config.map.grid_size)
+
+#define getGridX(id) (1.0*idToX(id)+0.5f)
+#define getGridY(id) (1.0*idToY(id)+0.5f)
 
 
 #define posToId(v) (config.map.grid_size*((int)v.x)+((int)v.y))

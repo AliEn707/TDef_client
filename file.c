@@ -160,6 +160,7 @@ void loadMenu(menu* root,char* path){
 							}
 							if(strcmp(buf,"text")==0){
 								fscanf(file,"%s\n",m->objects[i].elements[j].text);
+								printf("\nelement text %s\n",m->objects[i].elements[j].text);
 							}
 							if(strcmp(buf,"ctext")==0){
 								fscanf(file,"%hd\n",&m->objects[i].elements[j].text_centered);
@@ -227,7 +228,7 @@ void loadMap(char* path){
 		perror("malloc build loadMap");
 	fscanf(file,"%s\n",walk);
 	fscanf(file,"%s\n",build);
-	int i;
+	int i,j;
 	for(i=0;i<size*size;i++){
 		grid[i].id=i;
 		/*
@@ -295,37 +296,67 @@ void loadMap(char* path){
 		perror("fopen loadMap");
 	
 	while(1){
-		char c;
-		fscanf(file,"%c",&c);
-		if(c=='-'){
+		int c;
+		fscanf(file,"%s",buf);
+		if(*buf=='-'){
 			break;
 		}
+		sscanf(buf,"%d",&c);
 		fscanf(file,"%s\n",buf);
 		loadMTexture(&config.map.tex[mapTex(c)],buf);
 	}
 	int grid_out_size=(1+(config.map.grid_size+1)%2+config.map.grid_size)/2*(config.map.grid_size/2+config.map.grid_size%2);
-	char * map;
-	if ((map=malloc(sizeof(char)*config.map.grid_size*config.map.grid_size))==0)
-		perror("malloc map loadMap");
-	memset(map,0,sizeof(char)*config.map.grid_size*config.map.grid_size);
-	fscanf(file,"%s\n",map);
+	int id;
 	for(i=0;i<sqr(config.map.grid_size);i++){
-			config.map.grid[i].tex=mapTex(map[i]);
+			fscanf(file,"%d ",&id);
+			config.map.grid[i].tex=mapTex(id);
 //			printf("%d\n",config.map.grid[i].tex);
 		}
 	for(i=0;i<4;i++){
 		if((config.map.grid_out[i]=malloc(sizeof(gnode)*grid_out_size))==0)
 			perror("malloc grid_out[]"); 
 		memset(config.map.grid_out[i],0,sizeof(gnode)*grid_out_size);
-		fscanf(file,"%s\n",map);
-		int j;
 		for(j=0;j<grid_out_size;j++){
+			fscanf(file,"%d ",&id);
 			config.map.grid_out[i][j].id=-2;
 //			config.map.grid_out[i][j].walkable=1;
-			config.map.grid_out[i][j].tex=mapTex(map[j]);
+			config.map.grid_out[i][j].tex=mapTex(id);
 		}
 	}
-	free(map);
+
+	while(feof(file)==0){
+		fscanf(file,"%s",buf);
+		if(strcmp(buf,"walls")==0){
+			fscanf(file,"%d\n",&j);
+			int id;
+			if((config.map.walls=malloc(sizeof(wall)*j))==0)
+				perror("malloc walls loadMap");
+			config.map.walls_size=j;
+			for(i=0;i<j;i++){
+				fscanf(file,"%d %c %d\n",
+						&config.map.walls[i].position,
+						&config.map.walls[i].direction,
+						&id);
+				config.map.walls[i].tex=mapTex(id);
+			}
+		}
+		if(strcmp(buf,"objects")==0){
+			fscanf(file,"%d\n",&j);
+			int id;
+			if((config.map.map_objects=malloc(sizeof(map_object)*j))==0)
+				perror("malloc objects loadMap");
+			config.map.map_objects_size=j;
+			for(i=0;i<j;i++){
+				fscanf(file,"%f %f %d\n",
+						&config.map.map_objects[i].position.x,
+						&config.map.map_objects[i].position.y,
+						&id);
+				config.map.map_objects[i].tex=mapTex(id);
+			}
+		}
+		
+	}
+	
 	fclose(file);
 	
 	
@@ -338,6 +369,8 @@ void loadMap(char* path){
 
 void realizeMap(){
 	free(config.map.grid);
+	free(config.map.walls);
+	free(config.map.map_objects);
 	free(config.map.tower_array);
 	free(config.map.npc_array);
 	free(config.map.bullet_array);
@@ -723,6 +756,7 @@ void loadFiles(){
 	config.map.bullet_array[0].destination.y=y2;
 	config.map.bullet_array[0].direction.x=x2-x1;
 	config.map.bullet_array[0].direction.y=y2-y1;
+	
 	
 	/////
 }

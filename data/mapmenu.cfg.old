@@ -1,0 +1,268 @@
+deap 0
+path 0
+submenu 0
+objects 11
+----object1_left_down
+touch 1
+focus 1
+arg 2 2
+action movemap
+elements 3
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 30
+xsize 30
+ysize 70
+tex screen/left_down_left
+ftex 0
+//o1e1
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 30
+ysize 30
+tex screen/left_down
+ftex 0
+//o1e2
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 30
+ypos 0
+xsize 70
+ysize 30
+tex screen/left_down_down
+//o1e3
+//o1
+----object2_left_up
+ypos u 100
+touch 1
+focus 1
+arg -2 2
+action movemap
+elements 3
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xsize 30
+ysize 70
+tex screen/left_up_left
+ftex 0
+//o2e1
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+ypos 70
+xsize 30
+ysize 30
+tex screen/left_up
+ftex 0
+//o2e2
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 30
+ypos 70
+xsize 70
+ysize 30
+tex screen/left_up_up
+ftex 0
+//o2e3
+//o2
+----object3_right_up
+xpos r 100
+ypos u 100
+touch 1
+focus 1
+arg -2 -2
+action movemap
+elements 3
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 70
+xsize 70
+ysize 30
+tex screen/right_up_up
+//o3e1
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 70
+ypos 70
+xsize 30
+ysize 30
+tex screen/right_up
+//o3e2
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 70
+ypos 0
+xsize 30
+ysize 70
+tex screen/right_up_right
+//o3e3
+//o3
+----object4_right_down
+xpos r 100
+ypos d 0
+touch 1
+focus 1
+arg 2 -2
+action movemap
+elements 3
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 70
+ysize 30
+tex screen/right_down_down
+//o4e1
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 70
+ypos 0
+xsize 30
+ysize 30
+tex screen/right_down
+//o4e2
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 70
+ypos 30
+xsize 30
+ysize 70
+tex screen/right_down_right
+//o4e3
+//o4
+----object5_menu_button
+xpos l 40
+ypos u 80
+touch 1
+focus 1
+text menu
+action menu
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 40
+ysize 40
+tex screen/menu
+text Menu
+xtext 0
+ytext 0
+//o5e1
+//o5
+----object6_left
+xpos l 0
+ypos d 100
+touch 1
+focus 1
+arg 0 2
+action movemap
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 30
+ysize -200
+tex screen/left
+//o6e1
+//o6
+----object7_right
+xpos r 30
+ypos d 100
+touch 1
+focus 1
+arg 0 -2
+action movemap
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 30
+ysize -200
+tex screen/right
+//o7e1
+//o7
+----object8_down
+xpos l 100
+ypos d 0
+touch 1
+focus 1
+arg 2 0
+action movemap
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize -200
+ysize 30
+tex screen/down
+//o8e1
+//o8
+----object9_up
+xpos l 100
+ypos u 30
+touch 1
+focus 1
+arg -2 0
+action movemap
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize -200
+ysize 30
+tex screen/up
+//o9e1
+//o9
+----object10_zoom+_button
+xpos l 40
+ypos u 130
+touch 1
+focus 1
+arg 8 10
+action zoommap
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 40
+ysize 40
+tex screen/zoom_up
+//o10e1
+//o10
+----object11_zoom-_button
+xpos l 40
+ypos u 180
+touch 1
+focus 1
+arg -8 10
+action zoommap
+elements 1
+----
+color 1 1 1 1.0
+fcolor 0 1 1 1.0
+xpos 0
+ypos 0
+xsize 40
+ysize 40
+tex screen/zoom_down
+//o11e1
+//o11

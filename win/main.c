@@ -69,8 +69,8 @@ int main(int argc, char *argv[]){
 		config.global_count++;
 //		SDL_Delay(100);
 		SDL_Event event;
-		SDL_GetMouseState(&cursor.pos.x,&cursor.pos.y);
-		checkMouseState();
+//		SDL_GetMouseState(&cursor.pos.x,&cursor.pos.y);
+		processMouse();
 		while( SDL_PollEvent(&event) ){
 			processEvent(event);
 		}
