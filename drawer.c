@@ -377,44 +377,6 @@ void drawTowers(){
 			drawTower(&config.map.tower_array[i]);
 }
 
-void drawSplash(splash* s){
-	glPushMatrix();
-	glTranslatef(s->position.x,s->position.y,0);
-	backTransform();
-//	glScalef(1.2,1.2,1);
-//	glTranslatef(0,0.2,0);
-//	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
-	if (s->tex.frames==0){
-		if (config.splash_types[s->type].tex.frames==0)
-			loadMTexture(&config.splash_types[s->type].tex,config.splash_types[s->type].tex_path);
-		memcpy(&s->tex,&config.splash_types[s->type].tex,sizeof(texture));
-	}
-	if(setTexture(&s->tex))
-		s->anim_ended=1;
-	
-		glColor4f(1,1,1,1);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(-0.5f,0.0f);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(0.5f,0.0f);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(-0.5f,1.0f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(0.5f,1.0f);
-		glEnd();
-	glPopMatrix();
-}
-
-void drawSplashes(){
-	int i;
-	for(i=0;i<config.map.tower_max;i++)
-		if (config.map.tower_array[i].type!=0)
-			drawTower(&config.map.tower_array[i]);
-}
-
-
 void drawBullet(bullet* b){
 	glPushMatrix();
 //	printf("%g %g| %g %g %d\n",b->position.x,b->position.y,b->direction.x,b->direction.y,b->type);
@@ -521,6 +483,44 @@ void drawBullets(){
 			drawBullet(&config.map.bullet_array[i]);
 }
 
+
+void drawSplash(splash* s){
+	glPushMatrix();
+	glTranslatef(s->position.x,s->position.y,0);
+	backTransform();
+//	glScalef(1.2,1.2,1);
+//	glTranslatef(0,0.2,0);
+//	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
+	if (s->tex.frames==0){
+		if (config.splash_types[s->type].tex.frames==0)
+			loadMTexture(&config.splash_types[s->type].tex,config.splash_types[s->type].tex_path);
+		memcpy(&s->tex,&config.splash_types[s->type].tex,sizeof(texture));
+	}
+	if(setTexture(&s->tex))
+		s->anim_ended=1;
+	
+		glColor4f(1,1,1,1);
+//		glBegin(GL_LINE_LOOP);
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(-0.5f,0.0f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(0.5f,0.0f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(-0.5f,1.0f);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(0.5f,1.0f);
+		glEnd();
+	glPopMatrix();
+}
+
+void drawSplashes(){
+	int i;
+	for(i=0;i<config.map.tower_max;i++)
+		if (config.map.tower_array[i].type!=0)
+			drawTower(&config.map.tower_array[i]);
+}
+
 void drawWall(wall* w){
 	glPushMatrix();
 	glTranslatef(getGridX(w->position),getGridY(w->position),0);
@@ -528,23 +528,28 @@ void drawWall(wall* w){
 //	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	float x=0;
 	float y=0;
+	vec2 shift={0,0};
 	#define size 0.65f
-	if (w->direction=='x')
+	if (w->direction=='x'){
 		x=size;
-	else 
+		shift.x=size-0.5f;
+	}else {
 		y=size;
+		shift.y=-(size-0.5f);
+	}
+	glTranslatef(shift.x,shift.y,0);
 	setTexture(&config.map.tex[w->tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex3f(-x,-y,0);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex3f(x,y,0);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex3f(-x,-y,2*size);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex3f(x,y,2*size);
+			glTexCoord2f (0.005f, 0.005f);
+			glVertex3f(-x,y,0);
+			glTexCoord2f (0.995f, 0.005f);
+			glVertex3f(x,-y,0);
+			glTexCoord2f (0.005f, 0.995f);
+			glVertex3f(-x,y,2*size);
+			glTexCoord2f (0.995f, 0.995f);
+			glVertex3f(x,-y,2*size);
 		glEnd();
 	glPopMatrix();
 	#undef size
@@ -602,8 +607,15 @@ void drawScene(){
 		globalTransform();
 		glDisable(GL_DEPTH_TEST);
 		drawMap();
+	
 		config.texture_no_change=1;
 		drawWalls();
+		glEnable(GL_DEPTH_TEST);
+		config.texture_no_change=0;
+		drawWalls();
+		
+		glDisable(GL_DEPTH_TEST);
+		config.texture_no_change=1;
 		drawMapObjects();
 		drawNpcs();
 		drawTowers();
@@ -612,7 +624,6 @@ void drawScene(){
 		//draw map
 		glEnable(GL_DEPTH_TEST);
 		config.texture_no_change=0;
-		drawWalls();
 		drawMapObjects();
 		drawNpcs();
 		drawTowers();
