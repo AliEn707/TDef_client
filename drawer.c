@@ -300,6 +300,7 @@ void drawNpc(npc* n){
 	backTransform();
 //	printf("n->type - %d\n",n->type);
 	glScalef(0.9,0.9,1);
+	glTranslatef(0,0,1);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				loadMTexture(&config.npc_types[n->type].tex[n->current_tex],config.npc_types[n->type].tex_path[n->current_tex]);
@@ -341,7 +342,7 @@ void drawTower(tower* t){
 	glTranslatef(t->position.x,t->position.y,0);
 	backTransform();
 	glScalef(1.2,1.2,1);
-	glTranslatef(0,0.2,0);
+	glTranslatef(0,0.2,1);
 //	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	if (t->tex[t->current_tex].frames==0){
 		if (config.tower_types[t->type].tex[t->current_tex].frames==0)
@@ -390,7 +391,7 @@ void drawBullet(bullet* b){
 	
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
-	glTranslatef(0,0.2,0.01);
+	glTranslatef(0,0.2,1.01);
 	float x;
 	
 	if (b->destination.x==pos->x && b->destination.y==pos->y)
@@ -489,7 +490,7 @@ void drawSplash(splash* s){
 	glTranslatef(s->position.x,s->position.y,0);
 	backTransform();
 //	glScalef(1.2,1.2,1);
-//	glTranslatef(0,0.2,0);
+	glTranslatef(0,0,1);
 //	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	if (s->tex.frames==0){
 		if (config.splash_types[s->type].tex.frames==0)
@@ -610,9 +611,9 @@ void drawScene(){
 	
 		config.texture_no_change=1;
 		drawWalls();
-		glEnable(GL_DEPTH_TEST);
-		config.texture_no_change=0;
-		drawWalls();
+//		glEnable(GL_DEPTH_TEST);
+//		config.texture_no_change=0;
+//		drawWalls();
 		
 		glDisable(GL_DEPTH_TEST);
 		config.texture_no_change=1;
@@ -624,6 +625,7 @@ void drawScene(){
 		//draw map
 		glEnable(GL_DEPTH_TEST);
 		config.texture_no_change=0;
+		drawWalls();
 		drawMapObjects();
 		drawNpcs();
 		drawTowers();

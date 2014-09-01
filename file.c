@@ -777,7 +777,7 @@ void loadFiles(){
 	
 	config.map.tower_array[0].id=-1;
 	config.map.tower_array[0].type=1;
-	config.map.tower_array[0].position.x=3.5;
+	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
 	
 	config.map.bullet_array[0].id=-1;
