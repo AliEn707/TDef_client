@@ -314,13 +314,13 @@ void drawNpc(npc* n){
 //		glBegin(GL_LINE_LOOP);
 //		glBegin(GL_QUADS);
 		glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f (0.0f, 0.0f);
+			glTexCoord2f (0.005f, 0.005f);
 			glVertex2f(-0.5f,0.0f);
-			glTexCoord2f (1.0f, 0.0f);
+			glTexCoord2f (0.995f, 0.005f);
 			glVertex2f(0.5f,0.0f);
-			glTexCoord2f (0.0f, 1.0f);
+			glTexCoord2f (0.005f, 0.995f);
 			glVertex2f(-0.5f,1.0f);
-			glTexCoord2f (1.0f, 1.0f);
+			glTexCoord2f (0.995f, 0.995f);
 			glVertex2f(0.5f,1.0f);
 		glEnd();
 		//draw health
@@ -355,13 +355,13 @@ void drawTower(tower* t){
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_QUADS);
-			glTexCoord2f (0.0f, 0.0f);
+			glTexCoord2f (0.005f, 0.005f);
 			glVertex2f(-0.5f,-0.5f);
-			glTexCoord2f (1.0f, 0.0f);
+			glTexCoord2f (0.995f, 0.005f);
 			glVertex2f(0.5f,-0.5f);
-			glTexCoord2f (1.0f, 1.0f);
+			glTexCoord2f (0.995f, 0.995f);
 			glVertex2f(0.5f,0.5f);
-			glTexCoord2f (0.0f, 1.0f);
+			glTexCoord2f (0.005f, 0.995f);
 			glVertex2f(-0.5f,0.5f);
 		glEnd();
 	
@@ -436,16 +436,16 @@ void drawBullet(bullet* b){
 	float tx1,ty1,tx2,ty2,vx;
 	float height=0.08f;
 	if (config.bullet_types[b->type].solid==0){
-		tx1=0;
-		ty1=0;
-		tx2=1;
-		ty2=1;
+		tx1=0.005f;
+		ty1=0.005f;
+		tx2=0.995f;
+		ty2=0.995f;
 		vx=height*8;
 	}else{
-		tx1=0;
-		ty1=0;
+		tx1=0.005f;
+		ty1=0.005f;
 		tx2=length/0.64;
-		ty2=1;
+		ty2=0.995f;
 		vx=length;
 	}
 	if (x<0){
