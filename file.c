@@ -1,8 +1,4 @@
-#include "main.h"
-#include "file.h"
-#include "menu.h"
-#include "map.h"
-#include "engine.h"
+#include "headers.h"
 
 
 
@@ -156,7 +152,10 @@ void loadMenu(menu* root,char* path){
 								if (strcmp(buf,"0")==0)
 									continue;
 								//add tex load
-								loadTexture(&m->objects[i].elements[j].tex,buf);
+								if (root->map!=0)
+									loadMTexture(&m->objects[i].elements[j].tex,buf);
+								else
+									loadTexture(&m->objects[i].elements[j].tex,buf);
 							}
 							if(strcmp(buf,"text")==0){
 								fscanf(file,"%s\n",m->objects[i].elements[j].text);
@@ -202,6 +201,7 @@ void realizeMenu(menu* m){
 	free(m->objects);
 	free(m->submenu);
 	//clean all mallocs
+	memset(m,0,sizeof(menu));
 }
 
 
@@ -373,12 +373,20 @@ void loadMap(char* path){
 
 void realizeMap(){
 	free(config.map.grid);
+	config.map.grid=0;
 	free(config.map.walls);
+	config.map.walls=0;
 	free(config.map.map_objects);
+	config.map.map_objects=0;
 	free(config.map.tower_array);
+	config.map.tower_array=0;
 	free(config.map.npc_array);
+	config.map.npc_array=0;
 	free(config.map.bullet_array);
+	config.map.bullet_array=0;
 	free(config.map.splash_array);
+	config.map.splash_array=0;
+	
 }
 
 
@@ -749,15 +757,19 @@ void loadFiles(){
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	
 	loadMenu(&config.menu.root,"../data/menu.cfg");
+	loadMenu(&config.loading,"../data/loading.cfg");
 	loadMenu(&config.auth_menu,"../data/authmenu.cfg");
-	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
-	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
+//	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
+//	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
 	glFontCreate (&mainfont, "../data/main.glf");
 	
+//	loadMap("test");
 	
-	loadMap("test");
 	
+}
+
+void setTestData(){
 	////test
 	#define x1 4 
 	#define y1 2 //9	
@@ -797,23 +809,30 @@ void loadFiles(){
 
 void cleanMap(){
 	int i;
+	config.map.enable=0;
+	usleep(10000);
 	realizeMap();
+
+	realizeMenu(&config.map.action_menu);
+	config.map.action_menu.map=1;
+	realizeMenu(&config.map.screen_menu);
+	config.map.screen_menu.map=1;
 	
 	for(i=0;i<4;i++)
 		free(config.map.grid_out[i]);
 	glDeleteTextures (config.map.textures_size,(unsigned int*)config.map.textures);
-	
+	config.map.textures_size=0;
 }
 
 void cleanAll(){
 	realizeMenu(&config.menu.root);
 	realizeMenu(&config.auth_menu);
-	realizeMenu(&config.map.screen_menu);
-	realizeMenu(&config.map.action_menu);
+//	realizeMenu(&config.map.screen_menu);
+//	realizeMenu(&config.map.action_menu);
 	
 	realizeTypes();
 	
 	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
-	
-	cleanMap();
+	config.textures_size=0;
+//	cleanMap();
 }

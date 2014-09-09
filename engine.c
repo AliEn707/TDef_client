@@ -1,9 +1,4 @@
-#include "main.h"
-#include "engine.h"
-#include "menu.h"
-#include "map.h"
-#include "file.h"
-#include "tga.h"
+#include "headers.h"
 
 
 int sign(float x){
@@ -163,9 +158,9 @@ void processEvent(SDL_Event event){
 						actionToggleMenu(0);
 						break;
 				}
-				if (config.menu.enable!=0)
+				//if (config.menu.enable!=0)
 					processKeysMenu(event);
-				else
+				//else
 					if (config.map.enable!=0)
 						processKeysMap(event);
 				break;
@@ -183,9 +178,9 @@ void processEvent(SDL_Event event){
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				config.global.mouse[event.button.button]=1;
-				if (config.menu.enable!=0)
+				//if (config.menu.enable!=0)
 					processMouseMenu(event);
-				else
+				//else
 					if (config.map.enable!=0)
 						processMouseMap(event);
 				break;

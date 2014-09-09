@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h> 
 #include <string.h>
 #include <strings.h>
 #include <math.h>
@@ -328,6 +329,7 @@ struct object{
 typedef
 struct menu{
 	char enable;
+	char map;
 	int objects_size;
 	int submenu_size;
 	object * objects;
@@ -362,6 +364,7 @@ struct netw{
 	TCPsocket socket;
 	int err;
 	char server[40];
+	int port;
 } netw;
 
 typedef
@@ -385,7 +388,7 @@ struct map_conf{
 	
 	menu screen_menu;
 	menu action_menu;
-	menu npc_menu;
+//	menu npc_menu;
 	
 	int time_now;
 	
@@ -426,6 +429,8 @@ struct global_conf{
 	struct {
 		GLFONT all;
 	} font;
+	
+	SDL_Thread* drawer;
 }global_conf;
 
 
@@ -461,6 +466,7 @@ struct g_config{
 	
 	short auth;
 	menu auth_menu;
+	menu loading;
 	
 	int textures_size;
 	int textures[MAX_TEXTURES];

@@ -1,9 +1,4 @@
-#include "main.h"
-#include "menu.h"
-#include "engine.h"
-#include "file.h"
-#include "network.h"
-#include "threads.h"
+#include "headers.h"
 
 int checkMouseMenu(menu* root){
 	if (root==0)
@@ -59,21 +54,15 @@ void actionExit(void * arg){
 	config.main_running=0;
 }
 
-void actionAuth(void * arg){
-	config.auth++;
-	config.map.enable=1;
-	if (networkConnMap(config.map.network.server,34140)!=0){
-		config.map.worker=workerMapStart();
-		config.map.connector=connectorMapStart();
-	}
+void actionMapStart(void * arg){
+	config.loading.enable=1;
+	mapStart("test");
+	config.loading.enable=0;
 }
 
-void actionMapStart(void * arg){
-	loadMap("test");
-	if (networkConnMap(config.map.network.server,34140)!=0){
-		config.map.worker=workerMapStart();
-		config.map.connector=connectorMapStart();
-	}
+void actionAuth(void * arg){
+	config.auth++;
+	actionMapStart(0);
 }
 
 void actionTextTest(void * arg){

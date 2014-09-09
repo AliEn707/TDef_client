@@ -14,3 +14,5 @@ void loadFiles();
 void cleanMap();
 
 void cleanAll();
+//
+void setTestData();

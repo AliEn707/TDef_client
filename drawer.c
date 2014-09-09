@@ -1,8 +1,4 @@
-#include "main.h"
-#include "drawer.h"
-#include "map.h"
-#include "file.h"
-#include "engine.h"
+#include "headers.h"
 
 int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
@@ -303,7 +299,8 @@ void drawNpc(npc* n){
 	glTranslatef(0,0,1);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
-				loadMTexture(&config.npc_types[n->type].tex[n->current_tex],config.npc_types[n->type].tex_path[n->current_tex]);
+				//npc stored in global tex memory
+				loadTexture(&config.npc_types[n->type].tex[n->current_tex],config.npc_types[n->type].tex_path[n->current_tex]);
 			memcpy(&n->tex[n->current_tex],&config.npc_types[n->type].tex[n->current_tex],sizeof(texture));
 		}
 		if(setTexture(&n->tex[n->current_tex]))
@@ -339,35 +336,36 @@ void drawNpcs(){
 
 void drawTower(tower* t){
 	glPushMatrix();
-	glTranslatef(t->position.x,t->position.y,0);
-	backTransform();
-	glScalef(1.2,1.2,1);
-	glTranslatef(0,0.2,1);
-//	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
-	if (t->tex[t->current_tex].frames==0){
-		if (config.tower_types[t->type].tex[t->current_tex].frames==0)
-			loadMTexture(&config.tower_types[t->type].tex[t->current_tex],config.tower_types[t->type].tex_path[t->current_tex]);
-		memcpy(&t->tex[t->current_tex],&config.tower_types[t->type].tex[t->current_tex],sizeof(texture));
-	}
-	if(setTexture(&t->tex[t->current_tex]))
-		t->anim_ended=1;
-	
-		glColor4f(1,1,1,1);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_QUADS);
-			glTexCoord2f (0.005f, 0.005f);
-			glVertex2f(-0.5f,-0.5f);
-			glTexCoord2f (0.995f, 0.005f);
-			glVertex2f(0.5f,-0.5f);
-			glTexCoord2f (0.995f, 0.995f);
-			glVertex2f(0.5f,0.5f);
-			glTexCoord2f (0.005f, 0.995f);
-			glVertex2f(-0.5f,0.5f);
-		glEnd();
-	
-		float health=1.0*t->health/config.tower_types[t->type].health;
-		if (health<0.95)
-			drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
+		glTranslatef(t->position.x,t->position.y,0);
+		backTransform();
+		glScalef(1.2,1.2,1);
+		glTranslatef(0,0.2,1);
+//		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
+		if (t->tex[t->current_tex].frames==0){
+			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
+				//npc stored in global tex memory
+				loadTexture(&config.tower_types[t->type].tex[t->current_tex],config.tower_types[t->type].tex_path[t->current_tex]);
+			memcpy(&t->tex[t->current_tex],&config.tower_types[t->type].tex[t->current_tex],sizeof(texture));
+		}
+		if(setTexture(&t->tex[t->current_tex]))
+			t->anim_ended=1;
+		
+			glColor4f(1,1,1,1);
+//			glBegin(GL_LINE_LOOP);
+			glBegin(GL_QUADS);
+				glTexCoord2f (0.005f, 0.005f);
+				glVertex2f(-0.5f,-0.5f);
+				glTexCoord2f (0.995f, 0.005f);
+				glVertex2f(0.5f,-0.5f);
+				glTexCoord2f (0.995f, 0.995f);
+				glVertex2f(0.5f,0.5f);
+				glTexCoord2f (0.005f, 0.995f);
+				glVertex2f(-0.5f,0.5f);
+			glEnd();
+		
+			float health=1.0*t->health/config.tower_types[t->type].health;
+			if (health<0.95)
+				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
 	glPopMatrix();
 }
 
@@ -430,7 +428,7 @@ void drawBullet(bullet* b){
 	}
 	if (b->tex[b->current_tex].frames==0){
 		if (config.bullet_types[b->type].tex[b->current_tex].frames==0)
-			loadMTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);
+			loadTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);
 		memcpy(&b->tex[b->current_tex],&config.bullet_types[b->type].tex[b->current_tex],sizeof(texture));
 	}
 	float tx1,ty1,tx2,ty2,vx;
@@ -494,7 +492,7 @@ void drawSplash(splash* s){
 //	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	if (s->tex.frames==0){
 		if (config.splash_types[s->type].tex.frames==0)
-			loadMTexture(&config.splash_types[s->type].tex,config.splash_types[s->type].tex_path);
+			loadTexture(&config.splash_types[s->type].tex,config.splash_types[s->type].tex_path);
 		memcpy(&s->tex,&config.splash_types[s->type].tex,sizeof(texture));
 	}
 	if(setTexture(&s->tex))
@@ -600,42 +598,48 @@ void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 //	glEnable(GL_DEPTH_TEST);
+	//when we load something
+	if (config.loading.enable!=0){
+		drawMenu(&config.loading);
+		goto out;
+	}
 	if (config.auth==0){
 		drawMenu(&config.auth_menu);
 		goto out;
 	}
-	glPushMatrix();
-		globalTransform();
-		glDisable(GL_DEPTH_TEST);
-		drawMap();
-	
-		config.texture_no_change=1;
-		drawWalls();
-//		glEnable(GL_DEPTH_TEST);
-//		config.texture_no_change=0;
-//		drawWalls();
+	if (config.map.enable!=0){
+		glPushMatrix();
+			globalTransform();
+			glDisable(GL_DEPTH_TEST);
+			drawMap();
 		
+			config.texture_no_change=1;
+			drawWalls();
+	//		glEnable(GL_DEPTH_TEST);
+	//		config.texture_no_change=0;
+	//		drawWalls();
+			
+			glDisable(GL_DEPTH_TEST);
+			config.texture_no_change=1;
+			drawMapObjects();
+			drawNpcs();
+			drawTowers();
+			drawBullets();
+			drawSplashes();
+			//draw map
+			glEnable(GL_DEPTH_TEST);
+			config.texture_no_change=0;
+			drawWalls();
+			drawMapObjects();
+			drawNpcs();
+			drawTowers();
+			drawBullets();
+			drawSplashes();
+			//draw map egain
+		glPopMatrix();
 		glDisable(GL_DEPTH_TEST);
-		config.texture_no_change=1;
-		drawMapObjects();
-		drawNpcs();
-		drawTowers();
-		drawBullets();
-		drawSplashes();
-		//draw map
-		glEnable(GL_DEPTH_TEST);
-		config.texture_no_change=0;
-		drawWalls();
-		drawMapObjects();
-		drawNpcs();
-		drawTowers();
-		drawBullets();
-		drawSplashes();
-		//draw map egain
-	glPopMatrix();
-	glDisable(GL_DEPTH_TEST);
+	}
 	//draw screen controls
-	
 	
 	if (config.menu.enable!=0){
 		drawMenu(&config.menu.root);
@@ -647,5 +651,8 @@ void drawScene(){
 out:
 	//must be the last
 	drawCursor(); 
+	
+	glFlush();
+	SDL_GL_SwapWindow(config.window);
 }
 

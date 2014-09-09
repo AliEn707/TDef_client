@@ -1,9 +1,4 @@
-#include <math.h>
-
-#include "main.h"
-#include "network.h"
-#include "engine.h"
-#include "threads.h"
+#include "headers.h"
 
 #define checkMask(x,y) x&y
 

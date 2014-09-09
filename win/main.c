@@ -27,10 +27,12 @@ int main(int argc, char *argv[]){
 	config.time_per_frame=1000/50;
 	config.time_per_tick=1000/30;
 	graficsInit(); // инициализация
+	config.main_running=1;
 	printf("done\n");
+
 	loadFiles();
 	
-	
+//	drawerStart();
 	
 //	FreeConsole();
 //	GLFONT font;
@@ -52,6 +54,7 @@ int main(int argc, char *argv[]){
 	{
 		FILE * file=fopen("connect.txt","r");
 		fscanf(file,"%s\n",config.map.network.server);
+		fscanf(file,"%d\n",&config.map.network.port);
 		fclose(file);
 	}
 	
@@ -59,7 +62,7 @@ int main(int argc, char *argv[]){
 //	printf("%ls\n",L"ПРИвет");
 //	float xrf = 0, yrf = 0, zrf = 0; // углы поворота
 	Uint32 time=0;
-	config.main_running=1;
+
 	
 	networkInit();
 	
@@ -75,6 +78,7 @@ int main(int argc, char *argv[]){
 			processEvent(event);
 		}
 		processKeyboard();
+		
 
 	  	drawScene();
 //....................................................
@@ -100,12 +104,12 @@ int main(int argc, char *argv[]){
 */		
 //				drawNode();
 //.........................................................
-		glFlush();
-		SDL_GL_SwapWindow(config.window);
 	}
 	
 	config.map.enable=0;
 	SDL_WaitThread(config.map.worker, 0);
+	SDL_WaitThread(config.map.connector, 0);
+	SDL_WaitThread(config.global.drawer, 0);
 //	glFontDestroy(&font);
 	cleanAll();
 	networkExit();

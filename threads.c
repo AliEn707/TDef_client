@@ -1,8 +1,4 @@
-#include "main.h"
-#include "engine.h"
-#include "menu.h"
-#include "map.h"
-#include "network.h"
+#include "headers.h"
 
 typedef
 struct worker_arg{
@@ -154,7 +150,7 @@ int workerMap(void *ptr){
 
 SDL_Thread* workerMapStart(){
 	worker_arg arg;
-	printf("start worker....");
+	printf("start worker....\n");
 	return SDL_CreateThread(workerMap, "WorkerMap", (void*)&arg);
 }
 
@@ -183,6 +179,6 @@ int connectorMap(void *ptr){
 
 SDL_Thread* connectorMapStart(){
 	worker_arg arg;
-	printf("start connector....");
+	printf("start connector....\n");
 	return SDL_CreateThread(connectorMap, "ConnectorMap", (void*)&arg);
 }

@@ -1,11 +1,24 @@
-#include "main.h"
-#include "engine.h"
-#include "map.h"
+#include "headers.h"
 
 
 //
 
+void mapStart(char * path){
+	cleanMap();
+	loadMap(path);
+	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
+	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
+	if (networkConnMap(config.map.network.server,config.map.network.port)!=0){
+		config.map.worker=workerMapStart();
+		config.map.connector=connectorMapStart();
+	}else{
+		setTestData();
+	}	
+}
+
 void checkMouseMap(){
+	if (config.menu.enable!=0)
+		return;
 	if (config.map.enable==0){
 		config.map.focus=-1;
 		return;
@@ -29,7 +42,7 @@ void processMouseMap(SDL_Event event){
 	//priority on screen buttons
 	if(event.button.button==SDL_BUTTON_LEFT){
 		processNodeAction();
-		processObjectAction(MOUSE,SDL_BUTTON_LEFT);
+//		processObjectAction(MOUSE,SDL_BUTTON_LEFT);
 	}
 }
 
