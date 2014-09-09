@@ -630,30 +630,34 @@ void drawMinimap(){
 				glVertex2f(scale*config.map.grid_size,scale*i);
 			}
 		glEnd();
-		glDisable(GL_LINE_SMOOTH);
 		glLineWidth(1);
-		
-		glPointSize(3);
-		glEnable(GL_POINT_SMOOTH);
-		glBegin(GL_POINTS);
-			glColor4f(0,1,0,1.0);
+		glBegin(GL_LINES);
 			for(i=0;i<config.map.tower_max;i++)
 				if (config.map.tower_array[i].id!=0){
 					glColor4f(0,1,0,1.0);
-					glVertex2f(scale*config.map.tower_array[i].position.x,scale*config.map.tower_array[i].position.y);
+					glVertex2f(scale*(config.map.tower_array[i].position.x+0.5),scale*config.map.tower_array[i].position.y);
+					glVertex2f(scale*(config.map.tower_array[i].position.x-0.5),scale*config.map.tower_array[i].position.y);
+					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+0.5));
+					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-0.5));
 				}
+		glEnd();
+		glDisable(GL_LINE_SMOOTH);
+		glPointSize(3);
+		glEnable(GL_POINT_SMOOTH);
+		glBegin(GL_POINTS);
 			for(i=0;i<config.map.npc_max;i++)
 				if (config.map.npc_array[i].id!=0){
-					glColor4f(0,0.5,1,1.0);
+					glColor4f(0.2,1,0.2,1.0);
 					glVertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
 				}
-/*			glPointSize(1);
-			glColor4f(0.5,0.5,0,1.0);
-			for(i=0;i<config.map.bullet_max;i++)
-				if (config.map.bullet_array[i].id!=0)
-					glVertex2f(scale*config.map.bullet_array[i].position.x,scale*config.map.bullet_array[i].position.y);
-*/
 		glEnd();
+//		glPointSize(1);
+//		glBegin(GL_POINTS);
+///			glColor4f(1.0f,0.7f,0,1.0);
+//			for(i=0;i<config.map.bullet_max;i++)
+//				if (config.map.bullet_array[i].id!=0)
+//					glVertex2f(scale*config.map.bullet_array[i].position.x,scale*config.map.bullet_array[i].position.y);
+//		glEnd();
 		glPointSize(1);
 		glDisable(GL_POINT_SMOOTH);
 	glPopMatrix();
