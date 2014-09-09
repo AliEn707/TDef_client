@@ -594,6 +594,72 @@ void drawMapObjects(){
 			drawMapObject(&config.map.map_objects[i]);
 }
 
+void drawMinimap(){
+	if (config.map.minimap.enable==0)
+		return;
+#define minimap_size 200
+	float dsize=minimap_size*1.41;
+	float scale=1;
+	int i;
+	scale=minimap_size*1.0/config.map.grid_size;
+	glDisable(GL_TEXTURE_2D);
+	glColor4f(0,0,0,0.8);
+	glPushMatrix();
+	glTranslatef(config.window_width-dsize-15,config.window_height-dsize/4-15,0);	
+	//need to add tex under map 
+	glScalef(1,0.5,1);
+	glRotatef(-45,0,0,1);
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(0.0f,0.0f);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(minimap_size,0.0f);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(0.0f,minimap_size);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(minimap_size,minimap_size);
+		glEnd();
+		glColor4f(0.8,0.8,0.8,0.4);
+		glEnable(GL_LINE_SMOOTH);
+		glLineWidth(0.7);
+		glBegin(GL_LINES);
+			for(i=0;i<config.map.grid_size;i++){
+				glVertex2f(scale*i,scale*0);
+				glVertex2f(scale*i,scale*config.map.grid_size);
+				glVertex2f(scale*0,scale*i);
+				glVertex2f(scale*config.map.grid_size,scale*i);
+			}
+		glEnd();
+		glDisable(GL_LINE_SMOOTH);
+		glLineWidth(1);
+		
+		glPointSize(3);
+		glEnable(GL_POINT_SMOOTH);
+		glBegin(GL_POINTS);
+			glColor4f(0,1,0,1.0);
+			for(i=0;i<config.map.tower_max;i++)
+				if (config.map.tower_array[i].id!=0){
+					glColor4f(0,1,0,1.0);
+					glVertex2f(scale*config.map.tower_array[i].position.x,scale*config.map.tower_array[i].position.y);
+				}
+			for(i=0;i<config.map.npc_max;i++)
+				if (config.map.npc_array[i].id!=0){
+					glColor4f(0,0.5,1,1.0);
+					glVertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
+				}
+/*			glPointSize(1);
+			glColor4f(0.5,0.5,0,1.0);
+			for(i=0;i<config.map.bullet_max;i++)
+				if (config.map.bullet_array[i].id!=0)
+					glVertex2f(scale*config.map.bullet_array[i].position.x,scale*config.map.bullet_array[i].position.y);
+*/
+		glEnd();
+		glPointSize(1);
+		glDisable(GL_POINT_SMOOTH);
+	glPopMatrix();
+#undef minimap_size
+}
+
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -638,9 +704,10 @@ void drawScene(){
 			//draw map egain
 		glPopMatrix();
 		glDisable(GL_DEPTH_TEST);
+		drawMinimap();
 	}
 	//draw screen controls
-	
+	glDisable(GL_DEPTH_TEST);
 	if (config.menu.enable!=0){
 		drawMenu(&config.menu.root);
 	}else{

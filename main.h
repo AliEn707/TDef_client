@@ -379,9 +379,9 @@ struct menu_conf{
 typedef
 struct map_conf{
 	int enable;
-	int grid_size;
 	int focus;
 	int show_walk;
+	int grid_size;
 	gnode * grid;
 	gnode * grid_out[4]; //non working map zone 
 	texture tex[MAP_COMON_TEXTURES_MAX];
@@ -414,6 +414,11 @@ struct map_conf{
 	SDL_Thread* connector;
 	
 	char text[30];
+	struct {
+		short enable;
+		vec2 position;
+		
+	} minimap;
 } map_conf;
 
 typedef

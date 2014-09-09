@@ -358,7 +358,9 @@ void loadMap(char* path){
 				config.map.map_objects[i].tex=mapTex(id);
 			}
 		}
-		
+		if(strcmp(buf,"minimap")==0){
+			fscanf(file,"%hd\n",&config.map.minimap.enable);
+		}
 	}
 	
 	fclose(file);
