@@ -630,6 +630,7 @@ void drawMinimap(){
 				glVertex2f(scale*config.map.grid_size,scale*i);
 			}
 		glEnd();
+		
 		glLineWidth(1);
 		glBegin(GL_LINES);
 			for(i=0;i<config.map.tower_max;i++)
@@ -641,7 +642,16 @@ void drawMinimap(){
 					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-0.5));
 				}
 		glEnd();
+			
+		glColor4f(1,1,1,1);
 		glDisable(GL_LINE_SMOOTH);
+		glBegin(GL_LINE_LOOP);
+			glVertex2f(scale*screenToGridX(0,0),scale*screenToGridY(0,0));	
+			glVertex2f(scale*screenToGridX(config.window_width,0),scale*screenToGridY(config.window_width,0));	
+			glVertex2f(scale*screenToGridX(config.window_width,config.window_height),scale*screenToGridY(config.window_width,config.window_height));	
+			glVertex2f(scale*screenToGridX(0,config.window_height),scale*screenToGridY(0,config.window_height));	
+		glEnd();
+		
 		glPointSize(3);
 		glEnable(GL_POINT_SMOOTH);
 		glBegin(GL_POINTS);
@@ -652,8 +662,8 @@ void drawMinimap(){
 				}
 		glEnd();
 //		glPointSize(1);
+//		glColor4f(1.0f,0.7f,0,1.0);
 //		glBegin(GL_POINTS);
-///			glColor4f(1.0f,0.7f,0,1.0);
 //			for(i=0;i<config.map.bullet_max;i++)
 //				if (config.map.bullet_array[i].id!=0)
 //					glVertex2f(scale*config.map.bullet_array[i].position.x,scale*config.map.bullet_array[i].position.y);
