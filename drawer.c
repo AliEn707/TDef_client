@@ -339,7 +339,7 @@ void drawTower(tower* t){
 		glTranslatef(t->position.x,t->position.y,0);
 		backTransform();
 		glScalef(1.2,1.2,1);
-		glTranslatef(0,0.2,1);
+		glTranslatef(0,0.2,1.3);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
 			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
