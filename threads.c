@@ -156,22 +156,25 @@ SDL_Thread* workerMapStart(){
 
 int connectorMap(void *ptr){
 //	worker_arg * arg=ptr;
-	TCPsocket sock=config.map.network.socket;
+//	TCPsocket sock=config.map.network.socket;
 //	Uint32 time=0;
 //	int numready;
-	SDLNet_SocketSet set;
+//	SDLNet_SocketSet set;
 	
-	if((set=SDLNet_AllocSocketSet(1))==0)
-		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
-	if(SDLNet_TCP_AddSocket(set,sock)<0)
-		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
+//	if((set=SDLNet_AllocSocketSet(1))==0)
+//		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
+//	if(SDLNet_TCP_AddSocket(set,sock)<0)
+//		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
 	
 	printf("done\n");
 	while(config.map.enable){
 	//	config.map.time_now=SDL_GetTicks();
 		//get data from server
-		if(recvMesMap()<0)
+		if(recvMesMap()<0){
 			printf("network error");
+			//!!
+//			config.map.enable=0;
+		}
 	}
 	printf("exit workerMap\n");
 	return 0;

@@ -4,6 +4,7 @@
 //
 
 void mapStart(char * path){
+	config.loading.enable=1;
 	cleanMap();
 	loadMap(path);
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
@@ -13,7 +14,8 @@ void mapStart(char * path){
 		config.map.connector=connectorMapStart();
 	}else{
 		setTestData();
-	}	
+	}
+	config.loading.enable=0;
 }
 
 void checkMouseMap(){

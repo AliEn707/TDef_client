@@ -55,11 +55,12 @@ void actionExit(void * arg){
 }
 
 void actionMapStart(void * arg){
-	config.loading.enable=1;
+//	config.loading.enable=1;
 //	mapStart("global");
 //	mapStart("testbig");
 	mapStart("test");
-	config.loading.enable=0;
+//change to params for new connection	
+//	config.loading.enable=0;
 }
 
 void actionAuth(void * arg){

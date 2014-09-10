@@ -79,6 +79,11 @@ int main(int argc, char *argv[]){
 		}
 		processKeyboard();
 		
+		if (config.auth!=0)
+			if (config.map.enable==0){
+				//add connnection to map
+				//or default to public
+			}
 
 	  	drawScene();
 //....................................................

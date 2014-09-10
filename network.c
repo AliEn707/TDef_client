@@ -8,7 +8,7 @@ int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
 	int get;
 	get=SDLNet_TCP_Recv(sock,buf,need);
-	if (get<0)
+	if (get<=0)
 		return -1;
 	if (get==need)
 		return get;
