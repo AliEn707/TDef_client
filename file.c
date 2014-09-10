@@ -761,6 +761,7 @@ void loadFiles(){
 	loadMenu(&config.menu.root,"../data/menu.cfg");
 	loadMenu(&config.loading,"../data/loading.cfg");
 	loadMenu(&config.auth_menu,"../data/authmenu.cfg");
+	loadMenu(&config.message,"../data/message.cfg");
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
@@ -829,6 +830,7 @@ void cleanMap(){
 void cleanAll(){
 	realizeMenu(&config.menu.root);
 	realizeMenu(&config.auth_menu);
+	realizeMenu(&config.message);
 //	realizeMenu(&config.map.screen_menu);
 //	realizeMenu(&config.map.action_menu);
 	

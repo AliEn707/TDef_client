@@ -472,6 +472,7 @@ struct g_config{
 	short auth;
 	menu auth_menu;
 	menu loading;
+	menu message;
 	
 	int textures_size;
 	int textures[MAX_TEXTURES];

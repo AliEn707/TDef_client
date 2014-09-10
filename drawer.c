@@ -722,6 +722,7 @@ void drawScene(){
 	}
 	//draw screen controls
 	glDisable(GL_DEPTH_TEST);
+	drawMenu(&config.message);
 	if (config.menu.enable!=0){
 		drawMenu(&config.menu.root);
 	}else{
