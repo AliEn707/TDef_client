@@ -300,7 +300,10 @@ struct element{
 	vec2 position;
 	vec2 size;
 	texture tex;
+	short map;
+	char tex_path[30];
 	texture ftex;
+	char ftex_path[30];
 	short focus_tex;
 	int wire;
 	color3 color;
@@ -385,6 +388,7 @@ struct map_conf{
 	gnode * grid;
 	gnode * grid_out[4]; //non working map zone 
 	texture tex[MAP_COMON_TEXTURES_MAX];
+	char tex_path[MAP_COMON_TEXTURES_MAX][100];
 	
 	menu screen_menu;
 	menu action_menu;
@@ -404,6 +408,9 @@ struct map_conf{
 	int textures_size;
 	int textures[MAX_TEXTURES];
 	
+	int clean_textures_size;
+	int clean_textures[MAX_TEXTURES];
+	
 	int walls_size;
 	wall * walls;
 	int map_objects_size;
@@ -416,6 +423,7 @@ struct map_conf{
 	char text[30];
 	struct {
 		short enable;
+		short used;
 		vec2 position;
 		
 	} minimap;
@@ -435,7 +443,6 @@ struct global_conf{
 		GLFONT all;
 	} font;
 	
-	SDL_Thread* drawer;
 }global_conf;
 
 
@@ -472,7 +479,8 @@ struct g_config{
 	short auth;
 	menu auth_menu;
 	menu loading;
-	menu message;
+	
+	char message[500];
 	
 	int textures_size;
 	int textures[MAX_TEXTURES];
@@ -487,6 +495,13 @@ struct g_config{
 		bullet_type* bullet_types;
 	unsigned int splash_types_size;
 		splash_type* splash_types;
+	
+	struct {
+		char map[30];
+		char map_default[30];
+		SDL_Thread* thread;
+		TCPsocket sock;
+	} manager;
 	
 	struct {
 		int tower_level;

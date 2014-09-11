@@ -172,8 +172,8 @@ int connectorMap(void *ptr){
 		//get data from server
 		if(recvMesMap()<0){
 			printf("network error");
-			//!!
-//			config.map.enable=0;
+			setScreenMessage("network error");
+			config.map.enable=0;
 		}
 	}
 	printf("exit workerMap\n");
@@ -184,4 +184,39 @@ SDL_Thread* connectorMapStart(){
 	worker_arg arg;
 	printf("start connector....\n");
 	return SDL_CreateThread(connectorMap, "ConnectorMap", (void*)&arg);
+}
+
+
+int managerThread(void *ptr){
+//	worker_arg * arg=ptr;
+//	TCPsocket sock=config.map.network.socket;
+	printf("done\n");
+	while(config.main_running){ 
+		if (config.auth!=0){
+//			if(SDLNet_TCP_Send(config.manager.sock,&mtype,sizeof(mtype))<0){
+//				config.auth=0;
+//				goto out;
+//			}
+			if (config.map.enable==0){
+				if (*config.manager.map!=0){
+					mapStart(config.manager.map);
+					*config.manager.map=0;
+				}else{
+					mapStart(config.manager.map_default);
+				}
+				//add connnection to map
+				//or default to public
+			}
+		}
+//out:	
+	SDL_Delay(300);
+	}
+	printf("exit manager\n");
+	return 0;
+}
+
+SDL_Thread* managerStart(){
+	worker_arg arg;
+	printf("start manager....\n");
+	return SDL_CreateThread(managerThread, "Manager", (void*)&arg);
 }

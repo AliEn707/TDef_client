@@ -19,13 +19,19 @@ int textureFrameNext(texture *t){
 }
 
 void drawText(GLFONT *glFont,char* text){
-	//glFontHeight(glFont,text)
+	glPushMatrix();		
+//	glScalef(15,15,1);
+//	glTranslatef(0,glFontHeight(&mainfont,text),0);
+	glEnable(GL_TEXTURE_2D);
 	glFontTextOut(glFont,text,0,0,0);
+	glPopMatrix();
 }
 
 void drawTextCentered(GLFONT *glFont,char* text){
-	glPushMatrix();
+	glPushMatrix();		
+//	glScalef(15,15,1);
 	glTranslatef(-glFontWigth(glFont,text)/2,0,0);
+	glEnable(GL_TEXTURE_2D);
 	glFontTextOut(glFont,text,0,0,0);
 	glPopMatrix();
 }
@@ -85,13 +91,26 @@ int setTexture(texture * t){
 		return 0;
 	}
 	//add some stuff
-	glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
 	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
 	//if (config.global_count%FpF==0) //check next texture
 	return textureFrameNext(t);
 }
 
 void drawElement(element * e,int focus){
+	if (e->focus_tex!=0)
+		if (e->ftex.frames==0){
+			if(e->map!=0)
+				loadMTexture(&e->ftex,e->ftex_path);
+			else
+				loadTexture(&e->ftex,e->ftex_path);
+		}
+	if (e->tex.frames==0){
+		if(e->map!=0)
+			loadMTexture(&e->tex,e->tex_path);
+		else
+			loadTexture(&e->tex,e->tex_path);
+	}
 	if (focus==0){
 		glColor4f(e->color.r,e->color.g,e->color.b,e->color.a);
 		if (e->focus_tex!=0)
@@ -152,6 +171,9 @@ void drawMenu(menu * root){
 void drawNode(gnode * n){
 //	glBindTexture(GL_TEXTURE_2D, n->tex);
 //	glEnable(GL_TEXTURE_2D);
+	if (config.map.tex[n->tex].frames==0){
+		loadMTexture(&config.map.tex[n->tex],config.map.tex_path[n->tex]);
+	}
 	setTexture(&config.map.tex[n->tex]);
 	if (n->id==config.map.focus && config.menu.selected==0)
 		glColor4f(0,1,0,1);
@@ -265,6 +287,7 @@ void globalTransform(){
 void backTransform(){
 	glRotatef(45,0,0,1);
 	glRotatef(60,1,0,0);
+//	glScalef(1,2,1);
 	//glScalef(1,4*1,1);
 }
 
@@ -320,9 +343,19 @@ void drawNpc(npc* n){
 			glTexCoord2f (0.995f, 0.995f);
 			glVertex2f(0.5f,1.0f);
 		glEnd();
+		
+//		glTranslatef(0,0,0.1169);
+		glTranslatef(0,0,5);
 		//draw health
 		float health=1.0*n->health/config.npc_types[n->type].health;
-		if (health<0.95)
+		glPushMatrix();
+			glTranslatef(-0.5,0.9,0);
+			glScalef(0.15,0.15,1);
+			char buf[5];
+			sprintf(buf,"%d",n->level);
+			drawText(&mainfont,buf);
+		glPopMatrix();
+		if (health<0.98)
 			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
 	glPopMatrix();
 }
@@ -362,6 +395,16 @@ void drawTower(tower* t){
 				glTexCoord2f (0.005f, 0.995f);
 				glVertex2f(-0.5f,0.5f);
 			glEnd();
+			//draw level and health
+			glTranslatef(0,0,5);//need to draw over all
+
+			glPushMatrix();
+				glTranslatef(-0.325,0.5,0);
+				glScalef(0.1125,0.1125,1);
+				char buf[5];
+				sprintf(buf,"%d",t->level);
+				drawText(&mainfont,buf);
+			glPopMatrix();
 		
 			float health=1.0*t->health/config.tower_types[t->type].health;
 			if (health<0.95)
@@ -537,6 +580,9 @@ void drawWall(wall* w){
 		shift.y=-(size-0.5f);
 	}
 	glTranslatef(shift.x,shift.y,0);
+	if (config.map.tex[w->tex].frames==0){
+		loadMTexture(&config.map.tex[w->tex],config.map.tex_path[w->tex]);
+	}
 	setTexture(&config.map.tex[w->tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
@@ -571,6 +617,9 @@ void drawMapObject(map_object* o){
 //if first 2,3 and second 3,4 -> |      |	
 //	glTranslatef(0,0.2,0);
 //	printf("object on map\n");
+	if (config.map.tex[o->tex].frames==0){
+		loadMTexture(&config.map.tex[o->tex],config.map.tex_path[o->tex]);
+	}
 	setTexture(&config.map.tex[o->tex]);
 		glColor4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
@@ -674,6 +723,18 @@ void drawMinimap(){
 #undef minimap_size
 }
 
+void drawMessage(){
+	if (*config.message==0)
+		return;
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1,1,1,1);
+	glPushMatrix();
+		glTranslatef(config.window_width/2.0,config.window_height/2.0+100,0);	
+		glScalef(15,15,1);	
+		drawTextCentered(&mainfont,config.message);
+	glPopMatrix();
+}
+
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -722,7 +783,7 @@ void drawScene(){
 	}
 	//draw screen controls
 	glDisable(GL_DEPTH_TEST);
-	drawMenu(&config.message);
+	drawMessage();
 	if (config.menu.enable!=0){
 		drawMenu(&config.menu.root);
 	}else{

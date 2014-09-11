@@ -31,6 +31,7 @@ int main(int argc, char *argv[]){
 	printf("done\n");
 
 	loadFiles();
+	sprintf(config.manager.map_default,"test");
 	
 //	drawerStart();
 	
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]){
 
 	
 	networkInit();
-	
+	config.manager.thread=managerStart();
 	
 	while(config.main_running){ 
 		frameSync(&time);
@@ -78,14 +79,18 @@ int main(int argc, char *argv[]){
 			processEvent(event);
 		}
 		processKeyboard();
-		
+/*		
 		if (config.auth!=0)
 			if (config.map.enable==0){
 				//add connnection to map
 				//or default to public
 			}
-
+*/
 	  	drawScene();
+		if (config.map.clean_textures_size!=0){
+			glDeleteTextures(config.map.clean_textures_size,(unsigned int*)config.map.clean_textures);
+			config.map.clean_textures_size=0;
+		}
 //....................................................
 /*
 		xrf -= 0.5; 
@@ -114,7 +119,7 @@ int main(int argc, char *argv[]){
 	config.map.enable=0;
 	SDL_WaitThread(config.map.worker, 0);
 	SDL_WaitThread(config.map.connector, 0);
-	SDL_WaitThread(config.global.drawer, 0);
+//	SDL_WaitThread(config.global.drawer, 0);
 //	glFontDestroy(&font);
 	cleanAll();
 	networkExit();

@@ -152,10 +152,12 @@ void loadMenu(menu* root,char* path){
 								if (strcmp(buf,"0")==0)
 									continue;
 								//add tex load
-								if (root->map!=0)
-									loadMTexture(&m->objects[i].elements[j].tex,buf);
-								else
-									loadTexture(&m->objects[i].elements[j].tex,buf);
+								m->objects[i].elements[j].map=root->map;
+								sprintf(m->objects[i].elements[j].tex_path,"%s",buf);
+//								if (root->map!=0)
+//									loadMTexture(&m->objects[i].elements[j].tex,buf);
+//								else
+//									loadTexture(&m->objects[i].elements[j].tex,buf);
 							}
 							if(strcmp(buf,"text")==0){
 								fscanf(file,"%s\n",m->objects[i].elements[j].text);
@@ -211,6 +213,10 @@ void loadMap(char* path){
 	FILE * file;
 	char fullpath[300];
 	printf("load map....");
+//	if (config.map.textures_size==0){
+//		glDeleteTextures (config.map.textures_size,(unsigned int*)config.map.textures);
+//		config.map.textures_size=0;
+//	}
 	sprintf(fullpath,"../maps/%s.mp",path);
 	if ((file=fopen(fullpath,"r"))==0) 
 		perror("fopen loadMap");
@@ -307,7 +313,8 @@ void loadMap(char* path){
 		}
 		sscanf(buf,"%d",&c);
 		fscanf(file,"%s\n",buf);
-		loadMTexture(&config.map.tex[mapTex(c)],buf);
+//		loadMTexture(&config.map.tex[mapTex(c)],buf);
+		sprintf(config.map.tex_path[mapTex(c)],"%s",buf);
 	}
 	int grid_out_size=(1+(config.map.grid_size+1)%2+config.map.grid_size)/2*(config.map.grid_size/2+config.map.grid_size%2);
 	int id;
@@ -360,6 +367,7 @@ void loadMap(char* path){
 		}
 		if(strcmp(buf,"minimap")==0){
 			fscanf(file,"%hd\n",&config.map.minimap.enable);
+			config.map.minimap.used=config.map.minimap.enable;
 		}
 	}
 	
@@ -374,6 +382,7 @@ void loadMap(char* path){
 } 
 
 void realizeMap(){
+	int i;
 	free(config.map.grid);
 	config.map.grid=0;
 	free(config.map.walls);
@@ -389,6 +398,8 @@ void realizeMap(){
 	free(config.map.splash_array);
 	config.map.splash_array=0;
 	
+	for(i=0;i<4;i++)
+		free(config.map.grid_out[i]);
 }
 
 
@@ -761,7 +772,6 @@ void loadFiles(){
 	loadMenu(&config.menu.root,"../data/menu.cfg");
 	loadMenu(&config.loading,"../data/loading.cfg");
 	loadMenu(&config.auth_menu,"../data/authmenu.cfg");
-	loadMenu(&config.message,"../data/message.cfg");
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
@@ -774,7 +784,7 @@ void loadFiles(){
 
 void setTestData(){
 	////test
-	#define x1 4 
+	#define x1 3 
 	#define y1 2 //9	
 	#define x2 7.5
 	#define y2 5.5
@@ -811,31 +821,26 @@ void setTestData(){
 }
 
 void cleanMap(){
-	int i;
 	config.map.enable=0;
 	usleep(10000);
 	realizeMap();
-
+	memcpy(config.map.clean_textures,config.map.textures,config.map.textures_size*sizeof(int));
+	config.map.clean_textures_size=config.map.textures_size;
+	config.map.textures_size=0;
 	realizeMenu(&config.map.action_menu);
 	config.map.action_menu.map=1;
 	realizeMenu(&config.map.screen_menu);
 	config.map.screen_menu.map=1;
-	
-	for(i=0;i<4;i++)
-		free(config.map.grid_out[i]);
-	glDeleteTextures (config.map.textures_size,(unsigned int*)config.map.textures);
-	config.map.textures_size=0;
 }
 
 void cleanAll(){
 	realizeMenu(&config.menu.root);
 	realizeMenu(&config.auth_menu);
-	realizeMenu(&config.message);
 //	realizeMenu(&config.map.screen_menu);
 //	realizeMenu(&config.map.action_menu);
 	
 	realizeTypes();
-	
+	cleanMap();
 	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
 	config.textures_size=0;
 //	cleanMap();

@@ -1,3 +1,6 @@
+
+void setScreenMessage(char * mes);
+
 int checkMouseMenu(menu * root);
 
 void processMouseMenu(SDL_Event event);
