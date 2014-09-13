@@ -31,12 +31,8 @@ int main(int argc, char *argv[]){
 	printf("done\n");
 
 	loadFiles();
-	sprintf(config.manager.map_default,"test");
-	
-//	drawerStart();
 	
 //	FreeConsole();
-//	GLFONT font;
 	
 	
 	cursor.text="Hello";
@@ -66,7 +62,7 @@ int main(int argc, char *argv[]){
 
 	
 	networkInit();
-	config.manager.thread=managerStart();
+	config.drawer=drawerStart();
 	
 	while(config.main_running){ 
 		frameSync(&time);
@@ -79,50 +75,40 @@ int main(int argc, char *argv[]){
 			processEvent(event);
 		}
 		processKeyboard();
-/*		
+		
 		if (config.auth!=0)
 			if (config.map.enable==0){
+//				mapStart("public");
+				mapStart("test");
+				config.map.enable=1;
 				//add connnection to map
 				//or default to public
 			}
-*/
+		/*
+		check connection to config.public.network.socket
+		if no config.auth=0
+		*/
+/*
 	  	drawScene();
 		if (config.map.clean_textures_size!=0){
 			glDeleteTextures(config.map.clean_textures_size,(unsigned int*)config.map.clean_textures);
 			config.map.clean_textures_size=0;
 		}
-//....................................................
-/*
-		xrf -= 0.5; 
-		yrf -= 0.5;
-		zrf -= 0.5;
-		
-		
-		glEnable(GL_DEPTH_TEST);
-		
-		glPushMatrix();
-			glTranslatef(config.window_width/2,config.window_height/2,-20);
-				
-			glScalef(100,100,1);
-			//glFontBegin(&font);
-				
-			//glFontEnd();
-			glDisable (GL_TEXTURE_2D);
-			drawCube(xrf, yrf, zrf); 
-		 
-		glPopMatrix();
-*/		
-//				drawNode();
-//.........................................................
+*/
 	}
 	
 	config.map.enable=0;
-	SDL_WaitThread(config.map.worker, 0);
-	SDL_WaitThread(config.map.connector, 0);
-//	SDL_WaitThread(config.global.drawer, 0);
+//	if (config.map.worker!=0){
+		SDL_WaitThread(config.map.worker, 0);
+		config.map.worker=0;
+		SDL_WaitThread(config.map.connector, 0);
+		config.map.connector=0;
+//	}
+//	SDL_WaitThread(config.drawer, 0);
 //	glFontDestroy(&font);
 	cleanAll();
 	networkExit();
+	printf("exit\n");
 	SDL_Quit(); // завершаем работу SDL и выходим
 	return 0;
 }

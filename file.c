@@ -374,7 +374,7 @@ void loadMap(char* path){
 	fclose(file);
 	
 	
-	config.map.enable=1;
+//	config.map.enable=1;
 	setDefaultTransform();
 	printf("done\n");
 	
@@ -763,11 +763,6 @@ int loadMTexture(texture * t, char * path){
 void loadFiles(){
 	loadTypes("../data/types.cfg");
 	//set to config file
-	loadTexture(&cursor.tex,"global/cursor");
-	loadTexture(&config.map.tex[ERROR_T],"global/error");
-	loadTexture(&config.map.tex[BUILDABLE],"global/build");
-	loadTexture(&config.map.tex[WALKABLE],"global/walk");
-	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	
 	loadMenu(&config.menu.root,"../data/menu.cfg");
 	loadMenu(&config.loading,"../data/loading.cfg");
@@ -775,7 +770,6 @@ void loadFiles(){
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	
-	glFontCreate (&mainfont, "../data/main.glf");
 	
 //	loadMap("test");
 	
@@ -841,7 +835,5 @@ void cleanAll(){
 	
 	realizeTypes();
 	cleanMap();
-	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
-	config.textures_size=0;
 //	cleanMap();
 }

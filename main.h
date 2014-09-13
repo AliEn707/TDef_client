@@ -496,16 +496,12 @@ struct g_config{
 	unsigned int splash_types_size;
 		splash_type* splash_types;
 	
-	struct {
-		char map[30];
-		char map_default[30];
-		SDL_Thread* thread;
-		TCPsocket sock;
-	} manager;
 	
 	struct {
 		int tower_level;
 	} player;
+	
+	SDL_Thread* drawer;
 }g_config;
 
 

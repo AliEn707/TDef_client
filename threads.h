@@ -7,4 +7,4 @@ SDL_Thread* workerMapStart();
 
 SDL_Thread* connectorMapStart();
 
-SDL_Thread* managerStart();
+SDL_Thread* drawerStart();

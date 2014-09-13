@@ -63,8 +63,10 @@ void actionMapStart(void * arg){
 //	config.loading.enable=1;
 //	mapStart("global");
 //	mapStart("testbig");
-//	mapStart("test");
-	sprintf(config.manager.map,"test");
+	
+//	sprintf(config.map.network.server,"%s",??);
+//	config.map.network.port= ??
+	mapStart("test");
 	config.map.enable=0;
 //change to params for new connection	
 //	config.loading.enable=0;

@@ -187,36 +187,63 @@ SDL_Thread* connectorMapStart(){
 }
 
 
-int managerThread(void *ptr){
+int drawerThread(void *ptr){
 //	worker_arg * arg=ptr;
 //	TCPsocket sock=config.map.network.socket;
+	Uint32 time=0;
+	
+	SDL_GLContext glcontext = SDL_GL_CreateContext(config.window); // создаем контекст OpenGL
+	if(glcontext == NULL){
+		exit(1);
+	}
+	
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); 
+	glClearDepth(1.0);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0,config.window_width,0,config.window_height,-10000,10000);
+	glMatrixMode(GL_MODELVIEW); 
+	
+	////////////load global textures
+	loadTexture(&cursor.tex,"global/cursor");
+	loadTexture(&config.map.tex[ERROR_T],"global/error");
+	loadTexture(&config.map.tex[BUILDABLE],"global/build");
+	loadTexture(&config.map.tex[WALKABLE],"global/walk");
+	loadTexture(&config.map.tex[NO_SEE],"global/see");
+	
+	glFontCreate (&mainfont, "../data/main.glf");
+	/////////////tex load must be only here
+	
 	printf("done\n");
 	while(config.main_running){ 
-		if (config.auth!=0){
-//			if(SDLNet_TCP_Send(config.manager.sock,&mtype,sizeof(mtype))<0){
-//				config.auth=0;
-//				goto out;
-//			}
-			if (config.map.enable==0){
-				if (*config.manager.map!=0){
-					mapStart(config.manager.map);
-					*config.manager.map=0;
-				}else{
-					mapStart(config.manager.map_default);
-				}
-				//add connnection to map
-				//or default to public
-			}
+//	while(1){ 
+		frameSync(&time);
+		
+		drawScene();
+		if (config.map.clean_textures_size!=0){
+			glDeleteTextures(config.map.clean_textures_size,(unsigned int*)config.map.clean_textures);
+			config.map.clean_textures_size=0;
 		}
-//out:	
-	SDL_Delay(300);
+		
 	}
-	printf("exit manager\n");
+	SDL_GL_DeleteContext(glcontext);
+	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
+	config.textures_size=0;
+	glFontDestroy(&mainfont);
+//	SDL_Delay(300);
+	
+	printf("exit drawer\n");
+	SDL_Delay(100);
 	return 0;
 }
 
-SDL_Thread* managerStart(){
+SDL_Thread* drawerStart(){
 	worker_arg arg;
-	printf("start manager....\n");
-	return SDL_CreateThread(managerThread, "Manager", (void*)&arg);
+	printf("start drawer....\n");
+	return SDL_CreateThread(drawerThread, "Drawer", (void*)&arg);
 }
