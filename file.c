@@ -149,9 +149,10 @@ void loadMenu(menu* root,char* path){
 							}
 							if(strcmp(buf,"tex")==0){
 								fscanf(file,"%s\n",buf);
-								if (strcmp(buf,"0")==0)
+								if (strcmp(buf,"0")==0){
+									m->objects[i].elements[j].tex.frames=-1;
 									continue;
-								//add tex load
+								}//add tex load
 								m->objects[i].elements[j].map=root->map;
 								sprintf(m->objects[i].elements[j].tex_path,"%s",buf);
 //								if (root->map!=0)

@@ -23,6 +23,10 @@ float screenToGridX(float x, float y);
 
 float screenToGridY(float x, float y);
 
+float gridToMinimapX(float x,float y);
+
+float gridToMinimapY(float x,float y);
+
 void setActionMenu();
 
 //actions
@@ -34,5 +38,9 @@ void actionMoveMap(void * arg);
 void actionZoomMap(void * arg);
 
 void actionSpawnTower(void * arg);
+
+void actionMinimapToggle(void * arg);
+
+void actionMinimap(void * arg);
 
 

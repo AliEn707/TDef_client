@@ -12,7 +12,6 @@ int checkMouseMenu(menu* root){
 	m=root;
 	int i;
 	int o=0;
-	config.menu.selected=0;
 	for(i=0;i<config.menu.depth;i++)
 		m=&m->submenu[config.menu.path[i]];
 	for(i=0;i<m->objects_size;i++){

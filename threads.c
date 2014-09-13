@@ -215,6 +215,7 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
+	loadTexture(&config.map.minimap.tex,"global/minimap");
 	
 	glFontCreate (&mainfont, "../data/main.glf");
 	/////////////tex load must be only here

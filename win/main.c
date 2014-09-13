@@ -33,8 +33,8 @@ int main(int argc, char *argv[]){
 	loadFiles();
 	
 //	FreeConsole();
-	
-	
+	CAMERA_SPEED=7;
+	CAMERA_ZOOM=3;
 	cursor.text="Hello";
 /*	
 	printf("locale set %s\n",setlocale( LC_ALL, "ru_ru.65001" ));
@@ -63,6 +63,9 @@ int main(int argc, char *argv[]){
 	
 	networkInit();
 	config.drawer=drawerStart();
+	
+	config.map.minimap.obj.touch=1;
+	config.map.minimap.obj.action=actionMinimap;
 	
 	while(config.main_running){ 
 		frameSync(&time);

@@ -19,6 +19,11 @@
 //texture global
 #define MAX_TEX_GLOBAL 100
 
+//minimap
+#define MINIMAP_SIZE 200
+#define MINIMAP_AREA_WIDTH (MINIMAP_SIZE*1.41)
+#define MINIMAP_AREA_HEIGHT (MINIMAP_AREA_WIDTH/2)
+#define MINIMAP_AREA_SHIFT 15
 
 //textures map
 #define MAP_COMON_TEXTURES_MAX 500
@@ -89,7 +94,8 @@
 #define BULLET_CREATE 4
 
 //global controls
-#define CAMERA_SPEED 3.0f //config.global.camera.move_speed
+#define CAMERA_SPEED config.global.camera.move_speed
+#define CAMERA_ZOOM config.global.camera.zoom_speed
 
 
 typedef
@@ -425,7 +431,8 @@ struct map_conf{
 		short enable;
 		short used;
 		vec2 position;
-		
+		texture tex;
+		object obj;
 	} minimap;
 } map_conf;
 
@@ -438,6 +445,7 @@ struct global_conf{
 	
 	struct {
 		float move_speed;
+		float zoom_speed;
 	} camera;
 	struct {
 		GLFONT all;

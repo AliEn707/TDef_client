@@ -81,7 +81,7 @@ void drawCursor(){
 }
 
 int setTexture(texture * t){
-	if (t->frames==0){
+	if (t->frames==-1){
 		glDisable(GL_TEXTURE_2D);
 		return 0;
 	}
@@ -319,7 +319,7 @@ void drawNpc(npc* n){
 	backTransform();
 //	printf("n->type - %d\n",n->type);
 	glScalef(0.9,0.9,1);
-	glTranslatef(0,0,1);
+	glTranslatef(0,0,.56f);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				//npc stored in global tex memory
@@ -372,7 +372,7 @@ void drawTower(tower* t){
 		glTranslatef(t->position.x,t->position.y,0);
 		backTransform();
 		glScalef(1.2,1.2,1);
-		glTranslatef(0,0.2,1.0);
+		glTranslatef(0,0.2,.56f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
 			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
@@ -646,15 +646,29 @@ void drawMapObjects(){
 void drawMinimap(){
 	if (config.map.minimap.enable==0)
 		return;
-#define minimap_size 200
-	float dsize=minimap_size*1.41;
+
+	
+	float dsize=MINIMAP_AREA_WIDTH;
 	float scale=1;
 	int i;
-	scale=minimap_size*1.0/config.map.grid_size;
+	glColor4f(1,1,1,1);
+	//glEnable(GL_TEXTURE_2D);
+	setTexture(&config.map.minimap.tex);
+	glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2f (0.0f, 0.0f);
+		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2);
+		glTexCoord2f (1.0f, 0.0f);
+		glVertex2f(config.window_width,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2);
+		glTexCoord2f (0.0f, 1.0f);
+		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2,config.window_height);
+		glTexCoord2f (1.0f, 1.0f);
+		glVertex2f(config.window_width,config.window_height);
+	glEnd();
+	scale=MINIMAP_SIZE*1.0/config.map.grid_size;
 	glDisable(GL_TEXTURE_2D);
 	glColor4f(0,0,0,0.8);
 	glPushMatrix();
-	glTranslatef(config.window_width-dsize-15,config.window_height-dsize/4-15,0);	
+	glTranslatef(config.window_width-dsize,config.window_height-dsize/4,0);	
 	//need to add tex under map 
 	glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
@@ -662,11 +676,11 @@ void drawMinimap(){
 			glTexCoord2f (0.0f, 0.0f);
 			glVertex2f(0.0f,0.0f);
 			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(minimap_size,0.0f);
+			glVertex2f(MINIMAP_SIZE,0.0f);
 			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(0.0f,minimap_size);
+			glVertex2f(0.0f,MINIMAP_SIZE);
 			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(minimap_size,minimap_size);
+			glVertex2f(MINIMAP_SIZE,MINIMAP_SIZE);
 		glEnd();
 		glColor4f(0.8,0.8,0.8,0.4);
 		glEnable(GL_LINE_SMOOTH);
@@ -720,7 +734,6 @@ void drawMinimap(){
 		glPointSize(1);
 		glDisable(GL_POINT_SMOOTH);
 	glPopMatrix();
-#undef minimap_size
 }
 
 void drawMessage(){
@@ -746,7 +759,7 @@ void drawScene(){
 	}
 	if (config.auth==0){
 		drawMenu(&config.auth_menu);
-		goto out;
+		goto cur;
 	}
 	if (config.map.enable!=0){
 		glPushMatrix();
@@ -791,10 +804,10 @@ void drawScene(){
 		if (config.map.action_menu.enable!=0)
 			drawMenu(&config.map.action_menu);
 	}
-out:
+cur:
 	//must be the last
 	drawCursor(); 
-	
+out:	
 	glFlush();
 	SDL_GL_SwapWindow(config.window);
 }

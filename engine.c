@@ -188,7 +188,7 @@ void processEvent(SDL_Event event){
 				config.global.mouse[event.button.button]=0;
 				break;
 			case SDL_MOUSEWHEEL:
-				setZoom(event.wheel.y*1.2f);
+				setZoom(event.wheel.y*CAMERA_ZOOM);
 				break;
 		}
 }
@@ -266,6 +266,7 @@ void mouseMotion(){
 int checkMouseState(){
 //	mouseMotion();
 	cursor.text=0;
+	config.menu.selected=0;
 	//check mouse on map, if not need it return 0
 	checkMouseMap();
 	//check menus on csreen
@@ -292,16 +293,18 @@ int checkMouseState(){
 
 
 int processMouse(){
-	#define border 4
-	if (cursor.state.x<border)
-		setMove(0,CAMERA_SPEED);
-	if (cursor.state.y<border)
-		setMove(CAMERA_SPEED,0);
-	if (cursor.state.y>config.window_height-border)
-		setMove(-CAMERA_SPEED,0);
-	if (cursor.state.x>config.window_width-border)
-		setMove(0,-CAMERA_SPEED);
-	
+	if (config.map.enable!=0 && config.menu.enable==0){
+		#define border 4
+		if (cursor.state.x<border)
+			setMove(0,CAMERA_SPEED);
+		if (cursor.state.y<border)
+			setMove(CAMERA_SPEED,0);
+		if (cursor.state.y>config.window_height-border)
+			setMove(-CAMERA_SPEED,0);
+		if (cursor.state.x>config.window_width-border)
+			setMove(0,-CAMERA_SPEED);
+		#undef border
+	}
 	checkMouseState();
 	return 0;	
 }

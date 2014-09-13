@@ -21,10 +21,19 @@ void mapStart(char * path){
 void checkMouseMap(){
 	if (config.menu.enable!=0)
 		return;
-	if (config.map.enable==0){
+	if (config.map.enable==0 || config.auth==0){
 		config.map.focus=-1;
 		return;
 	}
+	if(config.map.minimap.enable!=0) 
+		if (cursor.state.x>config.window_width-MINIMAP_AREA_WIDTH-MINIMAP_AREA_SHIFT*2 && 
+				cursor.state.y>config.window_height-MINIMAP_AREA_HEIGHT-MINIMAP_AREA_SHIFT*2){
+			if (cursor.state.x>config.window_width-MINIMAP_AREA_WIDTH && 
+					cursor.state.y>config.window_height-MINIMAP_AREA_HEIGHT){
+				config.menu.selected=&config.map.minimap.obj;
+			}
+			return;
+		}
 	float x=screenToGridX(cursor.state.x,cursor.state.y);
 	float y=screenToGridY(cursor.state.x,cursor.state.y);
 	if (x<0 || y<0 || x>config.map.grid_size || y>config.map.grid_size){
@@ -41,6 +50,7 @@ void checkMouseMap(){
 }
 
 void processMouseMap(SDL_Event event){	
+	
 	//priority on screen buttons
 	if(event.button.button==SDL_BUTTON_LEFT){
 		processNodeAction();
@@ -68,9 +78,9 @@ void processContKeysMap(){
 	if (config.global.keys[SDLK_a]!=0)
 		setMove(0,CAMERA_SPEED);
 	if (config.global.keys[SDLK_q]!=0)
-		setZoom(0.8);
+		setZoom(CAMERA_ZOOM);
 	if (config.global.keys[SDLK_e]!=0)
-		setZoom(-0.8);
+		setZoom(-CAMERA_ZOOM);
 	
 	//add another
 		if(config.global.mouse[SDL_BUTTON_LEFT]==1 ||
@@ -136,6 +146,7 @@ void setMove(float x,float y){
 	config.global.transform.translate.x+=y; //do not change!
 	config.global.transform.translate.y+=x;
 	globalTransformCorrection();
+//	printf("%g %g\n",config.global.transform.translate.x,config.global.transform.translate.y);
 }
 
 void setZoom(float x){
@@ -146,7 +157,7 @@ void setZoom(float x){
 	if (x<0)
 		s*=-1;
 	if(globalTransformCorrection()!=1)
-		setMove(0,s*screenToGridX(config.window_width/2.0f,config.window_height/2.0));;
+		setMove(0,CAMERA_ZOOM*s*screenToGridX(config.window_width/2.0f,config.window_height/2.0));;
 }
 
 
@@ -191,9 +202,19 @@ float screenToGridY(float x, float y){
 #undef sx
 #undef sy
 
+
+float gridToMinimapX(float x,float y){
+	return (0.707*y+0.707*x)*MINIMAP_SIZE/config.map.grid_size;
+}
+
+float gridToMinimapY(float x,float y){
+	return (0.5*(0.707*y-0.707*x)*MINIMAP_SIZE/config.map.grid_size+MINIMAP_AREA_WIDTH/4);
+}
+
+	
+
 void setActionMenu(){
-	printf("action on %d node (tower %d)\n",
-								config.map.focus,
+	printf("action on %d node (tower %d)\n",	config.map.focus,
 								config.map.grid[config.map.focus].tower_id);
 	tower* t; 
 	t=getTowerById(config.map.grid[config.map.focus].tower_id);
@@ -223,12 +244,14 @@ void actionShowWalkMap(void * arg){
 void actionMoveMap(void * arg){
 	int * p=(int*)arg;
 //	printf("%g %g\n",(float)p[0],(float)p[1]);
+//	setMove((float)p[0],(float)p[1]);
 	setMove((float)p[0],(float)p[1]);
 }
 
 void actionZoomMap(void * arg){
 	int * p=(int*)arg;
-	setZoom(p[0]*1.0/p[1]);
+//	setZoom(p[0]*1.0/p[1]);
+	setZoom(p[0]*CAMERA_ZOOM*0.85);
 }
 
 void actionSpawnTower(void * arg){
@@ -243,3 +266,23 @@ void actionSpawnTower(void * arg){
 	SDLNet_TCP_Send(config.map.network.socket,&p[1],sizeof(int));
 //	send(config.map.network.socket,sizeof(mtype),0);
 }
+
+void actionMinimapToggle(void * arg){
+	//sdsd
+}
+
+void actionMinimap(void * arg){
+	float dsize=MINIMAP_AREA_WIDTH;
+	vec2 lcScreen={screenToGridX(0,config.window_height/2),screenToGridY(0,config.window_height/2)};
+	vec2 centerScreen={screenToGridX(config.window_width/2,config.window_height/2),screenToGridY(config.window_width/2,config.window_height/2)};
+	vec2 zeroMap={config.global.transform.translate.x,config.global.transform.translate.y};
+	vec2 zeroMinimap={config.window_width-dsize,config.window_height-dsize/2};
+	vec2 minimap_shift={cursor.state.x-(zeroMinimap.x+gridToMinimapX(centerScreen.x,centerScreen.y)),
+					cursor.state.y-(zeroMinimap.y+gridToMinimapY(centerScreen.x,centerScreen.y))};
+	float shift_scale=-((zeroMap.x-0.01)/(gridToMinimapX(lcScreen.x,lcScreen.y)+0.01));//some hack to get non zero
+	config.global.transform.translate.x-=minimap_shift.x*shift_scale;
+	config.global.transform.translate.y-=minimap_shift.y*shift_scale;
+	globalTransformCorrection();
+}
+
+
