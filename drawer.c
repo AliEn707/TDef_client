@@ -117,11 +117,15 @@ void drawElement(element * e,int focus){
 			setTexture(&e->ftex);
 		else
 			setTexture(&e->tex);
+		if (e->color.a==0)
+			goto texbreak;
 	}else{
 		glColor4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,e->fcolor.a);
 		setTexture(&e->tex);
+		if (e->fcolor.a==0)
+			goto texbreak;
 	}
-	e->wire==0?glBegin(GL_QUADS):glBegin(GL_LINE_LOOP);
+	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(e->position.x,e->position.y);
 		glTexCoord2f(0.0f, 1.0f);
@@ -131,6 +135,11 @@ void drawElement(element * e,int focus){
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(e->position.x+e->size.x,e->position.y);
 	glEnd();
+	
+texbreak:
+	//draw text
+//	glColor4f(1,1,1,1);
+	glEnable(GL_TEXTURE_2D);
 	if (*e->text==0)
 		return;
 	glPushMatrix();
@@ -144,6 +153,29 @@ void drawElement(element * e,int focus){
 		else
 			drawText(&mainfont,e->text);
 	glPopMatrix();
+	//now draw wire
+	if (focus==0){
+		if (e->wirecolor.a==0)
+			goto wirebreak;
+		glColor4f(e->wirecolor.r,e->wirecolor.g,e->wirecolor.b,e->wirecolor.a);
+	}else{
+		if (e->fwirecolor.a==0)
+			goto wirebreak;
+		glColor4f(e->fwirecolor.r,e->fwirecolor.g,e->fwirecolor.b,e->fwirecolor.a);
+	}
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_LINE_LOOP);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(e->position.x,e->position.y);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(e->position.x,e->position.y+e->size.y);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(e->position.x+e->size.x,e->position.y+e->size.y);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(e->position.x+e->size.x,e->position.y);
+	glEnd();
+wirebreak:	
+	return;
 }
 
 void drawObject(object * o){

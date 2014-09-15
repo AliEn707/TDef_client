@@ -131,6 +131,18 @@ void loadMenu(menu* root,char* path){
 												&m->objects[i].elements[j].fcolor.b,
 												&m->objects[i].elements[j].fcolor.a);
 								}
+							if(strcmp(buf,"wirecolor")==0){
+								fscanf(file,"%f %f %f %f\n",&m->objects[i].elements[j].wirecolor.r,
+												&m->objects[i].elements[j].wirecolor.g,
+												&m->objects[i].elements[j].wirecolor.b,
+												&m->objects[i].elements[j].wirecolor.a);
+								}
+							if(strcmp(buf,"fwirecolor")==0){
+								fscanf(file,"%f %f %f %f\n",&m->objects[i].elements[j].fwirecolor.r,
+												&m->objects[i].elements[j].fwirecolor.g,
+												&m->objects[i].elements[j].fwirecolor.b,
+												&m->objects[i].elements[j].fwirecolor.a);
+								}
 							if(strcmp(buf,"xpos")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].position.x);
 							}

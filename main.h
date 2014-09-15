@@ -311,9 +311,11 @@ struct element{
 	texture ftex;
 	char ftex_path[30];
 	short focus_tex;
-	int wire;
+//	int wire;
 	color3 color;
 	color3 fcolor;
+	color3 wirecolor;
+	color3 fwirecolor;
 	char text[24];
 	vec2 text_position;
 	short text_centered;
