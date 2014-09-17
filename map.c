@@ -7,6 +7,7 @@ void mapStart(char * path){
 	config.loading.enable=1;
 	cleanMap();
 	loadMap(path);
+	loadMapGrafics(path);
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	if (networkConnMap(config.map.network.server,config.map.network.port)!=0){
@@ -242,20 +243,21 @@ void actionShowWalkMap(void * arg){
 }
 
 void actionMoveMap(void * arg){
-	int * p=(int*)arg;
+	object * o=arg;
 //	printf("%g %g\n",(float)p[0],(float)p[1]);
 //	setMove((float)p[0],(float)p[1]);
-	setMove((float)p[0],(float)p[1]);
+	setMove((float)o->arg[0],(float)o->arg[1]);
 }
 
 void actionZoomMap(void * arg){
-	int * p=(int*)arg;
+	object * o=arg;
 //	setZoom(p[0]*1.0/p[1]);
-	setZoom(p[0]*CAMERA_ZOOM*0.85);
+	setZoom(o->arg[0]*CAMERA_ZOOM*0.85);
 }
 
 void actionSpawnTower(void * arg){
-	int * p=(int*)arg;
+	object * o=arg;
+	int * p=(o->arg);
 	if (config.map.network.socket==0)
 		return;
 	char mtype=MSG_SPAWN_TOWER;

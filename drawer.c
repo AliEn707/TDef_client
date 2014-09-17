@@ -139,20 +139,6 @@ void drawElement(element * e,int focus){
 texbreak:
 	//draw text
 //	glColor4f(1,1,1,1);
-	glEnable(GL_TEXTURE_2D);
-	if (*e->text==0)
-		return;
-	glPushMatrix();
-		glTranslatef(e->position.x+e->text_position.x,
-				e->position.y+e->text_position.y,
-				0);
-		glScalef(15,15,1);
-		glTranslatef(0,glFontHeight(&mainfont,e->text),0);
-		if (e->text_centered!=0)
-			drawTextCentered(&mainfont,e->text);
-		else
-			drawText(&mainfont,e->text);
-	glPopMatrix();
 	//now draw wire
 	if (focus==0){
 		if (e->wirecolor.a==0)
@@ -175,12 +161,30 @@ texbreak:
 		glVertex2f(e->position.x+e->size.x,e->position.y);
 	glEnd();
 wirebreak:	
-	return;
+		glEnable(GL_TEXTURE_2D);
+	if (*e->text==0)
+		return;
+	glPushMatrix();
+		glTranslatef(e->position.x+e->text_position.x,
+				e->position.y+e->text_position.y,
+				0);
+		if (e->text_size==0)
+			glScalef(15,15,1);
+		else
+			glScalef(e->text_size,e->text_size,1);
+		glTranslatef(0,glFontHeight(&mainfont,e->text),0);
+		if (e->text_centered!=0)
+			drawTextCentered(&mainfont,e->text);
+		else
+			drawText(&mainfont,e->text);
+	glPopMatrix();
 }
 
 void drawObject(object * o){
 	int i;
 //	printf("%g %g|%g %g\n",o->position.x,o->position.y,o->size.x,o->size.y);
+	if (config.menu.selected!=o)
+		o->in_focus=0;
 	glPushMatrix();
 		glTranslatef(o->position.x,o->position.y,0);
 		for(i=0;i<o->elements_size;i++)
@@ -838,6 +842,8 @@ void drawScene(){
 	}
 cur:
 	//must be the last
+	if (config.text.enable!=0)
+		drawMenu(&config.text.keyboard);
 	drawCursor(); 
 out:	
 	glFlush();

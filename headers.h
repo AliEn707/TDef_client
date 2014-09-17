@@ -6,4 +6,5 @@
 #include "network.h"
 #include "threads.h"
 #include "drawer.h"
+#include "keyboard.h"
 #include "tga.h"

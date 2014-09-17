@@ -6,6 +6,7 @@ int loadMTexture(texture * t, char * path);
 void realizeTexture(texture * t);
 
 void loadMap(char* path);
+void loadMapGrafics(char* path);
 
 int loadTex(texture * t, char * path, int(load)(char * path));
 

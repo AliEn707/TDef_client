@@ -174,10 +174,13 @@ void loadMenu(menu* root,char* path){
 							}
 							if(strcmp(buf,"text")==0){
 								fscanf(file,"%s\n",m->objects[i].elements[j].text);
-								printf("\nelement text %s\n",m->objects[i].elements[j].text);
+//								printf("\nelement text %s\n",m->objects[i].elements[j].text);
 							}
 							if(strcmp(buf,"ctext")==0){
 								fscanf(file,"%hd\n",&m->objects[i].elements[j].text_centered);
+							}
+							if(strcmp(buf,"textsize")==0){
+								fscanf(file,"%hd\n",&m->objects[i].elements[j].text_size);
 							}
 							if(strcmp(buf,"xtext")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].text_position.x);
@@ -247,7 +250,7 @@ void loadMap(char* path){
 		perror("malloc build loadMap");
 	fscanf(file,"%s\n",walk);
 	fscanf(file,"%s\n",build);
-	int i,j;
+	int i;
 	for(i=0;i<size*size;i++){
 		grid[i].id=i;
 		/*
@@ -314,6 +317,23 @@ void loadMap(char* path){
 	config.map.grid=grid;
 	config.map.grid_size=size;
 	
+	printf("done\n");
+	
+	
+} 
+
+void loadMapGrafics(char* path){
+//	gnode * grid;
+	FILE * file;
+	char fullpath[300];
+	int i,j;
+	char buf[100];
+	printf("load map grafics....");
+	if (config.map.grid_size==0 || config.map.grid==0){
+		printf("error\n");
+		return;
+	}
+		
 	sprintf(fullpath,"../maps/%s.mg",path);
 	if ((file=fopen(fullpath,"r"))==0) 
 		perror("fopen loadMap");
@@ -389,10 +409,7 @@ void loadMap(char* path){
 	
 //	config.map.enable=1;
 	setDefaultTransform();
-	printf("done\n");
-	
-	
-} 
+}
 
 void realizeMap(){
 	int i;
@@ -780,6 +797,7 @@ void loadFiles(){
 	loadMenu(&config.menu.root,"../data/menu.cfg");
 	loadMenu(&config.loading,"../data/loading.cfg");
 	loadMenu(&config.auth_menu,"../data/authmenu.cfg");
+	loadMenu(&config.text.keyboard,"../data/keyboard.cfg");
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
 	

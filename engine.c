@@ -101,7 +101,7 @@ void processObjectAction(int type,int key){
 		return;
 	if(config.menu.selected->touch!=0)
 		if(config.menu.selected->action!=0)
-			config.menu.selected->action(&config.menu.selected->arg);
+			config.menu.selected->action(config.menu.selected);
 	if(config.menu.selected->single!=0){
 		if(type==KEYBOARD)
 			config.global.keys[key]=0;
@@ -269,10 +269,10 @@ int checkMouseState(){
 	config.menu.selected=0;
 	//check mouse on map, if not need it return 0
 	checkMouseMap();
-	//check menus on csreen
+	//check menus on screen
 	if (config.auth==0){
 		checkMouseMenu(&config.auth_menu);
-		return 0;
+		goto out;
 	}
 	if (config.menu.enable!=0)
 		checkMouseMenu(&config.menu.root);
@@ -286,8 +286,9 @@ int checkMouseState(){
 //				config.menu.selected->in_focus=1;
 //	printf("%d %d\n",cursor.state.x,cursor.state.y);
 	
-	
-	
+out:	
+	if (config.text.enable!=0)
+		checkMouseMenu(&config.text.keyboard);
 	return 0;
 }
 

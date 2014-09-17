@@ -319,6 +319,7 @@ struct element{
 	char text[24];
 	vec2 text_position;
 	short text_centered;
+	short text_size;
 } element;
 	
 typedef
@@ -466,7 +467,8 @@ struct {
 	short enable;
 	short pos;
 	char text[200];
-	char ** text_edit;
+	char * text_edit;
+	menu keyboard;
 } text_puts;
 
 typedef
