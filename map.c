@@ -221,13 +221,16 @@ void setActionMenu(){
 	t=getTowerById(config.map.grid[config.map.focus].tower_id);
 	if (t->id==0){
 		int i;
-		sprintf(config.map.action_menu.objects[0].text,
-				"create tower");
 		for(i=0;i<config.map.action_menu.objects_size;i++){
 			config.map.action_menu.objects[i].arg[0]=config.map.focus;
+			config.map.action_menu.objects[i].arg[1]=i+1;
+			config.map.action_menu.objects[i].action=actionSpawnTower;
+			sprintf(config.map.action_menu.objects[i].text,
+				"create %d",i+1);
+		
 		}
-		config.map.action_menu.objects[0].arg[1]=1;
-		config.map.action_menu.objects[0].action=actionSpawnTower;
+		//config.map.action_menu.objects[0].arg[1]=1;
+		//config.map.action_menu.objects[0].action=actionSpawnTower;
 	}else{
 		sprintf(config.map.action_menu.objects[0].text,
 				"upgrade");
