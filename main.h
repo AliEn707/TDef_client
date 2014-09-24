@@ -41,6 +41,8 @@
 #define TEXTURES 20
 #define TEXTURE_FRAMES 25
 
+#define BASE_TEX_LAYERS 10
+
 //textures npc
 #define TEX_IDLE 0
 #define TEX_DESTROY 1
@@ -97,6 +99,9 @@
 #define CAMERA_SPEED config.global.camera.move_speed
 #define CAMERA_ZOOM config.global.camera.zoom_speed
 
+//in game
+#define NPC_SET_SIZE 9
+#define TOWER_SET_SIZE 9
 
 typedef
 struct vec2{
@@ -221,7 +226,7 @@ typedef
 struct npc{
 	int id;
 	char status;
-	char group;
+	int owner;
 	vec2 position;
 	vec2 destination;
 	vec2 direction;
@@ -355,7 +360,6 @@ struct gnode{
 	int walkable;
 	int buildable;
 	int tower_id;
-	texture blood;
 } gnode;
 
 typedef 
@@ -387,6 +391,32 @@ struct menu_conf{
 	menu root;
 	object* selected;
 }menu_conf;
+
+typedef
+struct {
+	char tex_path[BASE_TEX_LAYERS][100];
+	texture tex[BASE_TEX_LAYERS];
+	
+} base;
+
+
+typedef
+struct {
+	struct {
+		int id;
+		int size;
+	} towers_set[NPC_SET_SIZE];
+	
+	struct {
+		int id;
+		int size;
+	} npc_set[TOWER_SET_SIZE];
+	
+	int level;
+	int money;
+	tower * base;
+	//add hero info
+} player;
 
 typedef
 struct map_conf{
@@ -437,6 +467,9 @@ struct map_conf{
 		texture tex;
 		object obj;
 	} minimap;
+	
+	player * player;
+	player players[20];
 } map_conf;
 
 typedef

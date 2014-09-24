@@ -388,7 +388,7 @@ void drawNpc(npc* n){
 			glTranslatef(-0.5,0.9,0);
 			glScalef(0.15,0.15,1);
 			char buf[5];
-			sprintf(buf,"%d",n->level);
+			sprintf(buf,"%hd",n->level);
 			drawText(&mainfont,buf);
 		glPopMatrix();
 		if (health<0.98)

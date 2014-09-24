@@ -2,7 +2,7 @@
 
 #define checkMask(x,y) x&y
 
-#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<0) return -1
+#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<=0) return -1
 
 int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
@@ -15,7 +15,7 @@ int recvData(TCPsocket sock, void * buf, int size){
 //	printf("get not all\n");
 	while(need>0){
 		need-=get;
-		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))<0)
+		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))<=0)
 			return -1;
 	}
 	return size;
@@ -86,7 +86,7 @@ int recvNpcMap(){
 	
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,NPC_CREATE)){
-		recvMap(n->group);
+		recvMap(n->owner);
 		recvMap(n->type);
 //		printf("%d\n",n->type);
 //		recvMap(n->destination);
@@ -103,10 +103,11 @@ int recvNpcMap(){
 		n->current_tex=getWalkTex(n->direction);
 	}
 //	}
+	if(checkMask(bit_mask,NPC_LEVEL) || checkMask(bit_mask,NPC_CREATE)){
+		recvMap(n->level);
+	}
 	if(checkMask(bit_mask,NPC_HEALTH) || checkMask(bit_mask,NPC_CREATE))
 		recvMap(n->health);
-	if(checkMask(bit_mask,NPC_LEVEL) || checkMask(bit_mask,NPC_CREATE))
-		recvMap(n->level);
 	if (n->id==0 && checkMask(bit_mask,NPC_CREATE))
 		n->id=id;
 	return 0;
@@ -139,10 +140,10 @@ int recvTowerMap(){
 	}
 	if (checkMask(bit_mask,TOWER_TARGET) || checkMask(bit_mask,TOWER_CREATE))
 		recvMap(t->target);
-	if(checkMask(bit_mask,TOWER_HEALTH) || checkMask(bit_mask,TOWER_CREATE))
-		recvMap(t->health);
 	if(checkMask(bit_mask,TOWER_LEVEL) || checkMask(bit_mask,TOWER_CREATE))
 		recvMap(t->level);
+	if(checkMask(bit_mask,TOWER_HEALTH) || checkMask(bit_mask,TOWER_CREATE))
+		recvMap(t->health);
 	if (t->id==0 && checkMask(bit_mask,TOWER_CREATE))
 		t->id=id;
 	return 0;

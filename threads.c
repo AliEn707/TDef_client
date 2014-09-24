@@ -69,6 +69,7 @@ int getAttackTex(vec2 v){
 int workerMap(void *ptr){
 //	worker_arg * arg=ptr;
 	Uint32 time=0;
+	SDL_Delay(900);
 	printf("done\n");
 	while(config.map.enable){
 		tickSync(&time);
@@ -165,7 +166,7 @@ int connectorMap(void *ptr){
 //		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
 //	if(SDLNet_TCP_AddSocket(set,sock)<0)
 //		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
-	
+	SDL_Delay(900);
 	printf("done\n");
 	while(config.map.enable){
 	//	config.map.time_now=SDL_GetTicks();
