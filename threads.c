@@ -172,12 +172,13 @@ int connectorMap(void *ptr){
 	//	config.map.time_now=SDL_GetTicks();
 		//get data from server
 		if(recvMesMap()<0){
-			printf("network error");
+			perror("network error");
 			setScreenMessage("network error");
-			config.map.enable=0;
+			//need to find problem
+//			config.map.enable=0;
 		}
 	}
-	printf("exit workerMap\n");
+	printf("exit connectorMap\n");
 	return 0;
 }
 
@@ -240,7 +241,7 @@ int drawerThread(void *ptr){
 //	SDL_Delay(300);
 	
 	printf("exit drawer\n");
-	SDL_Delay(100);
+	SDL_Delay(800);
 	return 0;
 }
 

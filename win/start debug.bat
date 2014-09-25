@@ -1,0 +1,1 @@
+Tdef > debug.txt 2>&1

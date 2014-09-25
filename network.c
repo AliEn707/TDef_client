@@ -2,7 +2,8 @@
 
 #define checkMask(x,y) x&y
 
-#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<=0) return -1
+//need to fix network reset problem
+#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<0) return -1
 
 int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
