@@ -399,8 +399,8 @@ void loadMapGrafics(char* path){
 			}
 		}
 		if(strcmp(buf,"minimap")==0){
-			fscanf(file,"%hd\n",&config.map.minimap.enable);
-			config.map.minimap.used=config.map.minimap.enable;
+			fscanf(file,"%hd\n",&config.map.minimap.used);
+			//config.map.minimap.used=config.map.minimap.enable;
 		}
 	}
 	
@@ -831,7 +831,7 @@ void setTestData(){
 	config.map.tower_array[0].position.y=2.5;
 	
 	config.map.bullet_array[0].id=-1;
-	config.map.bullet_array[0].type=1;
+	config.map.bullet_array[0].type=2;
 	config.map.bullet_array[0].position.x=x1;
 	config.map.bullet_array[0].position.y=y1;
 	config.map.bullet_array[0].source.x=x1;

@@ -466,13 +466,14 @@ void drawBullet(bullet* b){
 	else
 		pos=&b->position;
 	
+	if (b->destination.x==pos->x && b->destination.y==pos->y)
+		pos=&b->source;
+	
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
 	glTranslatef(0,0.2,1.01);
 	float x;
 	
-	if (b->destination.x==pos->x && b->destination.y==pos->y)
-		pos=&b->source;
 //	else
 	{
 		float ang;
@@ -485,11 +486,13 @@ void drawBullet(bullet* b){
 		x-=gridToScreenX(pos->x,pos->y);
 		y-=gridToScreenY(pos->x,pos->y);
 //		printf("%g %g| %g %g\n",dir.x,b->direction.x,dir.y,b->direction.y);
-		if (sign(b->direction.x)!=sign(dir.x))
-			goto drawBulletExit;
-//			x*=-1;
-		if (sign(b->direction.y)!=sign(dir.y))
-			goto drawBulletExit;
+		if (config.bullet_types[b->type].solid==0){
+			if (sign(b->direction.x)!=sign(dir.x))
+				goto drawBulletExit;
+	//			x*=-1;
+			if (sign(b->direction.y)!=sign(dir.y))
+				goto drawBulletExit;
+		}
 //			y*=-1;
 //		if (x==0 )
 //			goto drawBulletExit;
@@ -729,19 +732,21 @@ void drawMinimap(){
 				glVertex2f(scale*config.map.grid_size,scale*i);
 			}
 		glEnd();
-		
+		//draw towers
+		#define t_size 0.4f
 		glLineWidth(1);
-		glBegin(GL_LINES);
-			for(i=0;i<config.map.tower_max;i++)
-				if (config.map.tower_array[i].id!=0){
+		for(i=0;i<config.map.tower_max;i++)
+			if (config.map.tower_array[i].id!=0){
+				glBegin(config.map.tower_array[i].type!=BASE?GL_LINES:GL_TRIANGLE_STRIP);
+					//check group and set color
 					glColor4f(0,1,0,1.0);
-					glVertex2f(scale*(config.map.tower_array[i].position.x+0.5),scale*config.map.tower_array[i].position.y);
-					glVertex2f(scale*(config.map.tower_array[i].position.x-0.5),scale*config.map.tower_array[i].position.y);
-					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+0.5));
-					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-0.5));
-				}
-		glEnd();
-			
+					glVertex2f(scale*(config.map.tower_array[i].position.x+t_size),scale*config.map.tower_array[i].position.y);
+					glVertex2f(scale*(config.map.tower_array[i].position.x-t_size),scale*config.map.tower_array[i].position.y);
+					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+t_size));
+					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-t_size));
+				glEnd();
+			}
+		#undef t_size	
 		glColor4f(1,1,1,1);
 		glDisable(GL_LINE_SMOOTH);
 		glBegin(GL_LINE_LOOP);
@@ -750,7 +755,7 @@ void drawMinimap(){
 			glVertex2f(scale*screenToGridX(config.window_width,config.window_height),scale*screenToGridY(config.window_width,config.window_height));	
 			glVertex2f(scale*screenToGridX(0,config.window_height),scale*screenToGridY(0,config.window_height));	
 		glEnd();
-		
+		//draw npcs
 		glPointSize(3);
 		glEnable(GL_POINT_SMOOTH);
 		glBegin(GL_POINTS);
@@ -770,6 +775,10 @@ void drawMinimap(){
 		glPointSize(1);
 		glDisable(GL_POINT_SMOOTH);
 	glPopMatrix();
+}
+
+void drawPlayerHealth(){
+	
 }
 
 void drawMessage(){

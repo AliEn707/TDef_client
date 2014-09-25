@@ -173,9 +173,10 @@ int connectorMap(void *ptr){
 		//get data from server
 		if(recvMesMap()<0){
 			perror("network error");
+//			printf("error %s  \n",SDLNet_GetError());
 			setScreenMessage("network error");
 			//need to find problem
-//			config.map.enable=0;
+			config.map.enable=0;
 		}
 	}
 	printf("exit connectorMap\n");

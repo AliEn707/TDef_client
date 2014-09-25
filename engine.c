@@ -152,10 +152,7 @@ void processEvent(SDL_Event event){
 				config.global.keys[event.key.keysym.sym]=1;
 				switch(event.key.keysym.sym){ 
 					case SDLK_ESCAPE: 
-						config.main_running = 0; 
-						break;
-					case SDLK_m:
-						actionToggleMenu(0);
+						actionToggleMenu(0); 
 						break;
 				}
 				//if (config.menu.enable!=0)

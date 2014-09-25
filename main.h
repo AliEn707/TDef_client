@@ -15,6 +15,9 @@
 //write to config
 #define Df 0.26f
 
+//base
+#define BASE 0
+
 #define MAX_TEXTURES 10000
 //texture global
 #define MAX_TEX_GLOBAL 100

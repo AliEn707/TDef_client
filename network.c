@@ -2,22 +2,23 @@
 
 #define checkMask(x,y) x&y
 
-//need to fix network reset problem
-#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<0) return -1
+//check may be need to check <0
+#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))==0) return -1
 
 int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
 	int get;
 	get=SDLNet_TCP_Recv(sock,buf,need);
-	if (get<=0)
-		return -1;
+	if (get==0)
+		return get;
 	if (get==need)
 		return get;
 //	printf("get not all\n");
+	need-=get;
 	while(need>0){
+		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))==0)
+			return get;
 		need-=get;
-		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))<=0)
-			return -1;
 	}
 	return size;
 }
@@ -197,6 +198,10 @@ int recvBulletMap(){
 		recvMap(b->source);
 //		recvMap(b->destination);
 	}
+	//need to to correct solid, may be...
+	if (config.bullet_types[b->type].solid!=0)
+		memset(&b->direction,0,sizeof(vec2));
+	
 	if(checkMask(bit_mask,BULLET_DETONATE)){
 		recvMap(b->detonate);
 		//add animation detonation set

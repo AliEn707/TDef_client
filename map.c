@@ -65,7 +65,10 @@ void processKeysMap(SDL_Event event){
 		processNodeAction();
 	if(event.key.keysym.sym==SDLK_z) 
 		actionShowWalkMap(0);
+	if(event.key.keysym.sym==SDLK_m) 
+		actionMinimapToggle(0);
 	
+	//add another
 }
 
 
@@ -273,6 +276,8 @@ void actionSpawnTower(void * arg){
 }
 
 void actionMinimapToggle(void * arg){
+	if (config.map.minimap.used!=0)
+		config.map.minimap.enable=(config.map.minimap.enable+1)&1;
 	//sdsd
 }
 
