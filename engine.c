@@ -88,11 +88,13 @@ void tickSync(unsigned int *time){
 void processNodeAction(){
 	if(config.menu.selected==0){
 		if (config.map.focus>=0){
-			setActionMenu();
+//			setActionMenu();
+			//add brush here
+			processBrush();
 			return;
 			
 		}
-		config.map.action_menu.enable=0;
+		//config.map.action_menu.enable=0;
 	}
 }
 
@@ -276,6 +278,8 @@ int checkMouseState(){
 	else
 		if (config.map.enable!=0){
 			checkMouseMenu(&config.map.screen_menu);
+			checkMouseMenu(&config.map.tower_menu);
+			checkMouseMenu(&config.map.npc_menu);
 			if (config.map.action_menu.enable!=0)
 				checkMouseMenu(&config.map.action_menu);
 		}

@@ -22,11 +22,14 @@
 //texture global
 #define MAX_TEX_GLOBAL 100
 
+//global drawing
+#define SCREEN_OFFSET 20
+
 //minimap
-#define MINIMAP_SIZE 200
+#define MINIMAP_SIZE 190
 #define MINIMAP_AREA_WIDTH (MINIMAP_SIZE*1.41)
 #define MINIMAP_AREA_HEIGHT (MINIMAP_AREA_WIDTH/2)
-#define MINIMAP_AREA_SHIFT 15
+#define MINIMAP_AREA_SHIFT 12
 
 //textures map
 #define MAP_COMON_TEXTURES_MAX 500
@@ -105,6 +108,9 @@
 //in game
 #define NPC_SET_SIZE 9
 #define TOWER_SET_SIZE 9
+
+//brush
+#define BRUSH_TOWER_SPAWN 1
 
 typedef
 struct vec2{
@@ -311,19 +317,25 @@ struct g_params{
 
 typedef
 struct element{
+	short map;
+	short focus_tex;
+	int wire;
+	vec2 _position;
+	float anim_speed;
+	
 	vec2 position;
 	vec2 size;
 	texture tex;
-	short map;
 	char tex_path[30];
+	color3 color;
+	color3 wirecolor;
+	
+	vec2 fposition;
 	texture ftex;
 	char ftex_path[30];
-	short focus_tex;
-//	int wire;
-	color3 color;
 	color3 fcolor;
-	color3 wirecolor;
 	color3 fwirecolor;
+	
 	char text[24];
 	vec2 text_position;
 	short text_centered;
@@ -434,7 +446,8 @@ struct map_conf{
 	
 	menu screen_menu;
 	menu action_menu;
-//	menu npc_menu;
+	menu npc_menu;
+	menu tower_menu;
 	
 	int time_now;
 	
@@ -470,6 +483,12 @@ struct map_conf{
 		texture tex;
 		object obj;
 	} minimap;
+	
+	struct {
+		short type;
+		short id;
+		void (*action)(void);
+	} brush;
 	
 	player * player;
 	player players[20];

@@ -125,15 +125,26 @@ void drawElement(element * e,int focus){
 		if (e->fcolor.a==0)
 			goto texbreak;
 	}
+	//to create slide animation
+	if (focus==0){
+		e->_position.x=e->position.x;
+		e->_position.y=e->position.y;
+	}else{
+		e->_position.x=e->fposition.x;
+		e->_position.y=e->fposition.y;
+	}
+	glPushMatrix();
+	glTranslatef(e->_position.x,e->_position.y,0);
+	
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(e->position.x,e->position.y);
+		glVertex2f(0,0);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(e->position.x,e->position.y+e->size.y);
+		glVertex2f(0,e->size.y);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(e->position.x+e->size.x,e->position.y+e->size.y);
+		glVertex2f(e->size.x,e->size.y);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(e->position.x+e->size.x,e->position.y);
+		glVertex2f(e->size.x,0);
 	glEnd();
 	
 texbreak:
@@ -152,21 +163,22 @@ texbreak:
 	glDisable(GL_TEXTURE_2D);
 	glBegin(GL_LINE_LOOP);
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(e->position.x,e->position.y);
+		glVertex2f(0,0);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(e->position.x,e->position.y+e->size.y);
+		glVertex2f(0,e->size.y);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(e->position.x+e->size.x,e->position.y+e->size.y);
+		glVertex2f(e->size.x,e->size.y);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(e->position.x+e->size.x,e->position.y);
+		glVertex2f(e->size.x,0);
 	glEnd();
+	
 wirebreak:	
-		glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
 	if (*e->text==0)
-		return;
-	glPushMatrix();
-		glTranslatef(e->position.x+e->text_position.x,
-				e->position.y+e->text_position.y,
+		goto exit;
+	
+	glTranslatef(e->text_position.x,
+				e->text_position.y,
 				0);
 		if (e->text_size==0)
 			glScalef(15,15,1);
@@ -177,6 +189,7 @@ wirebreak:
 			drawTextCentered(&mainfont,e->text);
 		else
 			drawText(&mainfont,e->text);
+exit:
 	glPopMatrix();
 }
 
@@ -695,19 +708,19 @@ void drawMinimap(){
 	setTexture(&config.map.minimap.tex);
 	glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2f (0.0f, 0.0f);
-		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2);
+		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
 		glTexCoord2f (1.0f, 0.0f);
-		glVertex2f(config.window_width,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2);
+		glVertex2f(config.window_width-SCREEN_OFFSET,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
 		glTexCoord2f (0.0f, 1.0f);
-		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2,config.window_height);
+		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET);
 		glTexCoord2f (1.0f, 1.0f);
-		glVertex2f(config.window_width,config.window_height);
+		glVertex2f(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET);
 	glEnd();
 	scale=MINIMAP_SIZE*1.0/config.map.grid_size;
 	glDisable(GL_TEXTURE_2D);
-	glColor4f(0,0,0,0.8);
 	glPushMatrix();
-	glTranslatef(config.window_width-dsize,config.window_height-dsize/4,0);	
+	glTranslatef(config.window_width-dsize-SCREEN_OFFSET,config.window_height-dsize/4-SCREEN_OFFSET,0);	
+	glColor4f(0,0,0,0.8);
 	//need to add tex under map 
 	glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
@@ -750,10 +763,14 @@ void drawMinimap(){
 		glColor4f(1,1,1,1);
 		glDisable(GL_LINE_SMOOTH);
 		glBegin(GL_LINE_LOOP);
-			glVertex2f(scale*screenToGridX(0,0),scale*screenToGridY(0,0));	
-			glVertex2f(scale*screenToGridX(config.window_width,0),scale*screenToGridY(config.window_width,0));	
-			glVertex2f(scale*screenToGridX(config.window_width,config.window_height),scale*screenToGridY(config.window_width,config.window_height));	
-			glVertex2f(scale*screenToGridX(0,config.window_height),scale*screenToGridY(0,config.window_height));	
+			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,SCREEN_OFFSET),
+					scale*screenToGridY(SCREEN_OFFSET,SCREEN_OFFSET));	
+			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET),
+					scale*screenToGridY(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET));	
+			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
+					scale*screenToGridY(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
+			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
+					scale*screenToGridY(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
 		glEnd();
 		//draw npcs
 		glPointSize(3);
@@ -846,6 +863,8 @@ void drawScene(){
 		drawMenu(&config.menu.root);
 	}else{
 		drawMenu(&config.map.screen_menu);
+		drawMenu(&config.map.tower_menu);
+		drawMenu(&config.map.npc_menu);
 		if (config.map.action_menu.enable!=0)
 			drawMenu(&config.map.action_menu);
 	}

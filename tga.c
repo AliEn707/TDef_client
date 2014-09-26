@@ -458,20 +458,13 @@ ReadTGAgray16bitsRLE (FILE *fp, gl_texture_t *texinfo)
 
 
 gl_texture_t *
-ReadTGAFile (const char *filename)
+ReadTGAFile (FILE *fp)
 {
-  FILE *fp;
   gl_texture_t *texinfo;
   tga_header_t header;
   GLubyte *colormap = NULL;
 
-  fp = fopen (filename, "rb");
-  if (!fp)
-    {
-      fprintf (stderr, "error: couldn't open \"%s\"!\n", filename);
-      return NULL;
-    }
-
+  
   /* read header */
   fread (&header, sizeof (tga_header_t), 1, fp);
 
@@ -584,7 +577,6 @@ ReadTGAFile (const char *filename)
   if (colormap)
     free (colormap);
 
-  fclose (fp);
   return texinfo;
 }
 
@@ -594,9 +586,16 @@ loadTGATexture (const char *filename)
 {
   gl_texture_t *tga_tex = NULL;
   GLuint tex_id = 0;
+  FILE* fp;
+  fp = fopen (filename, "rb");
+  if (!fp)
+    {
+      fprintf (stderr, "error: couldn't open \"%s\"!\n", filename);
+      return 0;
+    }
 
-  tga_tex = ReadTGAFile (filename);
-
+  tga_tex = ReadTGAFile (fp);
+  fclose(fp);
   if (tga_tex && tga_tex->texels)
     {
       /* generate texture */

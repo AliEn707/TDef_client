@@ -81,8 +81,10 @@ void loadMenu(menu* root,char* path){
 						fscanf(file,"%d\n",&m->objects[i].single);
 					}
 					if(strcmp(buf,"arg")==0){
-						fscanf(file,"%d %d\n",&m->objects[i].arg[0],
-										&m->objects[i].arg[1]);
+						fscanf(file,"%d %d %d %d\n",&m->objects[i].arg[0],
+										&m->objects[i].arg[1],
+										&m->objects[i].arg[2],
+										&m->objects[i].arg[3]);
 						continue;
 					}
 					if(strcmp(buf,"action")==0){
@@ -103,6 +105,8 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionAuth;
 						if(strcmp(buf,"texttest")==0)
 							m->objects[i].action=actionTextTest;
+						if(strcmp(buf,"towerbrush")==0)
+							m->objects[i].action=actionTowerSpawnBrush;
 						continue;
 					}
 					//something else
@@ -148,6 +152,12 @@ void loadMenu(menu* root,char* path){
 							}
 							if(strcmp(buf,"ypos")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].position.y);
+							}
+							if(strcmp(buf,"fxpos")==0){
+								fscanf(file,"%f\n",&m->objects[i].elements[j].fposition.x);
+							}
+							if(strcmp(buf,"fypos")==0){
+								fscanf(file,"%f\n",&m->objects[i].elements[j].fposition.y);
 							}
 							if(strcmp(buf,"xsize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.x);
@@ -742,6 +752,9 @@ int loadTex(texture * t, char * path, int(load)(char * path)){
 		goto out;
 	if (*path==0)
 		goto out;
+	//try to load zip
+//	sprintf(fullpath,"../textures/%s.zip",path);
+//	fmemopen to open memory stream	
 	//try to load cfg
 	sprintf(fullpath,"../textures/%s.cfg",path);
 	if ((file=fopen(fullpath,"r"))!=0){

@@ -1,0 +1,16 @@
+Initializing.....done
+load menu....done
+load menu....done
+load menu....done
+load menu....done
+start drawer....
+done
+load map....done
+load map grafics....load menu....done
+load menu....done
+connect to server....fail
+exit
+exit drawer
+error: couldn't open "../textures/screen/menu.tga"!
+error: couldn't open "../textures/screen/zoom_up.tga"!
+error: couldn't open "../textures/screen/zoom_down.tga"!

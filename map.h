@@ -43,4 +43,14 @@ void actionMinimapToggle(void * arg);
 
 void actionMinimap(void * arg);
 
+void actionTowerSpawnBrush(void * arg);
 
+void actionNpcSpawnBrush(void * arg);
+
+//brush
+
+void brushTowerCreate();
+
+ void processBrush();
+ 
+ void dropBrush();

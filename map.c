@@ -1,15 +1,33 @@
 #include "headers.h"
 
 
-//
-
+/*
+#define amenu config.map.action_menu
+void setActionMenu(){
+	int i,j;
+	amenu.objects_size=TOWER_SET_SIZE;
+	if ((amenu.objects=malloc(amenu.objects_size*sizeof(object)))==0)
+		perror("malloc setActionMenu");
+	for(i=0;i<amenu.objects_size;i++){
+		amenu.objects[i].elements_size=1;
+		if ((amenu.objects[i].elements=malloc(amenu.objects[i].elements_size*sizeof(element)))==0)
+			perror("malloc setActionMenu");
+		for(j=0;j<amenu.objects[i].elements_size;j++){
+		//	amenu.objects[i].elements[j].
+		}
+	}
+}
+#undef amenu
+*/
 void mapStart(char * path){
 	config.loading.enable=1;
 	cleanMap();
 	loadMap(path);
 	loadMapGrafics(path);
 	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
-	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");
+//	setActionMenu();
+	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
+//	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 	if (networkConnMap(config.map.network.server,config.map.network.port)!=0){
 		config.map.worker=workerMapStart();
 		config.map.connector=connectorMapStart();
@@ -41,13 +59,13 @@ void checkMouseMap(){
 		config.map.focus=-1;
 		return;
 	}
-	if (config.map.grid[to2di(x,y)].buildable>0){
-		config.map.focus=to2di(x,y);
+	config.map.focus=to2di(x,y);
+	if (config.map.grid[to2di(x,y)].buildable>0 && config.map.brush.type==BRUSH_TOWER_SPAWN){
 		cursor.text=config.map.text;
 		sprintf(cursor.text,"build tower");
 		return;
 	}
-	config.map.focus=-1;
+	//config.map.focus=-1;
 }
 
 void processMouseMap(SDL_Event event){	
@@ -97,10 +115,10 @@ void processContKeysMap(){
 
 int globalTransformCorrection(){
 	int s=0;
-	float xl=gridToScreenX(0,0);
-	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size);
-	float yd=gridToScreenY(config.map.grid_size,0);
-	float yu=gridToScreenY(0,config.map.grid_size);
+	float xl=gridToScreenX(0,0)-SCREEN_OFFSET;
+	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size)+SCREEN_OFFSET;
+	float yd=gridToScreenY(config.map.grid_size,0)-SCREEN_OFFSET;
+	float yu=gridToScreenY(0,config.map.grid_size)+SCREEN_OFFSET;
 	if (xl>0){
 		config.global.transform.translate.x-=xl;
 		s=2;
@@ -120,11 +138,11 @@ int globalTransformCorrection(){
 	float x=xr-xl;
 	float y=yu-yd;
 	float scale=1;
-	if (x<config.window_width || y<config.window_height){
-		if (x-config.window_width<y-config.window_height)
-			scale=config.window_width/x;
+	if (x<(config.window_width) || y<(config.window_height)){
+		if (x-(config.window_width)<y-(config.window_height))
+			scale=(config.window_width)/x;
 		else
-			scale=config.window_height/y;
+			scale=(config.window_height)/y;
 		s=1;
 	}
 	config.global.transform.scale*=scale;
@@ -216,7 +234,7 @@ float gridToMinimapY(float x,float y){
 }
 
 	
-
+/*
 void setActionMenu(){
 	printf("action on %d node (tower %d)\n",	config.map.focus,
 								config.map.grid[config.map.focus].tower_id);
@@ -241,7 +259,7 @@ void setActionMenu(){
 				"destroy tower");
 	}
 	config.map.action_menu.enable=1;
-}
+}*/
 //
 
 void actionShowWalkMap(void * arg){
@@ -295,4 +313,49 @@ void actionMinimap(void * arg){
 	globalTransformCorrection();
 }
 
+void actionTowerSpawnBrush(void * arg){
+	object * o=arg;
+	config.map.brush.id=(short)o->arg[0];
+	config.map.brush.type=BRUSH_TOWER_SPAWN;
+	config.map.brush.action=brushTowerCreate;
+	printf("set Brush Tower button id %d\n",config.map.brush.id);
+}
 
+void actionNpcSpawnBrush(void * arg){
+	
+}
+
+///brush
+
+void brushTowerCreate(){
+	if (config.map.grid[config.map.focus].buildable<=0){
+		dropBrush();
+		return;
+	}
+//	printf("send %hd %hd\n",config.map.focus,config.map.brush.id);
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_SPAWN_TOWER;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnTower");
+//	else printf("send %d %d %d",mtype,p[0],p[1]);
+	SDLNet_TCP_Send(config.map.network.socket,&config.map.focus,sizeof(int));
+	SDLNet_TCP_Send(config.map.network.socket,&config.map.brush.id,sizeof(config.map.brush.id));
+//	send(config.map.network.socket,sizeof(mtype),0);
+}
+
+void processBrush(){
+	printf("click on node %d\n",config.map.focus);
+	if (config.map.brush.action==0)
+		return;
+	config.map.brush.action();
+//	config.map.focus;
+//	config.map.brush;
+}
+
+void dropBrush(){
+	config.map.brush.id=0;
+	config.map.brush.type=0;
+	config.map.brush.action=0;
+	printf("clear Brush\n");
+}
