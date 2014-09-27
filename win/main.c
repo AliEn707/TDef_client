@@ -67,6 +67,7 @@ int main(int argc, char *argv[]){
 	config.map.minimap.obj.touch=1;
 	config.map.minimap.obj.action=actionMinimap;
 	
+	sprintf(config.message,"hello my frend\n dont worry");
 	while(config.main_running){ 
 		frameSync(&time);
 		config.global_count++;

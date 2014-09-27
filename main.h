@@ -322,6 +322,7 @@ struct element{
 	int wire;
 	vec2 _position;
 	float anim_speed;
+	vec2 tile_size;
 	
 	vec2 position;
 	vec2 size;
@@ -492,6 +493,8 @@ struct map_conf{
 	
 	player * player;
 	player players[20];
+	object * tower_objects[TOWER_SET_SIZE];
+	object * npc_objects[NPC_SET_SIZE];
 } map_conf;
 
 typedef

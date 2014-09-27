@@ -135,15 +135,20 @@ void drawElement(element * e,int focus){
 	}
 	glPushMatrix();
 	glTranslatef(e->_position.x,e->_position.y,0);
+	vec2 tiles={1.0f,1.0f};
+	if (e->tile_size.x!=0)
+		tiles.x=e->size.x/e->tile_size.x;
+	if (e->tile_size.y!=0)
+		tiles.y=e->size.y/e->tile_size.y;
 	
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0,0);
-		glTexCoord2f(0.0f, 1.0f);
+		glTexCoord2f(0.0f, tiles.y);
 		glVertex2f(0,e->size.y);
-		glTexCoord2f(1.0f, 1.0f);
+		glTexCoord2f(tiles.x, tiles.y);
 		glVertex2f(e->size.x,e->size.y);
-		glTexCoord2f(1.0f, 0.0f);
+		glTexCoord2f(tiles.x, 0.0f);
 		glVertex2f(e->size.x,0);
 	glEnd();
 	
@@ -719,7 +724,7 @@ void drawMinimap(){
 	scale=MINIMAP_SIZE*1.0/config.map.grid_size;
 	glDisable(GL_TEXTURE_2D);
 	glPushMatrix();
-	glTranslatef(config.window_width-dsize-SCREEN_OFFSET,config.window_height-dsize/4-SCREEN_OFFSET,0);	
+	glTranslatef(config.window_width-dsize-SCREEN_OFFSET-1,config.window_height-dsize/4-SCREEN_OFFSET-1,0);	
 	glColor4f(0,0,0,0.8);
 	//need to add tex under map 
 	glScalef(1,0.5,1);

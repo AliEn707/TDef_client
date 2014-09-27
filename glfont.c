@@ -118,6 +118,8 @@ void glFontEnd (void)
 void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 {
 	int Length, i;
+	float height=0;
+	float _x=x;
 	GLFONTCHAR *Char;
 	
 	//Return if we don't have a valid glFont 
@@ -133,22 +135,28 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 	//Loop through characters
 	for (i = 0; i < Length; i++)
 	{
-		//Get pointer to glFont character
-		Char = &glFont->Char[(int)String[i] -
-			glFont->IntStart];
-		
-		//Specify vertices and texture coordinates
-		glTexCoord2f(Char->tx1, Char->ty1);
-		glVertex3f(x, y, z);
-		glTexCoord2f(Char->tx1, Char->ty2);
-		glVertex3f(x, y - Char->dy, z);
-		glTexCoord2f(Char->tx2, Char->ty2);
-		glVertex3f(x + Char->dx, y - Char->dy, z);
-		glTexCoord2f(Char->tx2, Char->ty1);
-		glVertex3f(x + Char->dx, y, z);
-	
-		//Move to next character
-		x += Char->dx;
+		if (String[i]=='\n'){
+			y-=height;
+			x=_x;
+		}else{
+			//Get pointer to glFont character
+			Char = &glFont->Char[(int)String[i] -
+				glFont->IntStart];
+			
+			//Specify vertices and texture coordinates
+			glTexCoord2f(Char->tx1, Char->ty1);
+			glVertex3f(x, y, z);
+			glTexCoord2f(Char->tx1, Char->ty2);
+			glVertex3f(x, y - Char->dy, z);
+			glTexCoord2f(Char->tx2, Char->ty2);
+			glVertex3f(x + Char->dx, y - Char->dy, z);
+			glTexCoord2f(Char->tx2, Char->ty1);
+			glVertex3f(x + Char->dx, y, z);
+			if (height<Char->dy)
+				height=Char->dy;
+			//Move to next character
+			x += Char->dx;
+		}
 	}
 
 	//Stop rendering quads

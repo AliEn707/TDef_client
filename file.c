@@ -105,8 +105,10 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionAuth;
 						if(strcmp(buf,"texttest")==0)
 							m->objects[i].action=actionTextTest;
-						if(strcmp(buf,"towerbrush")==0)
+						if(strcmp(buf,"towerbrush")==0){
 							m->objects[i].action=actionTowerSpawnBrush;
+							config.map.tower_objects[m->objects[i].arg[0]]=&m->objects[i];
+						}
 						continue;
 					}
 					//something else
@@ -168,6 +170,12 @@ void loadMenu(menu* root,char* path){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.y);
 								if (m->objects[i].elements[j].size.y<=0)
 									m->objects[i].elements[j].size.y=config.window_height+m->objects[i].elements[j].size.y;
+							}
+							if(strcmp(buf,"xtile")==0){
+								fscanf(file,"%f\n",&m->objects[i].elements[j].tile_size.x);
+							}
+							if(strcmp(buf,"ytile")==0){
+								fscanf(file,"%f\n",&m->objects[i].elements[j].tile_size.y);
 							}
 							if(strcmp(buf,"tex")==0){
 								fscanf(file,"%s\n",buf);
@@ -419,6 +427,7 @@ void loadMapGrafics(char* path){
 	
 //	config.map.enable=1;
 	setDefaultTransform();
+	printf("done\n");
 }
 
 void realizeMap(){
