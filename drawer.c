@@ -813,6 +813,11 @@ void drawMessage(){
 		glScalef(15,15,1);	
 		drawTextCentered(&mainfont,config.message);
 	glPopMatrix();
+	if (++config.message_ticks>800){
+		config.message_ticks=0;
+		*config.message=0;
+	}
+		
 }
 
 void drawScene(){
@@ -820,6 +825,8 @@ void drawScene(){
 	glLoadIdentity();
 //	glEnable(GL_DEPTH_TEST);
 	//when we load something
+	int dark=0;
+		
 	if (config.loading.enable!=0){
 		drawMenu(&config.loading);
 		goto out;
@@ -859,20 +866,25 @@ void drawScene(){
 			//draw map egain
 		glPopMatrix();
 		glDisable(GL_DEPTH_TEST);
+
 		drawMinimap();
+		
+		if (dark!=0){
+			getLightsMask();
+			drawLightsMask();
+		}
 	}
+	
 	//draw screen controls
 	glDisable(GL_DEPTH_TEST);
 	drawMessage();
-	if (config.menu.enable!=0){
+	drawMenu(&config.map.screen_menu);
+	drawMenu(&config.map.tower_menu);
+	drawMenu(&config.map.npc_menu);
+	if (config.map.action_menu.enable!=0)
+		drawMenu(&config.map.action_menu);
+	if (config.menu.enable!=0)
 		drawMenu(&config.menu.root);
-	}else{
-		drawMenu(&config.map.screen_menu);
-		drawMenu(&config.map.tower_menu);
-		drawMenu(&config.map.npc_menu);
-		if (config.map.action_menu.enable!=0)
-			drawMenu(&config.map.action_menu);
-	}
 cur:
 	//must be the last
 	if (config.text.enable!=0)

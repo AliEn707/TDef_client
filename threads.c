@@ -218,6 +218,7 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
+	loadTexture(&config.map.tex[LIGHT_MASK],"global/light_mask");
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	
 	glFontCreate (&mainfont, "../data/main.glf");
@@ -235,10 +236,11 @@ int drawerThread(void *ptr){
 		}
 		
 	}
-	SDL_GL_DeleteContext(glcontext);
+	glFontDestroy(&mainfont);
 	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
 	config.textures_size=0;
-	glFontDestroy(&mainfont);
+	SDL_GL_DeleteContext(glcontext);
+	
 //	SDL_Delay(300);
 	
 	printf("exit drawer\n");

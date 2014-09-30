@@ -349,10 +349,11 @@ void graficsInit(){
 	} 
 	
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 1);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,4);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
 
 	config.window = SDL_CreateWindow("TDef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.window_width, config.window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL ); //| SDL_WINDOW_FULLSCREEN
 	if(config.window == NULL){

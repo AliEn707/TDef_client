@@ -8,3 +8,4 @@
 #include "drawer.h"
 #include "keyboard.h"
 #include "tga.h"
+#include "lights.h"

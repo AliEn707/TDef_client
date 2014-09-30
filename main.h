@@ -37,7 +37,8 @@
 #define WALKABLE 2
 #define BUILDABLE 3
 #define NO_SEE 4
-#define COMON_TEXTURES_START 5
+#define LIGHT_MASK 5
+#define COMON_TEXTURES_START 6
 
 //process object
 #define MOUSE 1
@@ -551,6 +552,7 @@ struct g_config{
 	menu loading;
 	
 	char message[500];
+	short message_ticks;
 	
 	int textures_size;
 	int textures[MAX_TEXTURES];

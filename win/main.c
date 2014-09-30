@@ -113,6 +113,7 @@ int main(int argc, char *argv[]){
 	cleanAll();
 	networkExit();
 	printf("exit\n");
+//	SDL_Delay(100);
 	SDL_Quit(); // завершаем работу SDL и выходим
 	return 0;
 }
