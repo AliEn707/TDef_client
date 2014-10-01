@@ -62,7 +62,7 @@ void drawLights(void (*draw)(vec2 * pos, float size) ){
 }
 
 void getLightsMask(){
-	glClear(GL_DEPTH_BUFFER_BIT);
+/*	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	glDepthMask(GL_FALSE);
@@ -77,9 +77,28 @@ void getLightsMask(){
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glDepthMask(GL_TRUE);
 	glDisable(GL_STENCIL_TEST);
+*/
 }
 
 void drawLightsMask(){
+	glColor4f(0,0,0,0.9);
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_TRIANGLE_STRIP);
+		glVertex2f(0,0);
+		glVertex2f(0,config.window_height);
+		glVertex2f(config.window_width,0);
+		glVertex2f(config.window_width,config.window_height);
+	glEnd();
+	
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	glColor4f(1,1,1,0.5);
+	drawLights(drawLight);
+	
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	
+/*
 	glEnable(GL_STENCIL_TEST);
 	glStencilMask(0x00);
 	// draw where stencil's value is 0
@@ -99,4 +118,5 @@ void drawLightsMask(){
 	//where objects are 
 	drawLights(drawLight);
 	glDisable(GL_STENCIL_TEST);
+*/
 }
