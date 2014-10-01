@@ -87,6 +87,7 @@
 //#define checkMask(z,x) z->bit_mask&x
 
 #define PLAYER_HEALTH 1
+#define PLAYER_CREATE 4
 
 #define NPC_HEALTH 1
 #define NPC_POSITION 2
@@ -422,15 +423,19 @@ struct {
 	struct {
 		int id;
 		int size;
-	} towers_set[NPC_SET_SIZE];
+	} tower_set[NPC_SET_SIZE];
 	
 	struct {
 		int id;
 		int size;
 	} npc_set[TOWER_SET_SIZE];
 	
+	int id;
 	int level;
-	int money;
+	int group;
+
+	int money;	
+	int base_health;
 	tower * base;
 	//add hero info
 } player;
@@ -493,6 +498,7 @@ struct map_conf{
 	} brush;
 	
 	player * player;
+	int player_id;
 	player players[20];
 	object * tower_objects[TOWER_SET_SIZE];
 	object * npc_objects[NPC_SET_SIZE];

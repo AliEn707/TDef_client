@@ -69,11 +69,13 @@ TCPsocket networkConnMap(char * addr,int port){
 int recvNpcMap(){
 	npc * n;
 	int id,bit_mask;
+	npc tmp;
+	
 	recvMap(id);
 	//find npc by id
 	if ((n=getNpcById(id))==0){
-		perror("getNpcId recvNpcMap");
-		return 0;
+		perror("getNpcById recvNpcMap");
+		n=&tmp;
 	}
 	float shift;
 //	if (n->prev_time==0)
@@ -119,11 +121,13 @@ int recvNpcMap(){
 int recvTowerMap(){
 	tower * t;
 	int id,bit_mask;
+	tower tmp;
+	
 	recvMap(id);
 	//find npc by id
 	if((t=getTowerById(id))==0){
-		perror("getTowerId recvTowerMap");
-		return 0;
+		perror("getTowerById recvTowerMap");
+		t=&tmp;
 	}
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,TOWER_CREATE)){
@@ -154,11 +158,13 @@ int recvTowerMap(){
 int recvBulletMap(){
 	bullet * b;
 	int id,bit_mask;
+	bullet tmp;
+	
 	recvMap(id);
 	//find npc by id
 	if((b=getBulletById(id))==0){
-		perror("getBulletId recvBulletMap");
-		return 0;
+		perror("getBulletById recvBulletMap");
+		b=&tmp;
 	}
 	float shift;
 //	if (b->prev_time==0)
@@ -211,6 +217,24 @@ int recvBulletMap(){
 	return 0;
 }
 
+int recvPlayerMap(){
+	int id,bit_mask;
+	recvMap(id);
+	//check npc
+	recvMap(bit_mask);
+	if (checkMask(bit_mask,PLAYER_CREATE)){
+		recvMap(config.map.players[id].id);
+		recvMap(config.map.players[id].tower_set);
+		recvMap(config.map.players[id].npc_set);
+		recvMap(config.map.players[id].group);
+	}
+	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
+		printf("base health\n");
+		recvMap(config.map.players[id].base_health);
+	}
+	return 0;
+}
+
 int recvMesMap(){
 	char mes;
 //	int err;
@@ -229,6 +253,17 @@ int recvMesMap(){
 //		printf("get bullet\n");
 		return recvBulletMap();
 	}
+	if (mes==MSG_PLAYER){
+//		printf("get player\n");
+		return recvPlayerMap();
+	}
 	printf("unnown message\n");
+	return 0;
+}
+
+int networkMapAuth(){
+	recvMap(config.map.player_id);
+	config.map.player=&config.map.players[config.map.player_id];
+	
 	return 0;
 }

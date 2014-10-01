@@ -459,8 +459,11 @@ void drawTower(tower* t){
 				sprintf(buf,"%d",t->level);
 				drawText(&mainfont,buf);
 			glPopMatrix();
-		
-			float health=1.0*t->health/config.tower_types[t->type].health;
+			float health;
+			if (t->type==BASE)
+				health=1.0*t->health/config.map.players[t->owner].base_health;
+			else
+				health=1.0*t->health/config.tower_types[t->type].health;
 			if (health<0.95)
 				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
 	glPopMatrix();
@@ -700,6 +703,16 @@ void drawMapObjects(){
 			drawMapObject(&config.map.map_objects[i]);
 }
 
+void setMinimapObjectColor(int owner){
+	if (owner==config.map.player_id)
+		glColor4f(0,1,0,1.0);
+	else
+		if (config.map.players[owner].group==config.map.players[config.map.player_id].group)
+			glColor4f(0,0.6,1,1.0);
+		else
+			glColor4f(1,0,0,1.0);
+}
+
 void drawMinimap(){
 	if (config.map.minimap.enable==0)
 		return;
@@ -757,7 +770,8 @@ void drawMinimap(){
 			if (config.map.tower_array[i].id!=0){
 				glBegin(config.map.tower_array[i].type!=BASE?GL_LINES:GL_TRIANGLE_STRIP);
 					//check group and set color
-					glColor4f(0,1,0,1.0);
+					setMinimapObjectColor(config.map.tower_array[i].owner);
+					
 					glVertex2f(scale*(config.map.tower_array[i].position.x+t_size),scale*config.map.tower_array[i].position.y);
 					glVertex2f(scale*(config.map.tower_array[i].position.x-t_size),scale*config.map.tower_array[i].position.y);
 					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+t_size));
@@ -783,7 +797,8 @@ void drawMinimap(){
 		glBegin(GL_POINTS);
 			for(i=0;i<config.map.npc_max;i++)
 				if (config.map.npc_array[i].id!=0){
-					glColor4f(0.2,1,0.2,1.0);
+					//glColor4f(0.2,1,0.2,1.0);
+					setMinimapObjectColor(config.map.npc_array[i].owner);
 					glVertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
 				}
 		glEnd();

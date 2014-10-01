@@ -19,3 +19,5 @@ int sendData(int socket,void * buf,int size);
 int recvData(TCPsocket sock, void * buf, int size);
 
 int recvMesMap();
+
+int networkMapAuth();

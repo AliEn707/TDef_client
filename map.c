@@ -29,8 +29,10 @@ void mapStart(char * path){
 	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
 	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 	if (networkConnMap(config.map.network.server,config.map.network.port)!=0){
-		config.map.worker=workerMapStart();
-		config.map.connector=connectorMapStart();
+		if (networkMapAuth()==0){
+			config.map.worker=workerMapStart();
+			config.map.connector=connectorMapStart();
+		}
 	}else{
 		setTestData();
 	}

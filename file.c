@@ -836,10 +836,15 @@ void setTestData(){
 	#define x2 7.5
 	#define y2 5.5
 	
+	config.map.player_id=0;
+	config.map.player=&config.map.players[config.map.player_id];
+	config.map.players[2].group=1;
+	
 	config.map.npc_array[1].position.x=x1;
 	config.map.npc_array[1].position.y=y1;
 	config.map.npc_array[1].id=-100;
 	config.map.npc_array[1].type=1;
+	config.map.npc_array[1].owner=2;
 	config.map.npc_array[1].health=36;
 	config.map.npc_array[0].position.x=x2;
 	config.map.npc_array[0].position.y=y2;
@@ -849,6 +854,7 @@ void setTestData(){
 	
 	config.map.tower_array[0].id=-1;
 	config.map.tower_array[0].type=1;
+	config.map.tower_array[0].owner=1;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
 	
