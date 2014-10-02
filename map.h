@@ -39,6 +39,8 @@ void actionZoomMap(void * arg);
 
 void actionSpawnTower(void * arg);
 
+void actionSpawnNpc(void * arg);
+
 void actionMinimapToggle(void * arg);
 
 void actionMinimap(void * arg);

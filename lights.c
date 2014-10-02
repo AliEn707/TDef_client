@@ -2,121 +2,119 @@
 /*
 NOT WORKED YET
 */
+int tex_width=64;//config.window_width;
+int tex_height=64;//config.window_height;
+static char *mem;
 
-void DrawCircle(float cx, float cy, float r, int num_segments) 
-{ 
-	float theta = 2 * 3.1415926 /num_segments; 
-	float c = cosf(theta);//precalculate the sine and cosine
-	float s = sinf(theta);
-	float t;
-
-	float x = r;//we start at angle = 0 
-	float y = 0; 
-	int ii;
-	
-	glBegin(GL_TRIANGLE_FAN); 
-	for(ii = 0; ii < num_segments; ii++) 
-	{ 
-		glVertex2f(x + cx, y + cy);//output vertex 
-        
-		//apply the rotation matrix
-		t = x;
-		x = c * x - s * y;
-		y = s * t + c * y;
-	} 
-	glEnd(); 
+void initLights(){
+	mem=malloc(tex_width*tex_height);
 }
 
-void drawLightMask(vec2 * pos, float size){
-	setTexture(&config.map.tex[LIGHT_MASK]);
-	glEnable(GL_TEXTURE_2D);
-	DrawCircle(pos->x,pos->y,size*.85,15);
+void realizeLights(){
+	free(mem);
+}
+
+int createScreenTexture(int id){
+	unsigned int tex;
+
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex_width, tex_height, 0, GL_RGB, GL_UNSIGNED_INT, 0);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	config.map.tex[id].frames=1;
+	config.map.tex[id].loop=1;
+	config.map.tex[id].tex[0]=tex;
+
+//	config.map.textures[config.map.textures_size++]=tex;
+	return tex;
 }
 
 void drawLight(vec2 * pos, float size){
-	setTexture(&config.map.tex[LIGHT_MASK]);
-	glEnable(GL_TEXTURE_2D);
-	glBegin(GL_TRIANGLE_STRIP);
-		glTexCoord2f (0.0f, 0.0f);
-		glVertex2f(pos->x-size,pos->y-size);
-		glTexCoord2f (0.0f, 1.0f);
-		glVertex2f(pos->x-size,pos->y+size);
-		glTexCoord2f (1.0f, 0.0f);
-		glVertex2f(pos->x+size,pos->y-size);
-		glTexCoord2f (1.0f, 1.0f);
-		glVertex2f(pos->x+size,pos->y+size);
-	glEnd();
+	glPushMatrix();
+	glTranslatef(pos->x,pos->y,0);
+	backTransform();
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f (0.0f, 0.0f);
+			glVertex2f(-size,-size);
+			glTexCoord2f (0.0f, 1.0f);
+			glVertex2f(-size,size);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(size,-size);
+			glTexCoord2f (1.0f, 1.0f);
+			glVertex2f(size,size);
+		glEnd();
+	glPopMatrix();
 }
 
-void drawLights(void (*draw)(vec2 * pos, float size) ){
+void drawLights(){
 	int i;
+	setTexture(&config.map.tex[LIGHT]);
+	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
-	globalTransform();
+//	globalTransform();
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0)
-				draw(&config.map.tower_array[i].position,1);
+				drawLight(&config.map.tower_array[i].position,1.5);
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0)
-				draw(&config.map.npc_array[i].position,1);	
+				drawLight(&config.map.npc_array[i].position,1);	
 	glPopMatrix();
 }
 
 void getLightsMask(){
-/*	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_STENCIL_TEST);
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	glDepthMask(GL_FALSE);
-	glStencilFunc(GL_NEVER, 1, 0xFF);
-	glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);  // draw 1s on test fail (always)
+#define width config.window_width
+#define height config.window_height
+	
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glViewport(0, 0,  tex_width, tex_height);
+	
+	drawLightsMap();
+	
+	setTexture(&config.map.tex[LIGHT_MASK]);
+//	glBindTexture(GL_TEXTURE_2D,config.map.tex[LIGHT_MASK].tex[0]);
 
-	// draw stencil pattern
-	glStencilMask(0xFF);
-	glClear(GL_STENCIL_BUFFER_BIT);  // needs mask=0xFF
-	drawLights(drawLightMask);
+//        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, tex_width, tex_height, 0);
+//     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, 0, 0, tex_width, tex_height);
+	glReadPixels(0,0, tex_width, tex_height, GL_RED, GL_UNSIGNED_BYTE, mem);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_width, tex_height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, mem);
+	
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glViewport(0, 0, width, height);
+#undef width
+#undef height
+}
 
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDepthMask(GL_TRUE);
-	glDisable(GL_STENCIL_TEST);
-*/
+void drawLightsMap(){
+//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+//	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	glBlendFunc(GL_SRC_ALPHA,GL_SRC_ALPHA);
+	glColor4f(1,1,1,1);
+	drawLights(drawLight);
+	
+//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void drawLightsMask(){
-	glColor4f(0,0,0,0.9);
-	glDisable(GL_TEXTURE_2D);
+	glColor4f(1,1,1,0.95);
+	setTexture(&config.map.tex[LIGHT_MASK]);
+	glEnable(GL_TEXTURE_2D);
+//	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);
 	glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2f (0.0f, 0.0f);
 		glVertex2f(0,0);
+		glTexCoord2f (0.0f, 1.0f);
 		glVertex2f(0,config.window_height);
+		glTexCoord2f (1.0f, 0.0f);
 		glVertex2f(config.window_width,0);
+		glTexCoord2f (1.0f, 1.0f);
 		glVertex2f(config.window_width,config.window_height);
 	glEnd();
-	
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	glColor4f(1,1,1,0.5);
-	drawLights(drawLight);
-	
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	
-/*
-	glEnable(GL_STENCIL_TEST);
-	glStencilMask(0x00);
-	// draw where stencil's value is 0
-	glStencilFunc(GL_EQUAL, 0, 0xFF);
-	
-	glColor4f(0,0,0,0.9);
-	glDisable(GL_TEXTURE_2D);
-	glBegin(GL_TRIANGLE_STRIP);
-		glVertex2f(0,0);
-		glVertex2f(0,config.window_height);
-		glVertex2f(config.window_width,0);
-		glVertex2f(config.window_width,config.window_height);
-	glEnd();
-	
-	// draw only where stencil's value is 1
-	glStencilFunc(GL_EQUAL, 1, 0xFF);
-	//where objects are 
-	drawLights(drawLight);
-	glDisable(GL_STENCIL_TEST);
-*/
+//	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 }

@@ -47,10 +47,12 @@ void checkMouseMap(){
 		return;
 	}
 	if(config.map.minimap.enable!=0) 
-		if (cursor.state.x>config.window_width-MINIMAP_AREA_WIDTH-MINIMAP_AREA_SHIFT*2 && 
-				cursor.state.y>config.window_height-MINIMAP_AREA_HEIGHT-MINIMAP_AREA_SHIFT*2){
-			if (cursor.state.x>config.window_width-MINIMAP_AREA_WIDTH && 
-					cursor.state.y>config.window_height-MINIMAP_AREA_HEIGHT){
+		if (cursor.state.x>config.window_width-MINIMAP_AREA_WIDTH-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET && 
+				cursor.state.y>config.window_height-MINIMAP_AREA_HEIGHT-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET &&
+				cursor.state.x<config.window_width-SCREEN_OFFSET &&
+				cursor.state.y<config.window_height-SCREEN_OFFSET){
+			if (cursor.state.x>config.window_width-SCREEN_OFFSET-MINIMAP_AREA_WIDTH && 
+					cursor.state.y>config.window_height-SCREEN_OFFSET-MINIMAP_AREA_HEIGHT){
 				config.menu.selected=&config.map.minimap.obj;
 			}
 			return;
@@ -121,16 +123,17 @@ int globalTransformCorrection(){
 	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size)+SCREEN_OFFSET;
 	float yd=gridToScreenY(config.map.grid_size,0)-SCREEN_OFFSET;
 	float yu=gridToScreenY(0,config.map.grid_size)+SCREEN_OFFSET;
+	//printf("xl %g %g\n",yd, yu);
 	if (xl>0){
 		config.global.transform.translate.x-=xl;
 		s=2;
 	}
 	if (xr<config.window_width){
-		config.global.transform.translate.x-=xr-config.window_width;
+		config.global.transform.translate.x-=xr-(config.window_width);
 		s=3;
 	}
 	if (yu<config.window_height){
-		config.global.transform.translate.y-=yu-config.window_height;
+		config.global.transform.translate.y-=yu-(config.window_height);
 		s=4;
 	}
 	if (yd>0){
@@ -295,6 +298,20 @@ void actionSpawnTower(void * arg){
 //	send(config.map.network.socket,sizeof(mtype),0);
 }
 
+void actionSpawnNpc(void * arg){
+	object * o=arg;
+	int * p=(o->arg);
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_SPAWN_NPC;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+//	else printf("send %d %d %d",mtype,p[0],p[1]);
+	SDLNet_TCP_Send(config.map.network.socket,&p[0],sizeof(int));
+	SDLNet_TCP_Send(config.map.network.socket,&p[1],sizeof(int));
+//	send(config.map.network.socket,sizeof(mtype),0);
+}
+
 void actionMinimapToggle(void * arg){
 	if (config.map.minimap.used!=0)
 		config.map.minimap.enable=(config.map.minimap.enable+1)&1;
@@ -303,13 +320,14 @@ void actionMinimapToggle(void * arg){
 
 void actionMinimap(void * arg){
 	float dsize=MINIMAP_AREA_WIDTH;
-	vec2 lcScreen={screenToGridX(0,config.window_height/2),screenToGridY(0,config.window_height/2)};
-	vec2 centerScreen={screenToGridX(config.window_width/2,config.window_height/2),screenToGridY(config.window_width/2,config.window_height/2)};
-	vec2 zeroMap={config.global.transform.translate.x,config.global.transform.translate.y};
-	vec2 zeroMinimap={config.window_width-dsize,config.window_height-dsize/2};
+	//vec2 lcScreen={screenToGridX(SCREEN_OFFSET,(config.window_height-SCREEN_OFFSET)/2),screenToGridY(SCREEN_OFFSET,(config.window_height-SCREEN_OFFSET)/2)};
+	vec2 centerScreen={screenToGridX((config.window_width-SCREEN_OFFSET)/2,(config.window_height-SCREEN_OFFSET)/2),screenToGridY((config.window_width-SCREEN_OFFSET)/2,(config.window_height-SCREEN_OFFSET)/2)};
+	//vec2 zeroMap={config.global.transform.translate.x,config.global.transform.translate.y};
+	vec2 zeroMinimap={(config.window_width-SCREEN_OFFSET)-dsize,(config.window_height-SCREEN_OFFSET)-dsize/2};
 	vec2 minimap_shift={cursor.state.x-(zeroMinimap.x+gridToMinimapX(centerScreen.x,centerScreen.y)),
 					cursor.state.y-(zeroMinimap.y+gridToMinimapY(centerScreen.x,centerScreen.y))};
-	float shift_scale=-((zeroMap.x-0.01)/(gridToMinimapX(lcScreen.x,lcScreen.y)+0.01));//some hack to get non zero
+	float shift_scale=2;
+	//fabs(((zeroMap.x-0.01)/(gridToMinimapX(lcScreen.x,lcScreen.y)+0.001)));//some hack to get non zero
 	config.global.transform.translate.x-=minimap_shift.x*shift_scale;
 	config.global.transform.translate.y-=minimap_shift.y*shift_scale;
 	globalTransformCorrection();

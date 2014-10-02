@@ -10,6 +10,7 @@
 #include "../map.h"
 #include "../threads.h"
 #include "../network.h"
+#include "../lights.h"
 
 
 
@@ -29,12 +30,13 @@ int main(int argc, char *argv[]){
 	graficsInit(); // инициализация
 	config.main_running=1;
 	printf("done\n");
-
+	
 	loadFiles();
 	
 //	FreeConsole();
-	CAMERA_SPEED=7;
-	CAMERA_ZOOM=3;
+	CAMERA_SPEED=8;
+	CAMERA_ZOOM=4;
+	CURSOR_SPEED=9;
 	cursor.text="Hello";
 /*	
 	printf("locale set %s\n",setlocale( LC_ALL, "ru_ru.65001" ));
@@ -62,6 +64,7 @@ int main(int argc, char *argv[]){
 
 	
 	networkInit();
+	initLights();
 	config.drawer=drawerStart();
 	
 	config.map.minimap.obj.touch=1;
@@ -111,6 +114,7 @@ int main(int argc, char *argv[]){
 //	SDL_WaitThread(config.drawer, 0);
 //	glFontDestroy(&font);
 	cleanAll();
+	realizeLights();
 	networkExit();
 	printf("exit\n");
 //	SDL_Delay(100);

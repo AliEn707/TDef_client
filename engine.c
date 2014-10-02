@@ -196,13 +196,13 @@ void processKeyboard(){
 	//global keys
 	//mouse motion
 	if (config.global.keys[SDLK_UP])
-		cursorMove(0,5);
+		cursorMove(0,CURSOR_SPEED);
 	if (config.global.keys[SDLK_DOWN])
-		cursorMove(0,-5);
+		cursorMove(0,-CURSOR_SPEED);
 	if (config.global.keys[SDLK_LEFT])
-		cursorMove(-5,0);
+		cursorMove(-CURSOR_SPEED,0);
 	if (config.global.keys[SDLK_RIGHT])
-		cursorMove(5,0);
+		cursorMove(CURSOR_SPEED,0);
 	//
 
 	if (config.menu.enable==0)
@@ -330,8 +330,8 @@ int loadGlobalTexture(char * path){
 
 
 int loadMapTexture(char * path){
-	config.textures[config.map.textures_size]=loadTGATexture(path);
-	return config.textures[config.map.textures_size++];
+	config.map.textures[config.map.textures_size]=loadTGATexture(path);
+	return config.map.textures[config.map.textures_size++];
 }
 
 

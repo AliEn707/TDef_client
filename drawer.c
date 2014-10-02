@@ -752,45 +752,23 @@ void drawMinimap(){
 			glTexCoord2f (1.0f, 1.0f);
 			glVertex2f(MINIMAP_SIZE,MINIMAP_SIZE);
 		glEnd();
-		glColor4f(0.8,0.8,0.8,0.4);
-		glEnable(GL_LINE_SMOOTH);
-		glLineWidth(0.7);
-		glBegin(GL_LINES);
-			for(i=0;i<config.map.grid_size;i++){
-				glVertex2f(scale*i,scale*0);
-				glVertex2f(scale*i,scale*config.map.grid_size);
-				glVertex2f(scale*0,scale*i);
-				glVertex2f(scale*config.map.grid_size,scale*i);
-			}
-		glEnd();
 		//draw towers
 		#define t_size 0.4f
+		glEnable(GL_LINE_SMOOTH);
 		glLineWidth(1);
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0){
 				glBegin(config.map.tower_array[i].type!=BASE?GL_LINES:GL_TRIANGLE_STRIP);
 					//check group and set color
 					setMinimapObjectColor(config.map.tower_array[i].owner);
-					
 					glVertex2f(scale*(config.map.tower_array[i].position.x+t_size),scale*config.map.tower_array[i].position.y);
 					glVertex2f(scale*(config.map.tower_array[i].position.x-t_size),scale*config.map.tower_array[i].position.y);
 					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+t_size));
 					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-t_size));
 				glEnd();
 			}
-		#undef t_size	
-		glColor4f(1,1,1,1);
 		glDisable(GL_LINE_SMOOTH);
-		glBegin(GL_LINE_LOOP);
-			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,SCREEN_OFFSET),
-					scale*screenToGridY(SCREEN_OFFSET,SCREEN_OFFSET));	
-			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET),
-					scale*screenToGridY(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET));	
-			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
-					scale*screenToGridY(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
-			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
-					scale*screenToGridY(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
-		glEnd();
+		#undef t_size	
 		//draw npcs
 		glPointSize(3);
 		glEnable(GL_POINT_SMOOTH);
@@ -811,6 +789,32 @@ void drawMinimap(){
 //		glEnd();
 		glPointSize(1);
 		glDisable(GL_POINT_SMOOTH);
+		//draw minimap grid
+		glColor4f(0.8,0.8,0.8,0.4);
+		glEnable(GL_LINE_SMOOTH);
+		glLineWidth(0.7);
+		glBegin(GL_LINES);
+			for(i=0;i<=config.map.grid_size;i++){
+				glVertex2f(scale*i,scale*0);
+				glVertex2f(scale*i,scale*config.map.grid_size);
+				glVertex2f(scale*0,scale*i);
+				glVertex2f(scale*config.map.grid_size,scale*i);
+			}
+		glEnd();
+		glDisable(GL_LINE_SMOOTH);
+		//draw screen quad
+		glColor4f(1,1,1,1);
+		glBegin(GL_LINE_LOOP);
+			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,SCREEN_OFFSET),
+					scale*screenToGridY(SCREEN_OFFSET,SCREEN_OFFSET));	
+			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET),
+					scale*screenToGridY(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET));	
+			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
+					scale*screenToGridY(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
+			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
+					scale*screenToGridY(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
+		glEnd();
+		
 	glPopMatrix();
 }
 
@@ -853,17 +857,14 @@ void drawScene(){
 	if (config.map.enable!=0){
 		glPushMatrix();
 			globalTransform();
+			if (dark!=0)
+				getLightsMask();
+			
 			glDisable(GL_DEPTH_TEST);
 			drawMap();
 		
 			config.texture_no_change=1;
 			drawWalls();
-	//		glEnable(GL_DEPTH_TEST);
-	//		config.texture_no_change=0;
-	//		drawWalls();
-			
-			glDisable(GL_DEPTH_TEST);
-			config.texture_no_change=1;
 			drawMapObjects();
 			drawNpcs();
 			drawTowers();
@@ -882,12 +883,11 @@ void drawScene(){
 		glPopMatrix();
 		glDisable(GL_DEPTH_TEST);
 
-		drawMinimap();
-		
 		if (dark!=0){
-			getLightsMask();
 			drawLightsMask();
 		}
+		
+		drawMinimap();
 	}
 	
 	//draw screen controls

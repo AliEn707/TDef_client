@@ -38,7 +38,8 @@
 #define BUILDABLE 3
 #define NO_SEE 4
 #define LIGHT_MASK 5
-#define COMON_TEXTURES_START 6
+#define LIGHT 6
+#define COMON_TEXTURES_START 7
 
 //process object
 #define MOUSE 1
@@ -104,6 +105,7 @@
 #define BULLET_CREATE 4
 
 //global controls
+#define CURSOR_SPEED cursor.speed
 #define CAMERA_SPEED config.global.camera.move_speed
 #define CAMERA_ZOOM config.global.camera.zoom_speed
 
@@ -388,6 +390,7 @@ struct cur{
 	color3 color;
 	texture tex;
 	float sens;
+	float speed;
 	
 	char * text;
 } cur;

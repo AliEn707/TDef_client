@@ -218,7 +218,8 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[BUILDABLE],"global/build");
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
-	loadTexture(&config.map.tex[LIGHT_MASK],"global/light_mask");
+	loadTexture(&config.map.tex[LIGHT],"global/light_mask");
+	createScreenTexture(LIGHT_MASK);
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	
 	glFontCreate (&mainfont, "../data/main.glf");

@@ -11,3 +11,5 @@ void drawObject(object * o);
 void drawScene();
 
 void globalTransform();
+
+void backTransform();
