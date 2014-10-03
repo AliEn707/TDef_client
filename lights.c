@@ -8,6 +8,14 @@ static char *mem;
 
 void initLights(){
 	mem=malloc(tex_width*tex_height);
+	//move to configuration
+	if (config.window_width<900){
+		tex_width=32;
+		tex_height=32;
+	} else {
+		tex_width=64;
+		tex_height=64;
+	}
 }
 
 void realizeLights(){
@@ -36,15 +44,15 @@ void drawLight(vec2 * pos, float size){
 	glPushMatrix();
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
-		glBegin(GL_TRIANGLE_STRIP);
+		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f (0.0f, 0.0f);
 			glVertex2f(-size,-size);
 			glTexCoord2f (0.0f, 1.0f);
 			glVertex2f(-size,size);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(size,-size);
 			glTexCoord2f (1.0f, 1.0f);
 			glVertex2f(size,size);
+			glTexCoord2f (1.0f, 0.0f);
+			glVertex2f(size,-size);
 		glEnd();
 	glPopMatrix();
 }
@@ -74,7 +82,6 @@ void getLightsMask(){
 	glViewport(0, 0,  tex_width, tex_height);
 	
 	drawLightsMap();
-	
 	setTexture(&config.map.tex[LIGHT_MASK]);
 //	glBindTexture(GL_TEXTURE_2D,config.map.tex[LIGHT_MASK].tex[0]);
 
@@ -106,15 +113,15 @@ void drawLightsMask(){
 	setTexture(&config.map.tex[LIGHT_MASK]);
 	glEnable(GL_TEXTURE_2D);
 //	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);
-	glBegin(GL_TRIANGLE_STRIP);
+	glBegin(GL_TRIANGLE_FAN);
 		glTexCoord2f (0.0f, 0.0f);
 		glVertex2f(0,0);
 		glTexCoord2f (0.0f, 1.0f);
 		glVertex2f(0,config.window_height);
-		glTexCoord2f (1.0f, 0.0f);
-		glVertex2f(config.window_width,0);
 		glTexCoord2f (1.0f, 1.0f);
 		glVertex2f(config.window_width,config.window_height);
+		glTexCoord2f (1.0f, 0.0f);
+		glVertex2f(config.window_width,0);
 	glEnd();
 //	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 }

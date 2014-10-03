@@ -129,8 +129,6 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 	//Get length of string
 	Length = strlen(String);
 	
-	//Begin rendering quads
-	glBegin(GL_QUADS);
 	
 	//Loop through characters
 	for (i = 0; i < Length; i++)
@@ -142,7 +140,8 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 			//Get pointer to glFont character
 			Char = &glFont->Char[(int)String[i] -
 				glFont->IntStart];
-			
+			//Begin rendering quads
+			glBegin(GL_TRIANGLE_FAN);
 			//Specify vertices and texture coordinates
 			glTexCoord2f(Char->tx1, Char->ty1);
 			glVertex3f(x, y, z);
@@ -156,11 +155,13 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 				height=Char->dy;
 			//Move to next character
 			x += Char->dx;
+			//Stop rendering quads
+			glEnd();
+			
 		}
 	}
 
-	//Stop rendering quads
-	glEnd();
+	
 }
 //*********************************************************
 

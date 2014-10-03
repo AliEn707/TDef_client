@@ -685,7 +685,7 @@ display (void)
 
   // draw quad 
   glTranslatef (0.0, 0.0, -5.0);
-  glBegin (GL_QUADS);
+  glBegin (GL_TRIANGLE_FAN);
     glTexCoord2f (0.0f, 0.0f);
     glVertex3f (-1.0f, -1.0f, 0.0f);
 
