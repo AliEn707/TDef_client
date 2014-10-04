@@ -28,10 +28,11 @@
  */
 
 //#include <GL/glut.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <GL/gl.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <GL/gl.h>
 
+#include "headers.h"
 /* OpenGL texture info */
 typedef struct
 {

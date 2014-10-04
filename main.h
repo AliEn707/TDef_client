@@ -521,7 +521,7 @@ struct global_conf{
 	struct {
 		GLFONT all;
 	} font;
-	
+	unsigned int frame_time;
 }global_conf;
 
 

@@ -61,7 +61,7 @@ void drawLights(){
 	int i;
 	setTexture(&config.map.tex[LIGHT]);
 	glEnable(GL_TEXTURE_2D);
-	glPushMatrix();
+//	glPushMatrix();
 //	globalTransform();
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0)
@@ -69,7 +69,7 @@ void drawLights(){
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0)
 				drawLight(&config.map.npc_array[i].position,1);	
-	glPopMatrix();
+//	glPopMatrix();
 }
 
 void getLightsMask(){
@@ -77,7 +77,8 @@ void getLightsMask(){
 #define height config.window_height
 	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glViewport(0, 0,  tex_width, tex_height);
 	
@@ -91,7 +92,7 @@ void getLightsMask(){
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_width, tex_height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, mem);
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, width, height);
 #undef width
 #undef height
@@ -109,7 +110,7 @@ void drawLightsMap(){
 }
 
 void drawLightsMask(){
-	glColor4f(1,1,1,0.95);
+	glColor4f(1,1,1,0.97);
 	setTexture(&config.map.tex[LIGHT_MASK]);
 	glEnable(GL_TEXTURE_2D);
 //	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);

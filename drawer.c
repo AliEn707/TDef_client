@@ -19,12 +19,12 @@ int textureFrameNext(texture *t){
 }
 
 void drawText(GLFONT *glFont,char* text){
-	glPushMatrix();		
+//	glPushMatrix();		
 //	glScalef(15,15,1);
 //	glTranslatef(0,glFontHeight(&mainfont,text),0);
 	glEnable(GL_TEXTURE_2D);
 	glFontTextOut(glFont,text,0,0,0);
-	glPopMatrix();
+//	glPopMatrix();
 }
 
 void drawTextCentered(GLFONT *glFont,char* text){
@@ -225,6 +225,8 @@ void drawMenu(menu * root){
 void drawNode(gnode * n){
 //	glBindTexture(GL_TEXTURE_2D, n->tex);
 //	glEnable(GL_TEXTURE_2D);
+	float _x=0;
+	float _y=0;
 	if (config.map.tex[n->tex].frames==0){
 		loadMTexture(&config.map.tex[n->tex],config.map.tex_path[n->tex]);
 	}
@@ -233,31 +235,35 @@ void drawNode(gnode * n){
 		glColor4f(0,1,0,1);
 	else
 		glColor4f(1,1,1,1);
-	glPushMatrix();
-		if (n->id>=0)
-			glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
+//	glPushMatrix();
+	if (n->id>=0){
+		_x=n->id/config.map.grid_size;
+		_y=n->id%config.map.grid_size;
+	}
+//		if (n->id>=0)
+//			glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(0.0f,0.0f);
+			glVertex2f(_x,_y);
 			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(1.0f,0.0f);
+			glVertex2f(_x+1.0f,_y);
 			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(1.0f,1.0f);
+			glVertex2f(_x+1.0f,_y+1.0f);
 			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(0.0f,1.0f);
+			glVertex2f(_x,_y+1.0f);
 		glEnd();
 		if (n->buildable!=0){
 			setTexture(&config.map.tex[BUILDABLE]);
 			glBegin(GL_TRIANGLE_FAN);
 				glTexCoord2f (0.0f, 0.0f);
-				glVertex2f(0.0f,0.0f);
+				glVertex2f(_x,_y);
 				glTexCoord2f (1.0f, 0.0f);
-				glVertex2f(1.0f,0.0f);
+				glVertex2f(_x+1.0f,_y);
 				glTexCoord2f (1.0f, 1.0f);
-				glVertex2f(1.0f,1.0f);
+				glVertex2f(_x+1.0f,_y+1.0f);
 				glTexCoord2f (0.0f, 1.0f);
-				glVertex2f(0.0f,1.0f);
+				glVertex2f(_x,_y+1.0f);
 			glEnd();
 		}
 		if (config.map.show_walk!=0){
@@ -269,18 +275,18 @@ void drawNode(gnode * n){
 					setTexture(&config.map.tex[NO_SEE]);
 				glBegin(GL_TRIANGLE_FAN);
 					glTexCoord2f (0.0f, 0.0f);
-					glVertex2f(0.0f,0.0f);
+					glVertex2f(_x,_y);
 					glTexCoord2f (1.0f, 0.0f);
-					glVertex2f(1.0f,0.0f);
+					glVertex2f(_x+1.0f,_y);
 					glTexCoord2f (1.0f, 1.0f);
-					glVertex2f(1.0f,1.0f);
+					glVertex2f(_x+1.0f,_y+1.0f);
 					glTexCoord2f (0.0f, 1.0f);
-					glVertex2f(0.0f,1.0f);
+					glVertex2f(_x,_y+1.0f);
 				glEnd();
 			}
 		}
-	glPopMatrix();	
-	glDisable(GL_TEXTURE_2D);
+//	glPopMatrix();	
+//	glDisable(GL_TEXTURE_2D);
 }
 
 
@@ -346,8 +352,8 @@ void backTransform(){
 }
 
 void drawHealth(vec2 pos,vec2 size,float p){
-	glPushMatrix();
-	glTranslatef(0,0,0.03);
+//	glPushMatrix();
+//	glTranslatef(0,0,0.03);//why?
 	glDisable(GL_TEXTURE_2D);
 	glColor4f(0,0,0,0.8);
 	glBegin(GL_TRIANGLE_FAN);
@@ -364,7 +370,7 @@ void drawHealth(vec2 pos,vec2 size,float p){
 		glVertex2f(pos.x,pos.y+size.y);
 		
 	glEnd();
-	glPopMatrix();
+//	glPopMatrix();
 }
 
 void drawNpc(npc* n){
@@ -401,15 +407,17 @@ void drawNpc(npc* n){
 		glTranslatef(0,0,5);
 		//draw health
 		float health=1.0*n->health/config.npc_types[n->type].health;
-		glPushMatrix();
+		if (health<0.98)
+			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
+//		glPushMatrix();
+			glColor4f(1,1,1,1);
 			glTranslatef(-0.5,0.9,0);
 			glScalef(0.15,0.15,1);
 			char buf[5];
 			sprintf(buf,"%hd",n->level);
 			drawText(&mainfont,buf);
-		glPopMatrix();
-		if (health<0.98)
-			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
+//		glPopMatrix();
+		
 	glPopMatrix();
 }
 
@@ -631,7 +639,7 @@ void drawWall(wall* w){
 	float x=0;
 	float y=0;
 	vec2 shift={0,0};
-	#define size 0.65f
+	#define size 0.645f
 	if (w->direction=='x'){
 		x=size;
 		shift.x=size-0.5f;
@@ -839,8 +847,16 @@ void drawMessage(){
 		
 }
 
+void drawFrameTime(){
+	char buf[20];
+	sprintf(buf,"fps:%u ms/f:%u ",(int)(1000/config.global.frame_time+0.01),config.global.frame_time);
+	glScalef(12,12,1);
+	glFontTextOut(&mainfont,buf,0.2,1.2,0);
+}
+
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	glClear(GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 //	glEnable(GL_DEPTH_TEST);
 	//when we load something
@@ -857,10 +873,10 @@ void drawScene(){
 	if (config.map.enable!=0){
 		glPushMatrix();
 			globalTransform();
+			glDisable(GL_DEPTH_TEST);
 			if (dark!=0)
 				getLightsMask();
 			
-			glDisable(GL_DEPTH_TEST);
 			drawMap();
 		
 			config.texture_no_change=1;
@@ -906,6 +922,8 @@ cur:
 		drawMenu(&config.text.keyboard);
 	drawCursor(); 
 out:	
+	//must be the last
+	drawFrameTime();
 	glFlush();
 	SDL_GL_SwapWindow(config.window);
 }
