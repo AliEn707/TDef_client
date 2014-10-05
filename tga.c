@@ -604,8 +604,8 @@ loadTGATexture (const char *filename)
       glBindTexture (GL_TEXTURE_2D, tga_tex->id);
 
       /* setup some parameters for texture filters and mipmapping */
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR/*_MIPMAP_LINEAR*/);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter/*_MIPMAP_LINEAR GL_NEAREST*/);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, config.options.tex_filter);
 
 
       glTexImage2D (GL_TEXTURE_2D, 0, tga_tex->internalFormat,

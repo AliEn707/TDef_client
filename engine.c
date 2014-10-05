@@ -58,14 +58,35 @@ void frameSync(unsigned int *time){
 		*time=SDL_GetTicks();//timeGetTime();
 		return;
 	}
-		config.global.frame_time=config.time_per_frame-(SDL_GetTicks()-*time);
-	if (config.global.frame_time<0){
+	unsigned int t;
+		t=config.time_per_frame-(config.global.frame_time=(SDL_GetTicks()-*time));
+	if (t<0){
 		perror("Time");
-		config.global.frame_time=0;
+		t=0;
 	}
-	SDL_Delay(config.global.frame_time<=config.time_per_frame?config.global.frame_time:0);
+	config.global.frame_time+=t<=config.time_per_frame?t:0;
+	SDL_Delay(t<=config.time_per_frame?t:0);
 	*time=SDL_GetTicks();
 //	config.map.time_now=*time;
+}
+
+void workSync(unsigned int *time){
+	#define time_per_frame 20//1000/50
+	if (*time==0){
+		*time=SDL_GetTicks();//timeGetTime();
+		return;
+	}
+	unsigned int t;
+		t=time_per_frame-(SDL_GetTicks()-*time);
+	if (t<0){
+		perror("Time");
+		t=0;
+	}
+	SDL_Delay(t<=time_per_frame?t:0);
+	*time=SDL_GetTicks();
+	return;
+//	config.map.time_now=*time;
+	#undef time_per_frame
 }
 
 void tickSync(unsigned int *time){
@@ -82,6 +103,7 @@ void tickSync(unsigned int *time){
 		perror("time");
 	SDL_Delay(t<=config.time_per_tick?t:0);
 	*time=SDL_GetTicks();
+	return;
 }
 
 
@@ -170,7 +192,7 @@ void processEvent(SDL_Event event){
 	//			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
 				if (event.motion.xrel!=0||event.motion.yrel!=0){
 					cursor.state.x=event.motion.x;
-					cursor.state.y=config.window_height-event.motion.y;
+					cursor.state.y=config.options.window.height-event.motion.y;
 				}
 				//cursorMove(event.motion.xrel,-event.motion.yrel);
 				checkCursorBorder();
@@ -247,10 +269,10 @@ void checkCursorBorder(){
 		cursor.state.x=0;
 	if (cursor.state.y<0)
 		cursor.state.y=0;
-	if (cursor.state.y>config.window_height)
-		cursor.state.y=config.window_height;
-	if (cursor.state.x>config.window_width)
-		cursor.state.x=config.window_width;
+	if (cursor.state.y>config.options.window.height)
+		cursor.state.y=config.options.window.height;
+	if (cursor.state.x>config.options.window.width)
+		cursor.state.x=config.options.window.width;
 }
 //not used
 void mouseMotion(){
@@ -301,9 +323,9 @@ int processMouse(){
 			setMove(0,CAMERA_SPEED);
 		if (cursor.state.y<border)
 			setMove(CAMERA_SPEED,0);
-		if (cursor.state.y>config.window_height-border)
+		if (cursor.state.y>config.options.window.height-border)
 			setMove(-CAMERA_SPEED,0);
-		if (cursor.state.x>config.window_width-border)
+		if (cursor.state.x>config.options.window.width-border)
 			setMove(0,-CAMERA_SPEED);
 		#undef border
 	}
@@ -317,7 +339,7 @@ void cursorInit(){
 	cursor.color.g=1;
 	cursor.color.b=1;
 	cursor.state.x=0;
-	cursor.state.y=config.window_height;
+	cursor.state.y=config.options.window.height;
 	
 }
 
@@ -355,7 +377,7 @@ void graficsInit(){
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,4);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
 
-	config.window = SDL_CreateWindow("TDef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.window_width, config.window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL ); //| SDL_WINDOW_FULLSCREEN
+	config.window = SDL_CreateWindow("TDef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.options.window.width, config.options.window.height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL ); //| SDL_WINDOW_FULLSCREEN
 	if(config.window == NULL){
 		exit(1);
 	}

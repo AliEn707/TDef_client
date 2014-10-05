@@ -11,6 +11,8 @@ bullet* getBulletById(int id);
 //
 void frameSync(unsigned int *time);
 
+void workSync(unsigned int *time);
+
 void tickSync(unsigned int *time);
 
 float dirToAngle(vec2 v);

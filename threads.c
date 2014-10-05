@@ -209,8 +209,9 @@ int drawerThread(void *ptr){
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0,config.window_width,0,config.window_height,-10000,10000);
+	glOrtho(0,config.options.window.width,0,config.options.window.height,-10000,10000);
 	glMatrixMode(GL_MODELVIEW); 
+//	glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);//GL_NICEST
 	
 	////////////load global textures
 	loadTexture(&cursor.tex,"global/cursor");
@@ -229,6 +230,19 @@ int drawerThread(void *ptr){
 	while(config.main_running){ 
 //	while(1){ 
 		frameSync(&time);
+		config.global.screen.coord.ld.x=screenToGridX(SCREEN_OFFSET,SCREEN_OFFSET);
+		config.global.screen.coord.ld.y=screenToGridY(SCREEN_OFFSET,SCREEN_OFFSET);
+		config.global.screen.coord.lu.x=screenToGridX(SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
+		config.global.screen.coord.lu.y=screenToGridY(SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
+		config.global.screen.coord.ru.x=screenToGridX(config.options.window.width-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
+		config.global.screen.coord.ru.y=screenToGridY(config.options.window.width-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
+		config.global.screen.coord.rd.x=screenToGridX(config.options.window.width-SCREEN_OFFSET,SCREEN_OFFSET);
+		config.global.screen.coord.rd.y=screenToGridY(config.options.window.width-SCREEN_OFFSET,SCREEN_OFFSET);
+		
+		config.global.screen.node.l=getGridLineX(config.global.screen.coord.ld.x,config.global.screen.coord.ld.y)-3;
+		config.global.screen.node.r=getGridLineX(config.global.screen.coord.rd.x,config.global.screen.coord.rd.y)+3;
+		config.global.screen.node.d=getGridLineY(config.global.screen.coord.ld.x,config.global.screen.coord.ld.y)-3;
+		config.global.screen.node.u=getGridLineY(config.global.screen.coord.lu.x,config.global.screen.coord.lu.y)+3;
 		
 		drawScene();
 		if (config.map.clean_textures_size!=0){

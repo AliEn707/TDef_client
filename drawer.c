@@ -294,45 +294,50 @@ void drawMap(){
 	int i,j;
 	for(i=0;i<config.map.grid_size;i++)
 		for(j=0;j<config.map.grid_size;j++)
-			drawNode(&config.map.grid[to2d(i,j)]);
+			if (checkGridLines(i,j))
+				drawNode(&config.map.grid[to2d(i,j)]);
 	//draw non working zone
 	int k;
 	k=0;
 	for(i=-1;i>-(config.map.grid_size/2+config.map.grid_size%2+1);i--)
-		for(j=-i-1;j<config.map.grid_size-(-i-1);j++){
-			glPushMatrix();
-				glTranslatef(i,j,0);
-				drawNode(&config.map.grid_out[0][k]);
-			glPopMatrix();
-			k++;
-		}
+		for(j=-i-1;j<config.map.grid_size-(-i-1);j++)
+			if (checkGridLines(i,j)){
+				glPushMatrix();
+					glTranslatef(i,j,0);
+					drawNode(&config.map.grid_out[0][k]);
+				glPopMatrix();
+				k++;
+			}
 	k=0;
 	for(j=0;j<(config.map.grid_size/2+config.map.grid_size%2+1);j++)
-		for(i=j;i<config.map.grid_size-j;i++){
-			glPushMatrix();
-				glTranslatef(i,config.map.grid_size+j,0);
-				drawNode(&config.map.grid_out[1][k]);
-			glPopMatrix();
-			k++;
-		}
+		for(i=j;i<config.map.grid_size-j;i++)
+			if (checkGridLines(i,config.map.grid_size+j)){
+				glPushMatrix();
+					glTranslatef(i,config.map.grid_size+j,0);
+					drawNode(&config.map.grid_out[1][k]);
+				glPopMatrix();
+				k++;
+			}
 	k=0;
 	for(i=0;i<(config.map.grid_size/2+config.map.grid_size%2+1);i++)
-		for(j=i;j<config.map.grid_size-i;j++){
-			glPushMatrix();
-				glTranslatef(config.map.grid_size+i,j,0);
-				drawNode(&config.map.grid_out[2][k]);
-			glPopMatrix();
-			k++;
-		}
+		for(j=i;j<config.map.grid_size-i;j++)
+			if (checkGridLines(config.map.grid_size+i,j)){
+				glPushMatrix();
+					glTranslatef(config.map.grid_size+i,j,0);
+					drawNode(&config.map.grid_out[2][k]);
+				glPopMatrix();
+				k++;
+			}
 	k=0;
 	for(j=-1;j>-(config.map.grid_size/2+config.map.grid_size%2+1);j--)
-		for(i=-j-1;i<config.map.grid_size-(-j-1);i++){
-			glPushMatrix();
-				glTranslatef(i,j,0);
-				drawNode(&config.map.grid_out[3][k]);
-			glPopMatrix();
-			k++;
-		}
+		for(i=-j-1;i<config.map.grid_size-(-j-1);i++)
+			if (checkGridLines(i,j)){
+				glPushMatrix();
+					glTranslatef(i,j,0);
+					drawNode(&config.map.grid_out[3][k]);
+				glPopMatrix();
+				k++;
+			}
 }
 
 void globalTransform(){
@@ -425,7 +430,8 @@ void drawNpcs(){
 	int i;
 	for(i=0;i<config.map.npc_max;i++)
 		if (config.map.npc_array[i].id!=0)
-			drawNpc(&config.map.npc_array[i]);
+			if (checkGridLines(config.map.npc_array[i].position.x,config.map.npc_array[i].position.y))
+				drawNpc(&config.map.npc_array[i]);
 }
 
 void drawTower(tower* t){
@@ -480,7 +486,8 @@ void drawTowers(){
 	int i;
 	for(i=0;i<config.map.tower_max;i++)
 		if (config.map.tower_array[i].id!=0)
-			drawTower(&config.map.tower_array[i]);
+			if (checkGridLines(config.map.tower_array[i].position.x,config.map.tower_array[i].position.y))
+				drawTower(&config.map.tower_array[i]);
 }
 
 void drawBullet(bullet* b){
@@ -589,7 +596,9 @@ void drawBullets(){
 	int i;
 	for(i=0;i<config.map.bullet_max;i++)
 		if (config.map.bullet_array[i].id!=0)
-			drawBullet(&config.map.bullet_array[i]);
+			if (config.bullet_types[config.map.bullet_array[i].type].solid!=0 || 
+					checkGridLines(config.map.bullet_array[i].position.x,config.map.bullet_array[i].position.y))
+				drawBullet(&config.map.bullet_array[i]);
 }
 
 
@@ -626,9 +635,10 @@ void drawSplash(splash* s){
 
 void drawSplashes(){
 	int i;
-	for(i=0;i<config.map.tower_max;i++)
-		if (config.map.tower_array[i].type!=0)
-			drawTower(&config.map.tower_array[i]);
+	for(i=0;i<config.map.splash_max;i++)
+		if (config.map.splash_array[i].type!=0)
+			if (checkGridLines(config.map.splash_array[i].position.x,config.map.splash_array[i].position.y))
+				drawSplash(&config.map.splash_array[i]);
 }
 
 void drawWall(wall* w){
@@ -734,18 +744,18 @@ void drawMinimap(){
 	setTexture(&config.map.minimap.tex);
 	glBegin(GL_TRIANGLE_FAN);
 		glTexCoord2f (0.0f, 0.0f);
-		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
+		glVertex2f(config.options.window.width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.options.window.height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
 		glTexCoord2f (0.0f, 1.0f);
-		glVertex2f(config.window_width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET);
+		glVertex2f(config.options.window.width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
 		glTexCoord2f (1.0f, 1.0f);
-		glVertex2f(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET);
+		glVertex2f(config.options.window.width-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
 		glTexCoord2f (1.0f, 0.0f);
-		glVertex2f(config.window_width-SCREEN_OFFSET,config.window_height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
+		glVertex2f(config.options.window.width-SCREEN_OFFSET,config.options.window.height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
 	glEnd();
 	scale=MINIMAP_SIZE*1.0/config.map.grid_size;
 	glDisable(GL_TEXTURE_2D);
 	glPushMatrix();
-	glTranslatef(config.window_width-dsize-SCREEN_OFFSET-1,config.window_height-dsize/4-SCREEN_OFFSET-1,0);	
+	glTranslatef(config.options.window.width-dsize-SCREEN_OFFSET-1,config.options.window.height-dsize/4-SCREEN_OFFSET-1,0);	
 	glColor4f(0,0,0,0.8);
 	//need to add tex under map 
 	glScalef(1,0.5,1);
@@ -813,14 +823,14 @@ void drawMinimap(){
 		//draw screen quad
 		glColor4f(1,1,1,1);
 		glBegin(GL_LINE_LOOP);
-			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,SCREEN_OFFSET),
-					scale*screenToGridY(SCREEN_OFFSET,SCREEN_OFFSET));	
-			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET),
-					scale*screenToGridY(config.window_width-SCREEN_OFFSET,SCREEN_OFFSET));	
-			glVertex2f(scale*screenToGridX(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
-					scale*screenToGridY(config.window_width-SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
-			glVertex2f(scale*screenToGridX(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET),
-					scale*screenToGridY(SCREEN_OFFSET,config.window_height-SCREEN_OFFSET));	
+			glVertex2f(scale*config.global.screen.coord.ld.x,
+					scale*config.global.screen.coord.ld.y);	
+			glVertex2f(scale*config.global.screen.coord.lu.x,
+					scale*config.global.screen.coord.lu.y);	
+			glVertex2f(scale*config.global.screen.coord.ru.x,
+					scale*config.global.screen.coord.ru.y);	
+			glVertex2f(scale*config.global.screen.coord.rd.x,
+					scale*config.global.screen.coord.rd.y);	
 		glEnd();
 		
 	glPopMatrix();
@@ -836,7 +846,7 @@ void drawMessage(){
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1,1,1,1);
 	glPushMatrix();
-		glTranslatef(config.window_width/2.0,config.window_height/2.0+100,0);	
+		glTranslatef(config.options.window.width/2.0,config.options.window.height/2.0+100,0);	
 		glScalef(15,15,1);	
 		drawTextCentered(&mainfont,config.message);
 	glPopMatrix();
@@ -848,19 +858,21 @@ void drawMessage(){
 }
 
 void drawFrameTime(){
-	char buf[20];
-	sprintf(buf,"fps:%u ms/f:%u ",(int)(1000/config.global.frame_time+0.01),config.global.frame_time);
+	char buf[100];//="test";
+	sprintf(buf,"fps:%d ms/f:%d ",(int)(1000/(config.global.frame_time+0.0001)),config.global.frame_time);
 	glScalef(12,12,1);
+	glColor4f(1,1,1,1);
+	glEnable(GL_TEXTURE_2D);
 	glFontTextOut(&mainfont,buf,0.2,1.2,0);
 }
 
+		
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //	glClear(GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 //	glEnable(GL_DEPTH_TEST);
 	//when we load something
-	int dark=0;
 		
 	if (config.loading.enable!=0){
 		drawMenu(&config.loading);
@@ -874,7 +886,7 @@ void drawScene(){
 		glPushMatrix();
 			globalTransform();
 			glDisable(GL_DEPTH_TEST);
-			if (dark!=0)
+			if (config.options.darkness!=0)
 				getLightsMask();
 			
 			drawMap();
@@ -899,7 +911,7 @@ void drawScene(){
 		glPopMatrix();
 		glDisable(GL_DEPTH_TEST);
 
-		if (dark!=0){
+		if (config.options.darkness!=0){
 			drawLightsMask();
 		}
 		

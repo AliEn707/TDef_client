@@ -47,12 +47,12 @@ void checkMouseMap(){
 		return;
 	}
 	if(config.map.minimap.enable!=0) 
-		if (cursor.state.x>config.window_width-MINIMAP_AREA_WIDTH-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET && 
-				cursor.state.y>config.window_height-MINIMAP_AREA_HEIGHT-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET &&
-				cursor.state.x<config.window_width-SCREEN_OFFSET &&
-				cursor.state.y<config.window_height-SCREEN_OFFSET){
-			if (cursor.state.x>config.window_width-SCREEN_OFFSET-MINIMAP_AREA_WIDTH && 
-					cursor.state.y>config.window_height-SCREEN_OFFSET-MINIMAP_AREA_HEIGHT){
+		if (cursor.state.x>config.options.window.width-MINIMAP_AREA_WIDTH-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET && 
+				cursor.state.y>config.options.window.height-MINIMAP_AREA_HEIGHT-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET &&
+				cursor.state.x<config.options.window.width-SCREEN_OFFSET &&
+				cursor.state.y<config.options.window.height-SCREEN_OFFSET){
+			if (cursor.state.x>config.options.window.width-SCREEN_OFFSET-MINIMAP_AREA_WIDTH && 
+					cursor.state.y>config.options.window.height-SCREEN_OFFSET-MINIMAP_AREA_HEIGHT){
 				config.menu.selected=&config.map.minimap.obj;
 			}
 			return;
@@ -128,12 +128,12 @@ int globalTransformCorrection(){
 		config.global.transform.translate.x-=xl;
 		s=2;
 	}
-	if (xr<config.window_width){
-		config.global.transform.translate.x-=xr-(config.window_width);
+	if (xr<config.options.window.width){
+		config.global.transform.translate.x-=xr-(config.options.window.width);
 		s=3;
 	}
-	if (yu<config.window_height){
-		config.global.transform.translate.y-=yu-(config.window_height);
+	if (yu<config.options.window.height){
+		config.global.transform.translate.y-=yu-(config.options.window.height);
 		s=4;
 	}
 	if (yd>0){
@@ -143,11 +143,11 @@ int globalTransformCorrection(){
 	float x=xr-xl;
 	float y=yu-yd;
 	float scale=1;
-	if (x<(config.window_width) || y<(config.window_height)){
-		if (x-(config.window_width)<y-(config.window_height))
-			scale=(config.window_width)/x;
+	if (x<(config.options.window.width) || y<(config.options.window.height)){
+		if (x-(config.options.window.width)<y-(config.options.window.height))
+			scale=(config.options.window.width)/x;
 		else
-			scale=(config.window_height)/y;
+			scale=(config.options.window.height)/y;
 		s=1;
 	}
 	config.global.transform.scale*=scale;
@@ -184,7 +184,7 @@ void setZoom(float x){
 	if (x<0)
 		s*=-1;
 	if(globalTransformCorrection()!=1)
-		setMove(0,CAMERA_ZOOM*s*screenToGridX(config.window_width/2.0f,config.window_height/2.0));;
+		setMove(0,CAMERA_ZOOM*s*screenToGridX(config.options.window.width/2.0f,config.options.window.height/2.0));;
 }
 
 
@@ -320,10 +320,10 @@ void actionMinimapToggle(void * arg){
 
 void actionMinimap(void * arg){
 	float dsize=MINIMAP_AREA_WIDTH;
-	//vec2 lcScreen={screenToGridX(SCREEN_OFFSET,(config.window_height-SCREEN_OFFSET)/2),screenToGridY(SCREEN_OFFSET,(config.window_height-SCREEN_OFFSET)/2)};
-	vec2 centerScreen={screenToGridX((config.window_width-SCREEN_OFFSET)/2,(config.window_height-SCREEN_OFFSET)/2),screenToGridY((config.window_width-SCREEN_OFFSET)/2,(config.window_height-SCREEN_OFFSET)/2)};
+	//vec2 lcScreen={screenToGridX(SCREEN_OFFSET,(config.options.window.height-SCREEN_OFFSET)/2),screenToGridY(SCREEN_OFFSET,(config.options.window.height-SCREEN_OFFSET)/2)};
+	vec2 centerScreen={screenToGridX((config.options.window.width-SCREEN_OFFSET)/2,(config.options.window.height-SCREEN_OFFSET)/2),screenToGridY((config.options.window.width-SCREEN_OFFSET)/2,(config.options.window.height-SCREEN_OFFSET)/2)};
 	//vec2 zeroMap={config.global.transform.translate.x,config.global.transform.translate.y};
-	vec2 zeroMinimap={(config.window_width-SCREEN_OFFSET)-dsize,(config.window_height-SCREEN_OFFSET)-dsize/2};
+	vec2 zeroMinimap={(config.options.window.width-SCREEN_OFFSET)-dsize,(config.options.window.height-SCREEN_OFFSET)-dsize/2};
 	vec2 minimap_shift={cursor.state.x-(zeroMinimap.x+gridToMinimapX(centerScreen.x,centerScreen.y)),
 					cursor.state.y-(zeroMinimap.y+gridToMinimapY(centerScreen.x,centerScreen.y))};
 	float shift_scale=2;

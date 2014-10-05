@@ -23,8 +23,8 @@ void drawCube(float xrf, float yrf, float zrf);
 int main(int argc, char *argv[]){   
 	printf("Initializing.....");
 	memset(&config,0,sizeof(config));
-	config.window_width=800;
-	config.window_height=600;
+	config.options.window.width=800;
+	config.options.window.height=600;
 	config.time_per_frame=1000/50;
 	config.time_per_tick=1000/30;
 	graficsInit(); // инициализация
@@ -37,6 +37,8 @@ int main(int argc, char *argv[]){
 	CAMERA_SPEED=8;
 	CAMERA_ZOOM=4;
 	CURSOR_SPEED=9;
+	config.options.tex_filter=GL_LINEAR; // GL_NEAREST
+	config.options.darkness=0;
 	cursor.text="Hello";
 /*	
 	printf("locale set %s\n",setlocale( LC_ALL, "ru_ru.65001" ));
@@ -72,7 +74,7 @@ int main(int argc, char *argv[]){
 	
 	sprintf(config.message,"hello my frend\n dont worry");
 	while(config.main_running){ 
-		frameSync(&time);
+		workSync(&time);
 		config.global_count++;
 //		SDL_Delay(100);
 		SDL_Event event;

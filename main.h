@@ -106,8 +106,8 @@
 
 //global controls
 #define CURSOR_SPEED cursor.speed
-#define CAMERA_SPEED config.global.camera.move_speed
-#define CAMERA_ZOOM config.global.camera.zoom_speed
+#define CAMERA_SPEED config.options.camera.move_speed
+#define CAMERA_ZOOM config.options.camera.zoom_speed
 
 //in game
 #define NPC_SET_SIZE 9
@@ -515,13 +515,24 @@ struct global_conf{
 	g_params transform;
 	
 	struct {
-		float move_speed;
-		float zoom_speed;
-	} camera;
-	struct {
 		GLFONT all;
 	} font;
 	unsigned int frame_time;
+	struct {
+		struct {
+			int l;
+			int r;
+			int u;
+			int d;
+		} node; //grid lines
+		
+		struct {
+			vec2 ld;
+			vec2 lu;
+			vec2 ru;
+			vec2 rd;
+		} coord; //grid coordinates of screen angles
+	} screen;
 }global_conf;
 
 
@@ -544,8 +555,7 @@ struct g_config{
 	unsigned int time_per_frame;
 	unsigned int time_per_tick;
 	SDL_Window *window;
-	int window_width; 
-	int window_height; 
+
 	int main_running;
 	int texture_no_change;
 	
@@ -576,13 +586,30 @@ struct g_config{
 		bullet_type* bullet_types;
 	unsigned int splash_types_size;
 		splash_type* splash_types;
-	
-	
-	struct {
-		int tower_level;
-	} player;
+		
 	
 	SDL_Thread* drawer;
+	
+	struct {
+		struct {
+			int width; 
+			int height; 
+		} window;
+		struct {
+			int tex_width;
+			int tex_height;
+		} lights;
+		struct {
+			float move_speed;
+			float zoom_speed;
+		} camera;
+		struct {
+			int elements;
+		} wether;
+		float darkness;
+		int tex_filter;  //tex parameters
+		float brightness;
+	} options; //params for options menu
 }g_config;
 
 
@@ -604,6 +631,11 @@ struct g_config{
 #define getGridX(id) (1.0*idToX(id)+0.5f)
 #define getGridY(id) (1.0*idToY(id)+0.5f)
 
+//vetical and horisontal screen lines on grid
+#define getGridLineX(x,y) ((int)(x)+(int)(y))
+#define getGridLineY(x,y) (config.map.grid_size-(int)(x)+(int)(y))
+//in screen check 
+#define checkGridLines(x,y) (config.global.screen.node.l<getGridLineX(x,y) && config.global.screen.node.r>getGridLineX(x,y) && config.global.screen.node.u>getGridLineY(x,y) && config.global.screen.node.d<getGridLineY(x,y))
 
 #define posToId(v) (config.map.grid_size*((int)v.x)+((int)v.y))
 #define cursor config.global.cursor

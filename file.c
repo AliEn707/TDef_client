@@ -49,10 +49,10 @@ void loadMenu(menu* root,char* path){
 						fscanf(file,"%c %f\n",&c,&m->objects[i].position.x);
 						switch (c){
 							case 'c': 
-								m->objects[i].position.x+=config.window_width/2.0;
+								m->objects[i].position.x+=config.options.window.width/2.0;
 								break;
 							case 'r':
-								m->objects[i].position.x=config.window_width-m->objects[i].position.x;
+								m->objects[i].position.x=config.options.window.width-m->objects[i].position.x;
 								break;
 						}
 					}
@@ -61,10 +61,10 @@ void loadMenu(menu* root,char* path){
 						fscanf(file,"%c %f\n",&c,&m->objects[i].position.y);
 						switch (c){
 							case 'c': 
-								m->objects[i].position.y+=config.window_height/2.0;
+								m->objects[i].position.y+=config.options.window.height/2.0;
 								break;
 							case 'u':
-								m->objects[i].position.y=config.window_height-m->objects[i].position.y;
+								m->objects[i].position.y=config.options.window.height-m->objects[i].position.y;
 								break;
 						}
 					}
@@ -164,12 +164,12 @@ void loadMenu(menu* root,char* path){
 							if(strcmp(buf,"xsize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.x);
 								if (m->objects[i].elements[j].size.x<=0)
-									m->objects[i].elements[j].size.x=config.window_width+m->objects[i].elements[j].size.x;
+									m->objects[i].elements[j].size.x=config.options.window.width+m->objects[i].elements[j].size.x;
 							}
 							if(strcmp(buf,"ysize")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].size.y);
 								if (m->objects[i].elements[j].size.y<=0)
-									m->objects[i].elements[j].size.y=config.window_height+m->objects[i].elements[j].size.y;
+									m->objects[i].elements[j].size.y=config.options.window.height+m->objects[i].elements[j].size.y;
 							}
 							if(strcmp(buf,"xtile")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].tile_size.x);
@@ -869,6 +869,18 @@ void setTestData(){
 	config.map.bullet_array[0].direction.x=x2-x1;
 	config.map.bullet_array[0].direction.y=y2-y1;
 	
+	//hard test data
+	int i,j,k=2;
+	for (i=1;i<config.map.grid_size;i++)
+		for (j=i;j<config.map.grid_size;j++){
+			config.map.npc_array[k].position.x=i+rand()%100/100.0;
+			config.map.npc_array[k].position.y=j+rand()%100/100.0;
+			config.map.npc_array[k].id=-100;
+			config.map.npc_array[k].type=1;
+			config.map.npc_array[k].owner=rand()%3;
+			config.map.npc_array[k].health=rand()%300;
+			k++;
+		}
 	
 	/////
 }
