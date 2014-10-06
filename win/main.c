@@ -23,23 +23,28 @@ void drawCube(float xrf, float yrf, float zrf);
 int main(int argc, char *argv[]){   
 	printf("Initializing.....");
 	memset(&config,0,sizeof(config));
+	config.time_per_tick=1000/30;
+	
 	config.options.window.width=800;
 	config.options.window.height=600;
-	config.time_per_frame=1000/50;
-	config.time_per_tick=1000/30;
-	graficsInit(); // инициализация
-	config.main_running=1;
-	printf("done\n");
-	
-	loadFiles();
-	
-//	FreeConsole();
+	config.time_per_frame=1000/60;
 	CAMERA_SPEED=8;
 	CAMERA_ZOOM=4;
 	CURSOR_SPEED=9;
 	config.options.tex_filter=GL_LINEAR; // GL_NEAREST
 	config.options.darkness=0;
 	cursor.text="Hello";
+	config.global.latency=8;
+	
+	graficsInit(); // инициализация
+	config.main_running=1;
+	printf("done\n");
+	
+	srand(SDL_GetTicks());
+	loadFiles();
+	
+//	FreeConsole();
+	
 /*	
 	printf("locale set %s\n",setlocale( LC_ALL, "ru_ru.65001" ));
 	wchar_t wstr[100]=L"\0";
@@ -75,6 +80,7 @@ int main(int argc, char *argv[]){
 	sprintf(config.message,"hello my frend\n dont worry");
 	while(config.main_running){ 
 		workSync(&time);
+		Df=TEX_FPS/(1000.0f/(config.global.frame_time+0.001));
 		config.global_count++;
 //		SDL_Delay(100);
 		SDL_Event event;

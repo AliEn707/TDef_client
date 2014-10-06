@@ -13,8 +13,8 @@
 // screen frames per texture frames
 #define FpF 5
 //write to config
-#define Df 0.26f
-
+#define Df config.options.tdf//0.26f
+#define TEX_FPS 13.0f
 //base
 #define BASE 0
 
@@ -509,6 +509,7 @@ struct map_conf{
 
 typedef
 struct global_conf{
+	float latency;
 	cur cursor;
 	int keys[5000];
 	int mouse[100];
@@ -609,6 +610,7 @@ struct g_config{
 		float darkness;
 		int tex_filter;  //tex parameters
 		float brightness;
+		float tdf;
 	} options; //params for options menu
 }g_config;
 

@@ -166,6 +166,7 @@ int connectorMap(void *ptr){
 //		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
 //	if(SDLNet_TCP_AddSocket(set,sock)<0)
 //		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
+	//auth
 	SDL_Delay(900);
 	printf("done\n");
 	while(config.map.enable){

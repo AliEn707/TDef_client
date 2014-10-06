@@ -876,7 +876,7 @@ void setTestData(){
 			config.map.npc_array[k].position.x=i+rand()%100/100.0;
 			config.map.npc_array[k].position.y=j+rand()%100/100.0;
 			config.map.npc_array[k].id=-100;
-			config.map.npc_array[k].type=1;
+			config.map.npc_array[k].type=1;//rand()%4;
 			config.map.npc_array[k].owner=rand()%3;
 			config.map.npc_array[k].health=rand()%300;
 			k++;

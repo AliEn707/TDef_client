@@ -79,7 +79,7 @@ int recvNpcMap(){
 	}
 	float shift;
 //	if (n->prev_time==0)
-		shift=8;
+		shift=config.global.latency;
 	float add;
 	int time_now=SDL_GetTicks();
 	if (n->prev_time!=0)
@@ -168,7 +168,7 @@ int recvBulletMap(){
 	}
 	float shift;
 //	if (b->prev_time==0)
-		shift=8;
+		shift=config.global.latency;
 	float add;
 	int time_now=SDL_GetTicks();
 	if (b->prev_time!=0)
@@ -229,7 +229,6 @@ int recvPlayerMap(){
 		recvMap(config.map.players[id].group);
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
-		printf("base health\n");
 		recvMap(config.map.players[id].base_health);
 	}
 	return 0;
@@ -261,9 +260,23 @@ int recvMesMap(){
 	return 0;
 }
 
+
+void checkMapLatency(){
+	int a,b;
+	int mes=0;
+	
+	a=SDL_GetTicks();
+	SDLNet_TCP_Send(config.map.network.socket,&mes,sizeof(mes));
+	recvData(config.map.network.socket,&mes,sizeof(mes));
+	b=SDL_GetTicks();
+//	printf("latency test %dms %d tiks\n",(b-a),(b-a)/config.time_per_tick);
+	config.global.latency=7+((b-a)/config.time_per_tick);
+}
+
 int networkMapAuth(){
 	recvMap(config.map.player_id);
 	config.map.player=&config.map.players[config.map.player_id];
-	
+	checkMapLatency();
 	return 0;
 }
+

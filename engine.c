@@ -71,7 +71,7 @@ void frameSync(unsigned int *time){
 }
 
 void workSync(unsigned int *time){
-	#define time_per_frame 20//1000/50
+	#define time_per_frame 20 //1000/50
 	if (*time==0){
 		*time=SDL_GetTicks();//timeGetTime();
 		return;

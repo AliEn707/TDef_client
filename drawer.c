@@ -383,7 +383,7 @@ void drawNpc(npc* n){
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
 //	printf("n->type - %d\n",n->type);
-	glScalef(0.9,0.9,1);
+	glScalef(0.89,0.89,1);
 	glTranslatef(0,0,.56f);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
@@ -438,8 +438,8 @@ void drawTower(tower* t){
 	glPushMatrix();
 		glTranslatef(t->position.x,t->position.y,0);
 		backTransform();
-		glScalef(1.2,1.2,1);
-		glTranslatef(0,0.2,.56f);
+		glScalef(1.4,1.4,1);
+		glTranslatef(0,0.21,.56f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
 			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
