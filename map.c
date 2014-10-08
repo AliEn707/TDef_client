@@ -307,8 +307,9 @@ void actionSpawnNpc(void * arg){
 	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
 		perror("send spawnNpc");
 //	else printf("send %d %d %d",mtype,p[0],p[1]);
+
 	SDLNet_TCP_Send(config.map.network.socket,&p[0],sizeof(int));
-	SDLNet_TCP_Send(config.map.network.socket,&p[1],sizeof(int));
+//	SDLNet_TCP_Send(config.map.network.socket,&p[1],sizeof(int));
 //	send(config.map.network.socket,sizeof(mtype),0);
 }
 
@@ -341,9 +342,6 @@ void actionTowerSpawnBrush(void * arg){
 	printf("set Brush Tower button id %d\n",config.map.brush.id);
 }
 
-void actionNpcSpawnBrush(void * arg){
-	
-}
 
 ///brush
 

@@ -109,6 +109,10 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionTowerSpawnBrush;
 							config.map.tower_objects[m->objects[i].arg[0]]=&m->objects[i];
 						}
+						if(strcmp(buf,"spawnnpc")==0){
+							m->objects[i].action=actionSpawnNpc;
+							config.map.npc_objects[m->objects[i].arg[0]]=&m->objects[i];
+						}
 						continue;
 					}
 					//something else

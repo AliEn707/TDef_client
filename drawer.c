@@ -185,9 +185,8 @@ wirebreak:
 	glTranslatef(e->text_position.x,
 				e->text_position.y,
 				0);
-		if (e->text_size==0)
-			1;//glScalef(15,15,1);
-		else
+	
+		if (e->text_size!=0)
 			glScalef(e->text_size,e->text_size,1);
 		glTranslatef(0,glFontHeight(&mainfont,e->text),0);
 		if (e->text_centered!=0)
@@ -866,7 +865,7 @@ void drawFrameTime(){
 	glScalef(0.85,0.85,1);
 	glColor4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(&mainfont,buf,2,18,0);
+	glFontTextOut(&mainfont,buf,2,20,0);
 }
 
 		
