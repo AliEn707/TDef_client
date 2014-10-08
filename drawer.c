@@ -62,16 +62,16 @@ void drawCursor(){
 			glPushMatrix();
 				glDisable(GL_TEXTURE_2D);
 				//glTranslatef(cursor.state.x,cursor.state.y,0);
-				glTranslatef(cursor.state.x+42,cursor.state.y-25,0);
-				glScalef(15,15,1); //need to correct
+				glTranslatef(cursor.state.x+41,cursor.state.y-24,0);
+				//glScalef(15,15,1); //need to correct
 				glTranslatef(-length,0,0);
 				//glTranslatef(-length/2.0f,height,0);
 				glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
 				glBegin(GL_TRIANGLE_FAN);
 					glVertex3f(-shift,shift,0);
 					glVertex3f(-shift,-height-shift,0);
-					glVertex3f(length+shift,-height-shift,0);
-					glVertex3f(length+shift,shift,0);
+					glVertex3f(length+shift+1,-height-shift,0);
+					glVertex3f(length+shift+1,shift,0);
 				glEnd();
 					glEnable(GL_TEXTURE_2D);
 					glColor4f(1.0f, 1.0f, 1.0f,1.0f);
@@ -186,7 +186,7 @@ wirebreak:
 				e->text_position.y,
 				0);
 		if (e->text_size==0)
-			glScalef(15,15,1);
+			1;//glScalef(15,15,1);
 		else
 			glScalef(e->text_size,e->text_size,1);
 		glTranslatef(0,glFontHeight(&mainfont,e->text),0);
@@ -417,7 +417,8 @@ void drawNpc(npc* n){
 //		glPushMatrix();
 			glColor4f(1,1,1,1);
 			glTranslatef(-0.5,0.9,0);
-			glScalef(0.15,0.15,1);
+			//glScalef(0.15,0.15,1);
+			glScalef(0.011,0.011,1);
 			char buf[5];
 			sprintf(buf,"%hd",n->level);
 			drawText(&mainfont,buf);
@@ -467,7 +468,8 @@ void drawTower(tower* t){
 
 			glPushMatrix();
 				glTranslatef(-0.325,0.5,0);
-				glScalef(0.1125,0.1125,1);
+				//glScalef(0.1125,0.1125,1);
+				glScalef(0.0075,0.0075,1);
 				char buf[5];
 				sprintf(buf,"%d",t->level);
 				drawText(&mainfont,buf);
@@ -847,7 +849,7 @@ void drawMessage(){
 	glColor4f(1,1,1,1);
 	glPushMatrix();
 		glTranslatef(config.options.window.width/2.0,config.options.window.height/2.0+100,0);	
-		glScalef(15,15,1);	
+		//glScalef(15,15,1);	
 		drawTextCentered(&mainfont,config.message);
 	glPopMatrix();
 	if (++config.message_ticks>800){
@@ -860,10 +862,11 @@ void drawMessage(){
 void drawFrameTime(){
 	char buf[100];//="test";
 	sprintf(buf,"fps:%d ms/f:%d ",(int)(1000/(config.global.frame_time+0.0001)),config.global.frame_time);
-	glScalef(12,12,1);
+	//glScalef(12,12,1); //from glFont1
+	glScalef(0.85,0.85,1);
 	glColor4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(&mainfont,buf,0.2,1.2,0);
+	glFontTextOut(&mainfont,buf,2,18,0);
 }
 
 		
