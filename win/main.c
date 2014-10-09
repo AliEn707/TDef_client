@@ -71,7 +71,6 @@ int main(int argc, char *argv[]){
 
 	
 	networkInit();
-	initLights();
 	config.drawer=drawerStart();
 	
 	config.map.minimap.obj.touch=1;

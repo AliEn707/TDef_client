@@ -6,8 +6,15 @@ NOT WORKED YET
 //int config.options.lights.tex_height=64;//config.options.window.height;
 static char *mem;
 
+texture * lights;
+
 void initLights(){
-	mem=malloc(config.options.lights.tex_width*config.options.lights.tex_height);
+	if ((mem=malloc(config.options.lights.tex_width*config.options.lights.tex_height))==0)
+		perror("malloc initLights");
+	if ((lights=malloc(sizeof(texture)))==0)
+		perror("malloc initLights");
+	
+	memset(lights,0,sizeof(texture));
 	//move to configuration
 	if (config.options.window.width<900){
 		config.options.lights.tex_width=32;
@@ -16,13 +23,15 @@ void initLights(){
 		config.options.lights.tex_width=64;
 		config.options.lights.tex_height=64;
 	}
+	createLightsTexture();
 }
 
 void realizeLights(){
 	free(mem);
+	free(lights);
 }
 
-int createScreenTexture(int id){
+int createLightsTexture(){
 	unsigned int tex;
 
 	glGenTextures(1, &tex);
@@ -32,11 +41,13 @@ int createScreenTexture(int id){
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-	config.map.tex[id].frames=1;
-	config.map.tex[id].loop=1;
-	config.map.tex[id].tex[0]=tex;
+	lights->frames=1;
+	lights->loop=1;
+	lights->tex[0]=tex;
 
 //	config.map.textures[config.map.textures_size++]=tex;
+	config.textures[config.textures_size]=tex;
+	config.textures_size++;
 	return tex;
 }
 
@@ -85,7 +96,7 @@ void getLightsMask(){
 	glViewport(0, 0,  config.options.lights.tex_width, config.options.lights.tex_height);
 	
 	drawLightsMap();
-	setTexture(&config.map.tex[LIGHT_MASK]);
+	setTexture(lights);
 //	glBindTexture(GL_TEXTURE_2D,config.map.tex[LIGHT_MASK].tex[0]);
 
 //        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.options.lights.tex_width, config.options.lights.tex_height, 0);
@@ -113,7 +124,7 @@ void drawLightsMap(){
 
 void drawLightsMask(){
 	glColor4f(1,1,1,0.97);
-	setTexture(&config.map.tex[LIGHT_MASK]);
+	setTexture(lights);
 //	glEnable(GL_TEXTURE_2D);
 //	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);
 	glBegin(GL_TRIANGLE_FAN);

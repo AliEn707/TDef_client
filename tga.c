@@ -469,7 +469,8 @@ ReadTGAFile (FILE *fp)
   /* read header */
   fread (&header, sizeof (tga_header_t), 1, fp);
 
-  texinfo = (gl_texture_t *)malloc (sizeof (gl_texture_t));
+  if ((texinfo = (gl_texture_t *)malloc (sizeof (gl_texture_t)))==0)
+	  perror("malloc ReadTGAFile");
   GetTextureInfo (&header, texinfo);
   fseek (fp, header.id_lenght, SEEK_CUR);
 

@@ -2,7 +2,7 @@ void initLights();
 
 void realizeLights();
 
-int createScreenTexture(int id);
+int createLightsTexture();
 
 void drawLights();
 

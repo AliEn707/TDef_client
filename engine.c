@@ -58,13 +58,17 @@ void frameSync(unsigned int *time){
 		*time=SDL_GetTicks();//timeGetTime();
 		return;
 	}
-	unsigned int t;
-		t=config.time_per_frame-(config.global.frame_time=(SDL_GetTicks()-*time));
+	unsigned int t,_t;
+		t=config.time_per_frame-(_t=(SDL_GetTicks()-*time));
 	if (t<0){
 		perror("Time");
 		t=0;
 	}
-	config.global.frame_time+=t<=config.time_per_frame?t:0;
+	_t+=t<=config.time_per_frame?t:0;
+//	if (_t<config.global.frame_time)
+		config.global.frame_time=(config.global.frame_time+_t)/2.0f;
+//	else
+//		config.global.frame_time=_t;
 	SDL_Delay(t<=config.time_per_frame?t:0);
 	*time=SDL_GetTicks();
 //	config.map.time_now=*time;

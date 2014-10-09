@@ -37,9 +37,8 @@
 #define WALKABLE 2
 #define BUILDABLE 3
 #define NO_SEE 4
-#define LIGHT_MASK 5
-#define LIGHT 6
-#define COMON_TEXTURES_START 7
+#define LIGHT 5
+#define COMON_TEXTURES_START 6
 
 //process object
 #define MOUSE 1
@@ -518,7 +517,7 @@ struct global_conf{
 	struct {
 		GLFONT all;
 	} font;
-	unsigned int frame_time;
+	float frame_time;
 	struct {
 		struct {
 			int l;

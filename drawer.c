@@ -860,7 +860,7 @@ void drawMessage(){
 
 void drawFrameTime(){
 	char buf[100];//="test";
-	sprintf(buf,"fps:%d ms/f:%d ",(int)(1000/(config.global.frame_time+0.0001)),config.global.frame_time);
+	sprintf(buf,"fps:%.1f ms/f:%.1f ",(1000/(config.global.frame_time+0.0001)),config.global.frame_time);
 	//glScalef(12,12,1); //from glFont1
 	glScalef(0.85,0.85,1);
 	glColor4f(1,1,1,1);
