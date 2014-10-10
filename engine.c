@@ -363,7 +363,8 @@ int loadMapTexture(char * path){
 
 int getNewTexture(){
 	glGenTextures(1,(unsigned int*)(config.textures+config.textures_size));
-	return config.textures[config.textures_size++];
+	config.textures_size++;
+	return config.textures[config.textures_size-1];
 }
 
 

@@ -224,7 +224,6 @@ int drawerThread(void *ptr){
 	initLights();
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	
-	glFontCreate (&mainfont, "../data/main.glf");
 	/////////////tex load must be only here
 	
 	printf("done\n");
@@ -252,7 +251,7 @@ int drawerThread(void *ptr){
 		}
 		
 	}
-	glFontDestroy(&mainfont);
+//	glFontDestroy(&mainfont);
 	glDeleteTextures (config.textures_size,(unsigned int*)config.textures);
 	config.textures_size=0;
 	SDL_GL_DeleteContext(glcontext);

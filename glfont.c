@@ -30,9 +30,10 @@ int glFontCreate (GLFONT *Font, char *FileName)
 	FILE *Input;
 	char *TexBytes;
 	int Num;
-
+	char filepath[50];
+	sprintf(filepath,"../locale/%s.glf",FileName);
 	//Open font file
-	if ((Input = fopen(FileName, "rb")) == NULL)
+	if ((Input = fopen(filepath, "rb")) == NULL)
 		return FALSE;
 
 	//Read glFont structure
@@ -40,7 +41,7 @@ int glFontCreate (GLFONT *Font, char *FileName)
 
 	//Save texture number
 	Font->Tex=getNewTexture();
-	// glGenTextures (1, &Font->Tex);
+	//glGenTextures (1, (unsigned int*)&Font->Tex);
 
 	//Get number of characters
 	Num = Font->IntEnd - Font->IntStart + 1;
@@ -115,31 +116,50 @@ void glFontEnd (void)
 }
 */
 //*********************************************************
-#define size 0.66f
+#define size 0.606f //0.72f/*16*/ //0.66f /*17*/
 #define  glFont_TexWidth  glFont->TexWidth*size
 #define  glFont_TexHeight  glFont->TexHeight*size
 
-void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
+void glFontTextOut (char2 *String, float x, float y,  float z)
 {
-	int Length, i;
+	int i;
 //	float height=0;
 //	float _x=x;
 	GLFONTCHAR *Char;
+	GLFONT *glFont,*_glFont;
 	float _width, _height;
 	
 	//Return if we don't have a valid glFont 
-	if (glFont == NULL)
-		return;
-	glBindTexture(GL_TEXTURE_2D, glFont->Tex);
-	//Get length of string
-	Length = strlen(String);
-	
+//	if (glFont == NULL)
+//		return;
+	glFont=localeFontGet(String[0]);
+	if (glFont!=0){
+		if (glFont->Tex==0)
+			glFontCreate (glFont,localeFontPath(String[0]));
+		glBindTexture(GL_TEXTURE_2D, glFont->Tex);
+	}	
 	//Begin rendering quads
 	glBegin(GL_TRIANGLE_STRIP);
 		
 	//Loop through characters
-	for (i = 0; i < Length; i++)
+	for (i = 0; String[i] !=0; i++)
 	{
+		//get font
+		_glFont=localeFontGet(String[i]);
+		if (_glFont==0)
+			continue;
+		//check if font need to change
+		if (_glFont!=glFont){
+//			printf("font change\n");
+			glEnd();
+			glFont=_glFont;
+			if (glFont->Tex==0)
+				glFontCreate (glFont,localeFontPath(String[i]));
+			glBindTexture(GL_TEXTURE_2D, glFont->Tex);
+			glBegin(GL_TRIANGLE_STRIP);
+			
+		}
+//		printf("0x%x %d\n",String[i],glFont->IntStart);
 		//Get pointer to glFont character
 		Char = &glFont->Char[(int)String[i] -
 			glFont->IntStart];
@@ -170,20 +190,34 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 }
 //*********************************************************
 
-float glFontWigth(GLFONT *glFont,char *String){
-	int Length, i;
+float glFontWigth(char2 *String){
+	int  i;
 	float x=0;
 	GLFONTCHAR *Char;
-	
+	GLFONT *glFont,*_glFont;
 	//Return if we don't have a valid glFont 
-	if (glFont == NULL)
-		return 0;
-	//Get length of string
-	Length = strlen(String);
+//	if (glFont == NULL)
+//		return 0;
 	
+	glFont=localeFontGet(String[0]);
+	if (glFont->Tex==0)
+		glFontCreate (glFont,localeFontPath(String[0]));
+	
+		
 	//Loop through characters
-	for (i = 0; i < Length; i++)
+	for (i = 0; String[i] !=0; i++)
 	{
+		//get font
+		_glFont=localeFontGet(String[i]);
+		if (_glFont==0)
+			continue;
+		//check if font need to change
+		if (_glFont!=glFont){
+			glFont=_glFont;
+			if (glFont->Tex==0)
+				glFontCreate (glFont,localeFontPath(String[i]));
+		}
+		
 		//Get pointer to glFont character
 		Char = &glFont->Char[(int)String[i] -
 			glFont->IntStart];
@@ -195,21 +229,35 @@ float glFontWigth(GLFONT *glFont,char *String){
 	return x;
 }
 
-float glFontHeight (GLFONT *glFont,char *String)
+float glFontHeight (char2 *String)
 {
-	int Length, i;
+	int  i;
 	float y=0;
 	GLFONTCHAR *Char;
-	
+	GLFONT *glFont,*_glFont;
 	//Return if we don't have a valid glFont 
-	if (glFont == NULL)
-		return 0;
-	//Get length of string
-	Length = strlen(String);
+//	if (glFont == NULL)
+//		return 0;
 	
+	glFont=localeFontGet(String[0]);
+	if (glFont->Tex==0)
+		glFontCreate (glFont,localeFontPath(String[0]));
+	
+
 	//Loop through characters
-	for (i = 0; i < Length; i++)
+	for (i = 0; String[i] !=0; i++)
 	{
+		//get font
+		_glFont=localeFontGet(String[i]);
+		if (_glFont==0)
+			continue;
+		//check if font need to change
+		if (_glFont!=glFont){
+			glFont=_glFont;
+			if (glFont->Tex==0)
+				glFontCreate (glFont,localeFontPath(String[i]));
+		}
+		
 		//Get pointer to glFont character
 		Char = &glFont->Char[(int)String[i] -
 			glFont->IntStart];

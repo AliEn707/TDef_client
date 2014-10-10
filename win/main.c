@@ -2,6 +2,7 @@
 
 
 #include "../main.h"
+#include "../locale.h"
 #include "../tga.h"
 #include "../drawer.h"
 #include "../engine.h"
@@ -11,6 +12,7 @@
 #include "../threads.h"
 #include "../network.h"
 #include "../lights.h"
+
 
 
 

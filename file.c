@@ -829,8 +829,8 @@ void loadFiles(){
 	
 	
 //	loadMap("test");
-	
-	
+	//load locales
+	//localeLoad("locale/testutf16.txt");
 }
 
 void setTestData(){
@@ -911,4 +911,6 @@ void cleanAll(){
 	realizeTypes();
 	cleanMap();
 //	cleanMap();
+	
+	localeTextErase();
 }

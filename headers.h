@@ -9,3 +9,4 @@
 #include "keyboard.h"
 #include "tga.h"
 #include "lights.h"
+#include "locale.h"

@@ -513,10 +513,7 @@ struct global_conf{
 	int keys[5000];
 	int mouse[100];
 	g_params transform;
-	
-	struct {
-		GLFONT all;
-	} font;
+
 	float frame_time;
 	struct {
 		struct {
@@ -615,7 +612,7 @@ struct g_config{
 
 
 
-
+typedef short char2;
 
 
 
@@ -650,8 +647,6 @@ struct g_config{
 
 #define checkNpcTexAttack(x) (x==TEX_ATTACK_UP || x==TEX_ATTACK_DOWN || x==TEX_ATTACK_LEFT || x==TEX_ATTACK_LEFT_UP || x==TEX_ATTACK_LEFT_DOWN || x==TEX_ATTACK_RIGHT || x==TEX_ATTACK_RIGHT_UP || x==TEX_ATTACK_RIGHT_DOWN)
 #define checkNpcTexWalk(x) (x==TEX_WALK_UP || x==TEX_WALK_DOWN || x==TEX_WALK_LEFT || x==TEX_WALK_LEFT_UP || x==TEX_WALK_LEFT_DOWN || x==TEX_WALK_RIGHT || x==TEX_WALK_RIGHT_UP || x==TEX_WALK_RIGHT_DOWN)
-
-#define mainfont config.global.font.all
 
 
 g_config config;

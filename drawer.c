@@ -18,21 +18,21 @@ int textureFrameNext(texture *t){
 	return 0;
 }
 
-void drawText(GLFONT *glFont,char* text){
+void drawText(char2* text){
 //	glPushMatrix();		
 //	glScalef(15,15,1);
 //	glTranslatef(0,glFontHeight(&mainfont,text),0);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(glFont,text,0,0,0);
+	glFontTextOut(text,0,0,0);
 //	glPopMatrix();
 }
 
-void drawTextCentered(GLFONT *glFont,char* text){
+void drawTextCentered(char2* text){
 	glPushMatrix();		
 //	glScalef(15,15,1);
-	glTranslatef(-glFontWigth(glFont,text)/2,0,0);
+	glTranslatef(-glFontWigth(text)/2,0,0);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(glFont,text,0,0,0);
+	glFontTextOut(text,0,0,0);
 	glPopMatrix();
 }
 
@@ -56,9 +56,10 @@ void drawCursor(){
 	if (cursor.text!=0)
 		if (cursor.text[0]!=0){
 			float length;
-			float height=glFontHeight(&mainfont,cursor.text);
+			char2 * cur_text=localeTextGet(cursor.text);
+			float height=glFontHeight(cur_text);
 			float shift=0.05f;
-			length=glFontWigth(&mainfont,cursor.text);
+			length=glFontWigth(cur_text);
 			glPushMatrix();
 				glDisable(GL_TEXTURE_2D);
 				//glTranslatef(cursor.state.x,cursor.state.y,0);
@@ -75,7 +76,7 @@ void drawCursor(){
 				glEnd();
 					glEnable(GL_TEXTURE_2D);
 					glColor4f(1.0f, 1.0f, 1.0f,1.0f);
-					drawText(&mainfont,cursor.text);
+					drawText(cur_text);
 			glPopMatrix();
 		}
 }
@@ -181,18 +182,18 @@ wirebreak:
 	glEnable(GL_TEXTURE_2D);
 	if (*e->text==0)
 		goto exit;
-	
+	char2 * text=localeTextGet(e->text);
 	glTranslatef(e->text_position.x,
 				e->text_position.y,
 				0);
 	
 		if (e->text_size!=0)
 			glScalef(e->text_size,e->text_size,1);
-		glTranslatef(0,glFontHeight(&mainfont,e->text),0);
+		glTranslatef(0,glFontHeight(text),0);
 		if (e->text_centered!=0)
-			drawTextCentered(&mainfont,e->text);
+			drawTextCentered(text);
 		else
-			drawText(&mainfont,e->text);
+			drawText(text);
 exit:
 	glPopMatrix();
 }
@@ -420,7 +421,7 @@ void drawNpc(npc* n){
 			glScalef(0.011,0.011,1);
 			char buf[5];
 			sprintf(buf,"%hd",n->level);
-			drawText(&mainfont,buf);
+			drawText(localeTextGet(buf));
 //		glPopMatrix();
 		
 	glPopMatrix();
@@ -471,7 +472,7 @@ void drawTower(tower* t){
 				glScalef(0.0075,0.0075,1);
 				char buf[5];
 				sprintf(buf,"%d",t->level);
-				drawText(&mainfont,buf);
+				drawText(localeTextGet(buf));
 			glPopMatrix();
 			float health;
 			if (t->type==BASE)
@@ -849,7 +850,7 @@ void drawMessage(){
 	glPushMatrix();
 		glTranslatef(config.options.window.width/2.0,config.options.window.height/2.0+100,0);	
 		//glScalef(15,15,1);	
-		drawTextCentered(&mainfont,config.message);
+		drawTextCentered(localeTextGet(config.message));
 	glPopMatrix();
 	if (++config.message_ticks>800){
 		config.message_ticks=0;
@@ -865,7 +866,9 @@ void drawFrameTime(){
 	glScalef(0.85,0.85,1);
 	glColor4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(&mainfont,buf,2,20,0);
+	glFontTextOut(localeTextGet(buf),2,20,0);
+	char2 t[15]={0xdf,0x41f,0x440,0x438,0x432,0x435,0x422,0xdf,'5',0};
+	glFontTextOut(t,200,20,0);
 }
 
 		

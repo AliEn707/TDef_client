@@ -13,6 +13,8 @@
 #define FALSE	0
 #endif
 
+typedef short char2;
+
 //*********************************************************
 //Structures
 //*********************************************************
@@ -51,12 +53,12 @@ void glFontBegin (GLFONT *Font);
 void glFontEnd (void);
 
 //Draws text with a glFont
-void glFontTextOut (GLFONT *glFont, char *String, float x, float y,
+void glFontTextOut (char2 *String, float x, float y,
 	float z);
 
 //*********************************************************
-float glFontWigth(GLFONT *glFont,char *String);
+float glFontWigth(char2 *String);
 
-float glFontHeight(GLFONT *glFont,char *String);
+float glFontHeight(char2 *String);
 //End of file
 
