@@ -9,12 +9,6 @@ static char *mem;
 texture * lights;
 
 void initLights(){
-	if ((mem=malloc(config.options.lights.tex_width*config.options.lights.tex_height))==0)
-		perror("malloc initLights");
-	if ((lights=malloc(sizeof(texture)))==0)
-		perror("malloc initLights");
-	
-	memset(lights,0,sizeof(texture));
 	//move to configuration
 	if (config.options.window.width<900){
 		config.options.lights.tex_width=32;
@@ -23,6 +17,14 @@ void initLights(){
 		config.options.lights.tex_width=64;
 		config.options.lights.tex_height=64;
 	}
+	
+	if ((mem=malloc(config.options.lights.tex_width*config.options.lights.tex_height))==0)
+		perror("malloc initLights");
+	if ((lights=malloc(sizeof(texture)))==0)
+		perror("malloc initLights");
+	
+	memset(lights,0,sizeof(texture));
+	
 	createLightsTexture();
 }
 
@@ -88,7 +90,6 @@ void drawLights(){
 void getLightsMask(){
 #define width config.options.window.width
 #define height config.options.window.height
-	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);

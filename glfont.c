@@ -122,8 +122,8 @@ void glFontEnd (void)
 void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 {
 	int Length, i;
-	float height=0;
-	float _x=x;
+//	float height=0;
+//	float _x=x;
 	GLFONTCHAR *Char;
 	float _width, _height;
 	
@@ -134,42 +134,38 @@ void glFontTextOut (GLFONT *glFont,char *String, float x, float y,  float z)
 	//Get length of string
 	Length = strlen(String);
 	
-	
+	//Begin rendering quads
+	glBegin(GL_TRIANGLE_STRIP);
+		
 	//Loop through characters
 	for (i = 0; i < Length; i++)
 	{
-		if (String[i]=='\n'){
-			y-=height;
-			x=_x;
-		}else{
-			//Get pointer to glFont character
-			Char = &glFont->Char[(int)String[i] -
-				glFont->IntStart];
-			//Get width and height
-			_width = Char->dx * glFont_TexWidth;
-			_height =  Char->dy * glFont_TexHeight;
-			
-			//Begin rendering quads
-			glBegin(GL_TRIANGLE_FAN);
-			//Specify vertices and texture coordinates
-			glTexCoord2f(Char->tx1, Char->ty1);
-			glVertex3f(x, y, z);
-			glTexCoord2f(Char->tx1, Char->ty2);
-			glVertex3f(x, y - _height, z);
-			glTexCoord2f(Char->tx2, Char->ty2);
-			glVertex3f(x + _width, y - _height, z);
-			glTexCoord2f(Char->tx2, Char->ty1);
-			glVertex3f(x + _width, y, z);
-			if (height<_height)
-				height=_height;
-			//Move to next character
-			x += _width;
-			//Stop rendering quads
-			glEnd();
-			
-		}
+		//Get pointer to glFont character
+		Char = &glFont->Char[(int)String[i] -
+			glFont->IntStart];
+		//Get width and height
+		_width = Char->dx * glFont_TexWidth;
+		_height =  Char->dy * glFont_TexHeight;
+		
+		//Specify vertices and texture coordinates
+		glTexCoord2f(Char->tx1, Char->ty1);
+		glVertex3f(x, y, z);
+		glTexCoord2f(Char->tx1, Char->ty2);
+		glVertex3f(x, y - _height, z);
+		glTexCoord2f(Char->tx2, Char->ty1);
+		glVertex3f(x + _width, y, z);
+		glTexCoord2f(Char->tx2, Char->ty2);
+		glVertex3f(x + _width, y - _height, z);
+		
+//		if (height<_height)
+//			height=_height;
+		//Move to next character
+		x += _width;
+		
 	}
-
+	//Stop rendering quads
+	glEnd();
+	
 	
 }
 //*********************************************************

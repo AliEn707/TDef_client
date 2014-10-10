@@ -875,7 +875,7 @@ void drawScene(){
 	glLoadIdentity();
 //	glEnable(GL_DEPTH_TEST);
 	//when we load something
-		
+
 	if (config.loading.enable!=0){
 		drawMenu(&config.loading);
 		goto out;
