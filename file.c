@@ -12,6 +12,7 @@ void loadMenu(menu* root,char* path){
 	}
 	char buf[100];
 	menu* m;
+	m=root;
 	while(feof(file)==0){
 		fscanf(file,"%s ",buf);
 		if (strcmp(buf,"deap")==0){
@@ -19,7 +20,6 @@ void loadMenu(menu* root,char* path){
 			fscanf(file,"%d\n",&d);
 			fscanf(file,"%s ",buf);
 			fscanf(file,"%s\n",buf);
-			m=root;
 			for(i=0;i<d;i++)
 				m=&m->submenu[ctoi(buf[i])];
 			continue;

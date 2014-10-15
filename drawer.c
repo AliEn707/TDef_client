@@ -39,7 +39,7 @@ void drawTextCentered(char2* text){
 
 
 void drawCursor(){
-	glColor4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
+	Color4f(cursor.color.r,cursor.color.g,cursor.color.b,1);
 	glDisable(GL_DEPTH_TEST);
 	setTexture(&cursor.tex);
 	float cur_size=50;
@@ -67,7 +67,7 @@ void drawCursor(){
 				//glScalef(15,15,1); //need to correct
 				glTranslatef(-length,0,0);
 				//glTranslatef(-length/2.0f,height,0);
-				glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
+				Color4f(0.0f, 0.0f, 0.0f, 0.8f);
 				glBegin(GL_TRIANGLE_FAN);
 					glVertex3f(-shift,shift,0);
 					glVertex3f(-shift,-height-shift,0);
@@ -75,7 +75,7 @@ void drawCursor(){
 					glVertex3f(length+shift+1,shift,0);
 				glEnd();
 					glEnable(GL_TEXTURE_2D);
-					glColor4f(1.0f, 1.0f, 1.0f,1.0f);
+					Color4f(1.0f, 1.0f, 1.0f,1.0f);
 					drawText(cur_text);
 			glPopMatrix();
 		}
@@ -88,7 +88,7 @@ int setTexture(texture * t){
 	}
 	if (t->fd_delay_counter<t->fd_delay){
 		t->fd_delay_counter++;
-		glColor4f(0,0,0,0);
+		Color4f(0,0,0,0);
 		return 0;
 	}
 	//add some stuff
@@ -113,7 +113,7 @@ void drawElement(element * e,int focus){
 			loadTexture(&e->tex,e->tex_path);
 	}
 	if (focus==0){
-		glColor4f(e->color.r,e->color.g,e->color.b,e->color.a);
+		Color4f(e->color.r,e->color.g,e->color.b,e->color.a);
 		if (e->focus_tex!=0)
 			setTexture(&e->ftex);
 		else
@@ -121,7 +121,7 @@ void drawElement(element * e,int focus){
 		if (e->color.a==0)
 			goto texbreak;
 	}else{
-		glColor4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,e->fcolor.a);
+		Color4f(e->fcolor.r,e->fcolor.g,e->fcolor.b,e->fcolor.a);
 		setTexture(&e->tex);
 		if (e->fcolor.a==0)
 			goto texbreak;
@@ -155,16 +155,16 @@ void drawElement(element * e,int focus){
 	
 texbreak:
 	//draw text
-//	glColor4f(1,1,1,1);
+//	Color4f(1,1,1,1);
 	//now draw wire
 	if (focus==0){
 		if (e->wirecolor.a==0)
 			goto wirebreak;
-		glColor4f(e->wirecolor.r,e->wirecolor.g,e->wirecolor.b,e->wirecolor.a);
+		Color4f(e->wirecolor.r,e->wirecolor.g,e->wirecolor.b,e->wirecolor.a);
 	}else{
 		if (e->fwirecolor.a==0)
 			goto wirebreak;
-		glColor4f(e->fwirecolor.r,e->fwirecolor.g,e->fwirecolor.b,e->fwirecolor.a);
+		Color4f(e->fwirecolor.r,e->fwirecolor.g,e->fwirecolor.b,e->fwirecolor.a);
 	}
 	glDisable(GL_TEXTURE_2D);
 	glBegin(GL_LINE_LOOP);
@@ -232,9 +232,9 @@ void drawNode(gnode * n){
 	}
 	setTexture(&config.map.tex[n->tex]);
 	if (n->id==config.map.focus && config.menu.selected==0)
-		glColor4f(0,1,0,1);
+		Color4f(0,1,0,1);
 	else
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 //	glPushMatrix();
 	if (n->id>=0){
 		_x=n->id/config.map.grid_size;
@@ -267,7 +267,7 @@ void drawNode(gnode * n){
 			glEnd();
 		}
 		if (config.map.show_walk!=0){
-			glColor4f(1,1,1,1);
+			Color4f(1,1,1,1);
 			if (n->walkable<1){
 				if (n->walkable==0)
 					setTexture(&config.map.tex[WALKABLE]);
@@ -360,14 +360,14 @@ void drawHealth(vec2 pos,vec2 size,float p){
 //	glPushMatrix();
 //	glTranslatef(0,0,0.03);//why?
 	glDisable(GL_TEXTURE_2D);
-	glColor4f(0,0,0,0.8);
+	Color4f(0,0,0,0.8);
 	glBegin(GL_TRIANGLE_FAN);
 		glVertex2f(pos.x+size.x*p,pos.y);
 		glVertex2f(pos.x+size.x,pos.y);
 		glVertex2f(pos.x+size.x,pos.y+size.y);
 		glVertex2f(pos.x+size.x*p,pos.y+size.y);
 	glEnd();
-	glColor4f(1.2*(1-p),0.8*p,0,1);
+	Color4f(1.2*(1-p),0.8*p,0,1);
 	glBegin(GL_TRIANGLE_FAN);
 		glVertex2f(pos.x,pos.y);
 		glVertex2f(pos.x+size.x*p,pos.y);
@@ -384,7 +384,8 @@ void drawNpc(npc* n){
 	backTransform();
 //	printf("n->type - %d\n",n->type);
 	glScalef(0.89,0.89,1);
-	glTranslatef(0,0,.56f);
+//	glTranslatef(0,0,.56f);
+	glTranslatef(0,0,.06f);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				//npc stored in global tex memory
@@ -395,7 +396,7 @@ void drawNpc(npc* n){
 			n->anim_ended=1;
 //		else
 //			n->anim_ended=0;
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f (0.005f, 0.005f);
@@ -415,7 +416,7 @@ void drawNpc(npc* n){
 		if (health<0.98)
 			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
 //		glPushMatrix();
-			glColor4f(1,1,1,1);
+			Color4f(1,1,1,1);
 			glTranslatef(-0.5,0.9,0);
 			//glScalef(0.15,0.15,1);
 			glScalef(0.011,0.011,1);
@@ -440,7 +441,8 @@ void drawTower(tower* t){
 		glTranslatef(t->position.x,t->position.y,0);
 		backTransform();
 		glScalef(1.4,1.4,1);
-		glTranslatef(0,0.21,.56f);
+//		glTranslatef(0,0.21,.56f);
+		glTranslatef(0,0.21,0.05f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
 			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
@@ -451,7 +453,7 @@ void drawTower(tower* t){
 		if(setTexture(&t->tex[t->current_tex]))
 			t->anim_ended=1;
 		
-			glColor4f(1,1,1,1);
+			Color4f(1,1,1,1);
 //			glBegin(GL_LINE_LOOP);
 			glBegin(GL_TRIANGLE_FAN);
 				glTexCoord2f (0.005f, 0.005f);
@@ -508,7 +510,8 @@ void drawBullet(bullet* b){
 	
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
-	glTranslatef(0,0.2,1.01);
+//	glTranslatef(0,0.2,1.01);
+	glTranslatef(0,0.2,0.01);
 	float x;
 	
 //	else
@@ -573,7 +576,7 @@ void drawBullet(bullet* b){
 	
 //	else
 //		b->anim_ended=0;
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 		if (setTexture(&b->tex[b->current_tex]))
 			b->anim_ended=1;
 //		glBegin(GL_LINE_LOOP);
@@ -609,7 +612,7 @@ void drawSplash(splash* s){
 	glTranslatef(s->position.x,s->position.y,0);
 	backTransform();
 //	glScalef(1.2,1.2,1);
-	glTranslatef(0,0,1);
+//	glTranslatef(0,0,1);
 //	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	if (s->tex.frames==0){
 		if (config.splash_types[s->type].tex.frames==0)
@@ -619,7 +622,7 @@ void drawSplash(splash* s){
 	if(setTexture(&s->tex))
 		s->anim_ended=1;
 	
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f (0.0f, 0.0f);
@@ -664,7 +667,7 @@ void drawWall(wall* w){
 		loadMTexture(&config.map.tex[w->tex],config.map.tex_path[w->tex]);
 	}
 	setTexture(&config.map.tex[w->tex]);
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f (0.005f, 0.005f);
@@ -701,7 +704,7 @@ void drawMapObject(map_object* o){
 		loadMTexture(&config.map.tex[o->tex],config.map.tex_path[o->tex]);
 	}
 	setTexture(&config.map.tex[o->tex]);
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 //		glBegin(GL_LINE_LOOP);
 		glBegin(GL_TRIANGLE_FAN);
 			glTexCoord2f (0.0f, 0.0f);
@@ -725,12 +728,12 @@ void drawMapObjects(){
 
 void setMinimapObjectColor(int owner){
 	if (owner==config.map.player_id)
-		glColor4f(0,1,0,1.0);
+		Color4f(0,1,0,1.0);
 	else
 		if (config.map.players[owner].group==config.map.players[config.map.player_id].group)
-			glColor4f(0,0.6,1,1.0);
+			Color4f(0,0.6,1,1.0);
 		else
-			glColor4f(1,0,0,1.0);
+			Color4f(1,0,0,1.0);
 }
 
 void drawMinimap(){
@@ -741,7 +744,7 @@ void drawMinimap(){
 	float dsize=MINIMAP_AREA_WIDTH;
 	float scale=1;
 	int i;
-	glColor4f(1,1,1,1);
+	Color4f(1,1,1,1);
 	//glEnable(GL_TEXTURE_2D);
 	setTexture(&config.map.minimap.tex);
 	glBegin(GL_TRIANGLE_FAN);
@@ -758,7 +761,7 @@ void drawMinimap(){
 	glDisable(GL_TEXTURE_2D);
 	glPushMatrix();
 	glTranslatef(config.options.window.width-dsize-SCREEN_OFFSET-1,config.options.window.height-dsize/4-SCREEN_OFFSET-1,0);	
-	glColor4f(0,0,0,0.8);
+	Color4f(0,0,0,0.8);
 	//need to add tex under map 
 	glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
@@ -795,13 +798,13 @@ void drawMinimap(){
 		glBegin(GL_POINTS);
 			for(i=0;i<config.map.npc_max;i++)
 				if (config.map.npc_array[i].id!=0){
-					//glColor4f(0.2,1,0.2,1.0);
+					//Color4f(0.2,1,0.2,1.0);
 					setMinimapObjectColor(config.map.npc_array[i].owner);
 					glVertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
 				}
 		glEnd();
 //		glPointSize(1);
-//		glColor4f(1.0f,0.7f,0,1.0);
+//		Color4f(1.0f,0.7f,0,1.0);
 //		glBegin(GL_POINTS);
 //			for(i=0;i<config.map.bullet_max;i++)
 //				if (config.map.bullet_array[i].id!=0)
@@ -810,7 +813,7 @@ void drawMinimap(){
 		glPointSize(1);
 		glDisable(GL_POINT_SMOOTH);
 		//draw minimap grid
-		glColor4f(0.8,0.8,0.8,0.4);
+		Color4f(0.8,0.8,0.8,0.4);
 		glEnable(GL_LINE_SMOOTH);
 		glLineWidth(0.7);
 		glBegin(GL_LINES);
@@ -823,7 +826,7 @@ void drawMinimap(){
 		glEnd();
 		glDisable(GL_LINE_SMOOTH);
 		//draw screen quad
-		glColor4f(1,1,1,1);
+		Color4f(1,1,1,1);
 		glBegin(GL_LINE_LOOP);
 			glVertex2f(scale*config.global.screen.coord.ld.x,
 					scale*config.global.screen.coord.ld.y);	
@@ -846,7 +849,7 @@ void drawMessage(){
 	if (*config.message==0)
 		return;
 	glEnable(GL_TEXTURE_2D);
-	glColor4f(1,1,1,1);
+	Color4f(1,1,1,1);
 	glPushMatrix();
 		glTranslatef(config.options.window.width/2.0,config.options.window.height/2.0+100,0);	
 		//glScalef(15,15,1);	
@@ -864,7 +867,7 @@ void drawFrameTime(){
 	sprintf(buf,"fps:%.1f ms/f:%.1f ",(1000/(config.global.frame_time+0.0001)),config.global.frame_time);
 	//glScalef(12,12,1); //from glFont1
 	glScalef(0.85,0.85,1);
-	glColor4f(1,1,1,1);
+	Color4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
 	glFontTextOut(localeTextGet(buf),2,20,0);
 	char2 t[15]={0xdf,0x41f,0x440,0x438,0x432,0x435,0x422,0xdf,'5',0};
@@ -905,7 +908,7 @@ void drawScene(){
 			drawSplashes();
 			//draw map
 			glEnable(GL_DEPTH_TEST);
-			config.texture_no_change=0;
+			config.texture_no_change--;
 			drawWalls();
 			drawMapObjects();
 			drawNpcs();

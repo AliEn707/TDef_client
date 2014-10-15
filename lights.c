@@ -116,7 +116,7 @@ void drawLightsMap(){
 //	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 //	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 	glBlendFunc(GL_SRC_ALPHA,GL_SRC_ALPHA);
-	glColor4f(1,1,1,1);
+	Color4f(1,1,1,1);
 	drawLights(drawLight);
 	
 //	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
@@ -124,7 +124,7 @@ void drawLightsMap(){
 }
 
 void drawLightsMask(){
-	glColor4f(1,1,1,0.97);
+	Color4f(1,1,1,0.95);
 	setTexture(lights);
 //	glEnable(GL_TEXTURE_2D);
 //	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);

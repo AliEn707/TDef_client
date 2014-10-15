@@ -34,7 +34,15 @@ int main(int argc, char *argv[]){
 	CAMERA_ZOOM=4;
 	CURSOR_SPEED=9;
 	config.options.tex_filter=GL_LINEAR; // GL_NEAREST
+	//night mode swith
 	config.options.darkness=0;
+	//brightness 
+	config.options.brightness=0.7;
+	//color add to screen colors
+	config.options.color.r=1;
+	config.options.color.g=1;
+	config.options.color.b=1;
+	
 	cursor.text="Hello";
 	config.global.latency=8;
 	
@@ -126,7 +134,7 @@ int main(int argc, char *argv[]){
 	realizeLights();
 	networkExit();
 	printf("exit\n");
-	SDL_Delay(100);
+//	SDL_Delay(100);
 	SDL_DestroyWindow(config.window);
 	SDL_Quit(); // завершаем работу SDL и выходим
 	return 0;
