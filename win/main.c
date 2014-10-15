@@ -126,7 +126,8 @@ int main(int argc, char *argv[]){
 	realizeLights();
 	networkExit();
 	printf("exit\n");
-//	SDL_Delay(100);
+	SDL_Delay(100);
+	SDL_DestroyWindow(config.window);
 	SDL_Quit(); // завершаем работу SDL и выходим
 	return 0;
 }
