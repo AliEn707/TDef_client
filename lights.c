@@ -1,7 +1,12 @@
 #include "headers.h"
 /*
-NOT WORKED YET
+╔══════════════════════════════════════════════════════════════╗
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ sep 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
 */
+
 //int config.options.lights.tex_width=64;//config.options.window.width;
 //int config.options.lights.tex_height=64;//config.options.window.height;
 static char *mem;

@@ -1,5 +1,14 @@
 #include "headers.h"
 
+/*
+╔══════════════════════════════════════════════════════════════╗
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ jul 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+
 #define checkMask(x,y) x&y
 
 //check may be need to check <0

@@ -1,6 +1,15 @@
 #include "headers.h"
 
 
+/*
+╔══════════════════════════════════════════════════════════════╗
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ jul 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+
 void setScreenMessage(char * mes){
 	sprintf(config.message,"%s",mes);
 }

@@ -3,6 +3,18 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+
+/*
+╔══════════════════════════════════════════════════════════════╗
+║ contaners for storing room data					                       ║
+║ 										                       ║
+║ created by Yaroslav Zotov						                       ║
+║ edited by Dennis Yarikov						                       ║
+║ oct 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+
 /*
 extern "C" {
 	#include "headers.h"

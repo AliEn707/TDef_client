@@ -1,6 +1,14 @@
 #include "headers.h"
 //http://www.unicode.org/charts/nameslist/
 
+/*
+╔══════════════════════════════════════════════════════════════╗
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ oct 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
 
 #define FONTS 9
 

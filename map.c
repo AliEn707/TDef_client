@@ -2,6 +2,15 @@
 
 
 /*
+╔══════════════════════════════════════════════════════════════╗
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ jun 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+
+/*
 #define amenu config.map.action_menu
 void setActionMenu(){
 	int i,j;

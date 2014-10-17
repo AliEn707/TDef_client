@@ -1,5 +1,14 @@
 #include "headers.h"
 
+/*
+╔══════════════════════════════════════════════════════════════╗
+║functions for draw differrent elements				                       ║
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ jun 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
 int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
 		t->current_frame+=Df;

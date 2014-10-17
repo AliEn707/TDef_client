@@ -1,5 +1,14 @@
 #include "headers.h"
 
+/*
+╔══════════════════════════════════════════════════════════════╗
+║functions for draw differrent elements				                       ║
+║ 										                       ║
+║ created by Dennis Yarikov						                       ║
+║ jun 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
 
 int sign(float x){
 	if (x<0)
