@@ -34,8 +34,9 @@ int main(int argc, char *argv[]){
 	CAMERA_ZOOM=4;
 	CURSOR_SPEED=9;
 	config.options.tex_filter=GL_LINEAR; // GL_NEAREST
-	//night mode swith
-	config.options.darkness=0;
+	//night mode switch
+	config.options.darkness.enable=0;
+	config.options.darkness.tex_size=32;
 	//brightness 
 	config.options.brightness=0.7;
 	//color add to screen colors

@@ -548,6 +548,10 @@ void loadTypes(char * filepath){
 			fscanf(file,"%d\n",&config.tower_types[i].bullet_type);
 			continue;
 		}
+		if (strcmp(buf,"tex_size")==0){
+			fscanf(file,"%f\n",&config.tower_types[i].t_size);
+			continue;
+		}
 		
 	}
 	config.tower_types_size=i;
@@ -678,6 +682,10 @@ void loadTypes(char * filepath){
 		}
 		if (strcmp(buf,"type")==0){
 			fscanf(file,"%d\n",&config.npc_types[i].type);
+			continue;
+		}
+		if (strcmp(buf,"tex_size")==0){
+			fscanf(file,"%f\n",&config.tower_types[i].t_size);
 			continue;
 		}
 		

@@ -174,6 +174,8 @@ struct tower_type{
 	int prior_type;
 	int bullet_type;
 	int support;
+	int receive;
+	float t_size;
 	
 	char tex_path[TEXTURES][100];
 	texture tex[TEXTURES];
@@ -197,6 +199,7 @@ struct npc_type{
 	int bullet_type;
 	int support;
 	int receive;
+	float t_size;
 	
 	char tex_path[TEXTURES][100];
 	texture tex[TEXTURES];
@@ -593,9 +596,9 @@ struct g_config{
 			int height; 
 		} window;
 		struct {
-			int tex_width;
-			int tex_height;
-		} lights;
+			int tex_size;
+			char enable;
+		} darkness;
 		struct {
 			float move_speed;
 			float zoom_speed;
@@ -603,7 +606,6 @@ struct g_config{
 		struct {
 			int elements;
 		} wether;
-		float darkness;
 		int tex_filter;  //tex parameters
 		float brightness;
 		color3 color;

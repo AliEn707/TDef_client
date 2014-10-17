@@ -15,15 +15,15 @@ texture * lights;
 
 void initLights(){
 	//move to configuration
-	if (config.options.window.width<900){
-		config.options.lights.tex_width=32;
-		config.options.lights.tex_height=32;
-	} else {
-		config.options.lights.tex_width=64;
-		config.options.lights.tex_height=64;
-	}
+//	if (config.options.window.width<900){
+//		config.options.lights.tex_width=32;
+//		config.options.lights.tex_height=32;
+//	} else {
+//		config.options.lights.tex_width=64;
+//		config.options.lights.tex_height=64;
+//	}
 	
-	if ((mem=malloc(config.options.lights.tex_width*config.options.lights.tex_height))==0)
+	if ((mem=malloc(config.options.darkness.tex_size*config.options.darkness.tex_size*sizeof(char)))==0)
 		perror("malloc initLights");
 	if ((lights=malloc(sizeof(texture)))==0)
 		perror("malloc initLights");
@@ -43,7 +43,7 @@ int createLightsTexture(){
 
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, config.options.lights.tex_width, config.options.lights.tex_height, 0, GL_RGB, GL_UNSIGNED_INT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, config.options.darkness.tex_size, config.options.darkness.tex_size, 0, GL_RGB, GL_UNSIGNED_INT, 0);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -99,7 +99,7 @@ void getLightsMask(){
 //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	glViewport(0, 0,  config.options.lights.tex_width, config.options.lights.tex_height);
+	glViewport(0, 0,  config.options.darkness.tex_size, config.options.darkness.tex_size);
 	
 	drawLightsMap();
 	setTexture(lights);
@@ -107,8 +107,8 @@ void getLightsMask(){
 
 //        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.options.lights.tex_width, config.options.lights.tex_height, 0);
 //     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, 0, 0, config.options.lights.tex_width, config.options.lights.tex_height);
-	glReadPixels(0,0, config.options.lights.tex_width, config.options.lights.tex_height, GL_RED, GL_UNSIGNED_BYTE, mem);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config.options.lights.tex_width, config.options.lights.tex_height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, mem);
+	glReadPixels(0, 0, config.options.darkness.tex_size, config.options.darkness.tex_size, GL_RED, GL_UNSIGNED_BYTE, mem);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config.options.darkness.tex_size, config.options.darkness.tex_size, 0, GL_ALPHA, GL_UNSIGNED_BYTE, mem);
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
    //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

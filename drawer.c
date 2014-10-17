@@ -388,11 +388,14 @@ void drawHealth(vec2 pos,vec2 size,float p){
 }
 
 void drawNpc(npc* n){
+	float size=0.89f;
+	if (config.npc_types[n->type].t_size!=0)
+		size*=config.npc_types[n->type].t_size;
 	glPushMatrix();
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
 //	printf("n->type - %d\n",n->type);
-	glScalef(0.89,0.89,1);
+	glScalef(size,size,1);
 //	glTranslatef(0,0,.56f);
 	glTranslatef(0,0,.06f);
 		if (n->tex[n->current_tex].frames==0){
@@ -446,10 +449,13 @@ void drawNpcs(){
 }
 
 void drawTower(tower* t){
+	float size=1.4f;
+	if (config.tower_types[t->type].t_size!=0)
+		size*=config.tower_types[t->type].t_size;
 	glPushMatrix();
 		glTranslatef(t->position.x,t->position.y,0);
 		backTransform();
-		glScalef(1.4,1.4,1);
+		glScalef(size,size,1);
 //		glTranslatef(0,0.21,.56f);
 		glTranslatef(0,0.21,0.05f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
@@ -476,15 +482,6 @@ void drawTower(tower* t){
 			glEnd();
 			//draw level and health
 			glTranslatef(0,0,5);//need to draw over all
-
-			glPushMatrix();
-				glTranslatef(-0.325,0.5,0);
-				//glScalef(0.1125,0.1125,1);
-				glScalef(0.0075,0.0075,1);
-				char buf[5];
-				sprintf(buf,"%d",t->level);
-				drawText(localeTextGet(buf));
-			glPopMatrix();
 			float health;
 			if (t->type==BASE)
 				health=1.0*t->health/config.map.players[t->owner].base_health;
@@ -492,6 +489,15 @@ void drawTower(tower* t){
 				health=1.0*t->health/config.tower_types[t->type].health;
 			if (health<0.95)
 				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
+			Color4f(1,1,1,1);
+//		glPushMatrix();
+			glTranslatef(-0.325,0.5,0);
+			//glScalef(0.1125,0.1125,1);
+			glScalef(0.0075,0.0075,1);
+			char buf[5];
+			sprintf(buf,"%d",t->level);
+			drawText(localeTextGet(buf));
+//		glPopMatrix();
 	glPopMatrix();
 }
 
@@ -903,7 +909,7 @@ void drawScene(){
 		glPushMatrix();
 			globalTransform();
 			glDisable(GL_DEPTH_TEST);
-			if (config.options.darkness!=0)
+			if (config.options.darkness.enable!=0)
 				getLightsMask();
 			
 			drawMap();
@@ -928,7 +934,7 @@ void drawScene(){
 		glPopMatrix();
 		glDisable(GL_DEPTH_TEST);
 
-		if (config.options.darkness!=0){
+		if (config.options.darkness.enable!=0){
 			drawLightsMask();
 		}
 		
