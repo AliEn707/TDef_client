@@ -99,9 +99,9 @@ int recvNpcMap(){
 	
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,NPC_CREATE)){
+//		printf("get new npc %d\n",n->type);
 		recvMap(n->owner);
 		recvMap(n->type);
-//		printf("%d\n",n->type);
 //		recvMap(n->destination);
 	}
 //	if (checkMask(bit_mask,NPC_POSITION)){
@@ -140,6 +140,7 @@ int recvTowerMap(){
 	}
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,TOWER_CREATE)){
+//		printf("get new tower %d\n",t->type);		
 		recvMap(t->type);
 		recvMap(t->owner);
 		int position;
@@ -278,8 +279,9 @@ void checkMapLatency(){
 	SDLNet_TCP_Send(config.map.network.socket,&mes,sizeof(mes));
 	recvData(config.map.network.socket,&mes,sizeof(mes));
 	b=SDL_GetTicks();
-//	printf("latency test %dms %d tiks\n",(b-a),(b-a)/config.time_per_tick);
+	printf("latency test %dms %d tiks\n",(b-a),(b-a)/config.time_per_tick);
 	config.global.latency=7+((b-a)/config.time_per_tick);
+	printf("latency set to %g\n",config.global.latency);
 }
 
 int networkMapAuth(){

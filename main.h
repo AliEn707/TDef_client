@@ -10,6 +10,11 @@
 #include <locale.h>
 #include "glfont.h"
  
+ 
+ #define PUBLIC_SERVER "public.tdef.tk"
+ #define PUBLIC_PORT 72564
+ 
+ 
 // screen frames per texture frames
 #define FpF 5
 //write to config
@@ -346,7 +351,7 @@ struct element{
 	char text[24];
 	vec2 text_position;
 	short text_centered;
-	short text_size;
+	float text_size;
 } element;
 	
 typedef

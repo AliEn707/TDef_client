@@ -10,3 +10,4 @@
 #include "tga.h"
 #include "lights.h"
 #include "locale.h"
+#include "public.h"

@@ -360,7 +360,12 @@ void globalTransform(){
 
 void backTransform(){
 	glRotatef(45,0,0,1);
+
 	glRotatef(60,1,0,0);
+// try to set up
+//	glRotatef(90,1,0,0);
+//	glScalef(1,1.154,1);
+
 //	glScalef(1,2,1);
 	//glScalef(1,4*1,1);
 }

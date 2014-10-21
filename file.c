@@ -210,7 +210,7 @@ void loadMenu(menu* root,char* path){
 								fscanf(file,"%hd\n",&m->objects[i].elements[j].text_centered);
 							}
 							if(strcmp(buf,"textsize")==0){
-								fscanf(file,"%hd\n",&m->objects[i].elements[j].text_size);
+								fscanf(file,"%f\n",&m->objects[i].elements[j].text_size);
 							}
 							if(strcmp(buf,"xtext")==0){
 								fscanf(file,"%f\n",&m->objects[i].elements[j].text_position.x);

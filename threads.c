@@ -166,29 +166,26 @@ SDL_Thread* workerMapStart(){
 
 int connectorMap(void *ptr){
 //	worker_arg * arg=ptr;
-//	TCPsocket sock=config.map.network.socket;
-//	Uint32 time=0;
-//	int numready;
-//	SDLNet_SocketSet set;
-	
-//	if((set=SDLNet_AllocSocketSet(1))==0)
-//		printf("SDLNet_AllocSocketSet: %s\n",SDLNet_GetError());
-//	if(SDLNet_TCP_AddSocket(set,sock)<0)
-//		printf("SDLNet_TCP_AddSocket: %s\n",SDLNet_GetError());
-	//auth
+	SDLNet_SocketSet socketset;
+	socketset = SDLNet_AllocSocketSet(1); 
+	if (SDLNet_TCP_AddSocket(socketset, config.map.network.socket)<0)
+		perror("add to sockset");
+		//auth
 	SDL_Delay(900);
 	printf("done\n");
 	while(config.map.enable){
 	//	config.map.time_now=SDL_GetTicks();
+		if(SDLNet_CheckSockets(socketset, 10)!=0)
 		//get data from server
-		if(recvMesMap()<0){
-			perror("network error");
-//			printf("error %s  \n",SDLNet_GetError());
-			setScreenMessage("network error");
-			//need to find problem
-			config.map.enable=0;
-		}
+			if(recvMesMap()<0){
+				perror("network error");
+	//			printf("error %s  \n",SDLNet_GetError());
+				setScreenMessage("network error");
+				//need to find problem
+				config.map.enable=0;
+			}
 	}
+	SDLNet_FreeSocketSet(socketset);
 	printf("exit connectorMap\n");
 	return 0;
 }
@@ -257,6 +254,7 @@ int drawerThread(void *ptr){
 		if (config.map.clean_textures_size!=0){
 			glDeleteTextures(config.map.clean_textures_size,(unsigned int*)config.map.clean_textures);
 			config.map.clean_textures_size=0;
+			memset(config.map.tex+COMON_TEXTURES_START,0,sizeof(config.map.tex)-sizeof(texture)*COMON_TEXTURES_START);
 		}
 		
 	}
