@@ -17,6 +17,8 @@ void setScreenMessage(char * mes){
 int checkMouseMenu(menu* root){
 	if (root==0)
 		return 0;
+//	if (root->enable==0)
+//		return 0;
 	menu* m=0;
 	m=root;
 	int i;
@@ -75,15 +77,22 @@ void actionMapStart(void * arg){
 //	sprintf(config.map.network.server,"%s",??);
 //	config.map.network.port= ??
 	mapStart("test");
-	config.map.enable=0;
+//	config.map.enable=1;
 //change to params for new connection	
 //	config.loading.enable=0;
+}
+
+void actionMapTest(void * arg){
+	actionAuth(arg);
+//	config.map.enable=1;
+	mapStart("test");
 }
 
 void actionAuth(void * arg){
 	config.auth++;
 //	actionMapStart(0);
 	config.map.enable=0;
+	config.public.enable=0;
 }
 
 void actionTextTest(void * arg){

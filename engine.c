@@ -127,7 +127,6 @@ void processNodeAction(){
 			//add brush here
 			processBrush();
 			return;
-			
 		}
 		//config.map.action_menu.enable=0;
 	}
@@ -197,6 +196,8 @@ void processEvent(SDL_Event event){
 				//else
 					if (config.map.enable!=0)
 						processKeysMap(event);
+					if (config.public.enable!=0)
+						processKeysPublic(event);
 				break;
 			case SDL_KEYUP:
 				config.global.keys[event.key.keysym.sym]=0;
@@ -208,7 +209,7 @@ void processEvent(SDL_Event event){
 					cursor.state.y=config.options.window.height-event.motion.y;
 				}
 				//cursorMove(event.motion.xrel,-event.motion.yrel);
-				checkCursorBorder();
+				
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				config.global.mouse[event.button.button]=1;
@@ -225,6 +226,8 @@ void processEvent(SDL_Event event){
 				setZoom(event.wheel.y*CAMERA_ZOOM);
 				break;
 		}
+		//check mouse over screen
+		checkCursorBorder();
 }
 
 void processKeyboard(){
@@ -310,14 +313,14 @@ int checkMouseState(){
 	}
 	if (config.menu.enable!=0)
 		checkMouseMenu(&config.menu.root);
-	else
+	else{
 		if (config.map.enable!=0){
-			checkMouseMenu(&config.map.screen_menu);
-			checkMouseMenu(&config.map.tower_menu);
-			checkMouseMenu(&config.map.npc_menu);
-			if (config.map.action_menu.enable!=0)
-				checkMouseMenu(&config.map.action_menu);
+			checkMenuMap();
 		}
+		if (config.public.enable!=0){
+			checkMenuPublic();
+		}
+	}
 //			if (config.menu.selected!=0)
 //				config.menu.selected->in_focus=1;
 //	printf("%d %d\n",cursor.state.x,cursor.state.y);
@@ -390,12 +393,14 @@ void graficsInit(){
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,4);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
+	
+//	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+//	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
 	config.window = SDL_CreateWindow("TDef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.options.window.width, config.options.window.height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL ); //| SDL_WINDOW_FULLSCREEN
 	if(config.window == NULL){
 		exit(1);
 	}
-	
 	
 	cursorInit();
 	SDL_ShowCursor(0);

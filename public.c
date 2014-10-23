@@ -8,10 +8,48 @@
 ╚══════════════════════════════════════════════════════════════╝
 */
 
+#define sendData SDLNet_TCP_Send
+#define SIZE_OF_PASSWD 16
+
 typedef
 struct worker_arg{
 	int q;
 }worker_arg;
+
+
+///input 
+
+inline void checkMenuPublic(){
+/*	
+	checkMouseMenu(&config.map.screen_menu);
+	checkMouseMenu(&config.map.tower_menu);
+	checkMouseMenu(&config.map.npc_menu);
+	if (config.map.action_menu.enable!=0)
+		checkMouseMenu(&config.map.action_menu);
+*/
+}
+
+void processKeysPublic(SDL_Event event){
+/*  //add keys to addition for map keys
+	if(event.key.keysym.sym==SDLK_SPACE) 
+		processNodeAction();
+	if(event.key.keysym.sym==SDLK_z) 
+		actionShowWalkMap(0);
+	if(event.key.keysym.sym==SDLK_m) 
+		actionMinimapToggle(0);
+*/	
+	//add another
+}
+
+///drawing
+
+void publicDraw(){
+	
+}
+
+
+///connection
+
 
 int publicRestoreConn(){
 	return 0;
@@ -19,12 +57,23 @@ int publicRestoreConn(){
 
 int publicAuth(){
 	//if already connected
+	const char name[10]= "teoto";
+	const char passwd[20]= "testwdhnehodktrfff";
+	int name$;
+	name$=strlen(name);
+	sendData(config.public.network.socket,&name$,sizeof(name$));
+	sendData(config.public.network.socket,name,name$);
 	
+	//get salt to add to passwd and generate new
+	recvData(config.public.network.socket,&name$,sizeof(name$));
+	printf("get %d for salt\n",name$);
+	
+	sendData(config.public.network.socket,passwd,SIZE_OF_PASSWD);
 	//if not connected
-	
-	//set error message
-	setScreenMessage("auth error");
 	return 0;
+	//set error message
+//	setScreenMessage("auth error");
+	return 1;
 }
 
 int recvMesPublic(){
@@ -44,20 +93,30 @@ void publicStart(){
 	if (config.public.network.socket==0){
 		config.public.network.socket=networkConn(PUBLIC_SERVER,PUBLIC_PORT);
 		//check auth
-		if (publicAuth()!=0){
-			SDLNet_TCP_Close(config.public.network.socket);
-			config.public.network.socket=0;
+		if (config.public.network.socket!=0){
+			if (publicAuth()!=0){
+				setScreenMessage("#auth_error");
+				SDLNet_TCP_Close(config.public.network.socket);
+				config.public.network.socket=0;
+			}
+		} else{
+			printf("error connecting to public\n");
+			setScreenMessage("#public_conn_error");
 		}
 	}
 	//if socket == 0 we could not connect
 	if (config.public.network.socket!=0){
+		config.public.enable=1;
 //			config.map.worker=workerPublicStart();
-			config.map.connector=connectorPublicStart();
+//			config.map.connector=connectorPublicStart();
 	}else{
+		config.auth=0;
 		//set error message
 	}
 	config.loading.enable=0;
 }
+
+///threads
 
 int connectorPublic(void *ptr){
 //	worker_arg * arg=ptr;
@@ -83,6 +142,7 @@ int connectorPublic(void *ptr){
 	printf("exit connectorPublic\n");
 	return 0;
 }
+
 
 SDL_Thread* connectorPublicStart(){
 	worker_arg arg;

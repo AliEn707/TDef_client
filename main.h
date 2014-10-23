@@ -11,8 +11,8 @@
 #include "glfont.h"
  
  
- #define PUBLIC_SERVER "public.tdef.tk"
- #define PUBLIC_PORT 72564
+ #define PUBLIC_SERVER "localhost" //"public.tdef.tk"
+ #define PUBLIC_PORT 7001
  
  
 // screen frames per texture frames
@@ -451,6 +451,26 @@ struct {
 } player;
 
 typedef
+struct {
+	struct {
+		int id;
+		int size;
+	} tower_set[NPC_SET_SIZE];
+	
+	struct {
+		int id;
+		int size;
+	} npc_set[TOWER_SET_SIZE];
+	
+	int id;
+	int level;
+	
+	int money;	
+	int status;
+	//add hero info
+} player_public;
+
+typedef
 struct map_conf{
 	int enable;
 	int focus;
@@ -543,6 +563,7 @@ struct global_conf{
 
 typedef
 struct public_conf{
+	int enable;
 	netw network;
 }public_conf;
 

@@ -78,7 +78,7 @@ int getAttackTex(vec2 v){
 int workerMap(void *ptr){
 //	worker_arg * arg=ptr;
 	Uint32 time=0;
-	SDL_Delay(900);
+//	SDL_Delay(900);
 	printf("done\n");
 	while(config.map.enable){
 		tickSync(&time);
@@ -138,8 +138,8 @@ int workerMap(void *ptr){
 			if(config.map.bullet_array[i].id!=0){
 				config.map.bullet_array[i].position.x+=config.map.bullet_array[i].direction.x;
 				config.map.bullet_array[i].position.y+=config.map.bullet_array[i].direction.y;
-				if (config.map.bullet_array[i].detonate!=0 && 
-						config.map.bullet_array[i].anim_ended!=0){
+				if (config.map.bullet_array[i].detonate!=0){// && 
+//						config.map.bullet_array[i].anim_ended!=0){
 					config.map.bullet_array[i].id=0;
 					memset(&config.map.bullet_array[i],0,sizeof(bullet));
 				}
@@ -171,7 +171,7 @@ int connectorMap(void *ptr){
 	if (SDLNet_TCP_AddSocket(socketset, config.map.network.socket)<0)
 		perror("add to sockset");
 		//auth
-	SDL_Delay(900);
+//	SDL_Delay(900);
 	printf("done\n");
 	while(config.map.enable){
 	//	config.map.time_now=SDL_GetTicks();
@@ -186,6 +186,10 @@ int connectorMap(void *ptr){
 			}
 	}
 	SDLNet_FreeSocketSet(socketset);
+	//try to read from public
+	if (config.public.network.socket!=0){
+	
+	}
 	printf("exit connectorMap\n");
 	return 0;
 }
@@ -206,11 +210,26 @@ int drawerThread(void *ptr){
 	if(glcontext == NULL){
 		exit(1);
 	}
+/*
+	GLint  iMultiSample = 0;
+	GLint  iNumSamples = 0;
+	glGetIntegerv(GL_SAMPLE_BUFFERS_ARB, &iMultiSample);
+	glGetIntegerv(GL_SAMPLES_ARB, &iNumSamples);
+	printf("Multisample buffers %d samples %d\n",iMultiSample,iNumSamples);
+*/	
+	int tmp[2]={0,0};
+//	glGetIntegerv(GL_MAX_VIEWPORT_DIMS,tmp);
+//	printf("\t%d %d\n",tmp[0],tmp[1]);
+	SDL_GL_GetDrawableSize(config.window,&tmp[0],&tmp[1]);
+	config.options.window.width=tmp[0];
+	config.options.window.height=tmp[1];
+	
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); 
 	glClearDepth(1.0);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
+//	glEnable(GL_MULTISAMPLE_ARB);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

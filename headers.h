@@ -1,4 +1,5 @@
 #include "main.h"
+#include "glext.h"
 #include "menu.h"
 #include "engine.h"
 #include "file.h"

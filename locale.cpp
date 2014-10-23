@@ -41,11 +41,10 @@ extern "C" {
 	
 	char2 * localeTextGet(const char * key) {
 		//need to change
-		return strToStr2(key);
 		std::string _key(key);
 		if (locale.find(_key) != locale.end())
 			return locale[_key];
-		return 0;
+		return strToStr2(key);
 	}
 
 	int localeTextErase() {

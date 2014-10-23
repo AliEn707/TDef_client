@@ -1,6 +1,8 @@
 
 void mapStart(char * path);
 
+inline void checkMenuMap();
+
 void checkMouseMap();
 
 void processMouseMap(SDL_Event event);

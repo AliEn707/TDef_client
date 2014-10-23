@@ -30,6 +30,7 @@ void setActionMenu(){
 */
 void mapStart(char * path){
 	config.loading.enable=1;
+	config.public.enable=0;
 	cleanMap();
 	loadMap(path);
 	loadMapGrafics(path);
@@ -39,14 +40,25 @@ void mapStart(char * path){
 	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 	if (networkConnMap(config.map.network.server,config.map.network.port)!=0){
 		if (networkMapAuth()==0){
+			config.map.enable=1;
 			config.map.worker=workerMapStart();
 			config.map.connector=connectorMapStart();
 		}
 	}else{
+		config.map.enable=1;
 		setTestData();
 	}
 	config.loading.enable=0;
 }
+
+inline void checkMenuMap(){
+	checkMouseMenu(&config.map.screen_menu);
+	checkMouseMenu(&config.map.tower_menu);
+	checkMouseMenu(&config.map.npc_menu);
+	if (config.map.action_menu.enable!=0)
+		checkMouseMenu(&config.map.action_menu);
+}
+
 
 void checkMouseMap(){
 	if (config.menu.enable!=0)

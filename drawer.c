@@ -163,8 +163,6 @@ void drawElement(element * e,int focus){
 	glEnd();
 	
 texbreak:
-	//draw text
-//	Color4f(1,1,1,1);
 	//now draw wire
 	if (focus==0){
 		if (e->wirecolor.a==0)
@@ -191,6 +189,8 @@ wirebreak:
 	glEnable(GL_TEXTURE_2D);
 	if (*e->text==0)
 		goto exit;
+		//draw text
+		//Color4f(1,1,1,1);
 	char2 * text=localeTextGet(e->text);
 	glTranslatef(e->text_position.x,
 				e->text_position.y,
@@ -402,7 +402,7 @@ void drawNpc(npc* n){
 //	printf("n->type - %d\n",n->type);
 	glScalef(size,size,1);
 //	glTranslatef(0,0,.56f);
-	glTranslatef(0,0,.06f);
+	glTranslatef(0,0,.26f);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				//npc stored in global tex memory
@@ -462,7 +462,7 @@ void drawTower(tower* t){
 		backTransform();
 		glScalef(size,size,1);
 //		glTranslatef(0,0.21,.56f);
-		glTranslatef(0,0.21,0.05f);
+		glTranslatef(0,0.21,0.37f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
 			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
@@ -947,16 +947,21 @@ void drawScene(){
 	}
 	
 	//draw screen controls
+	if (config.public.enable!=0){
+		publicDraw();
+	}
 	glDisable(GL_DEPTH_TEST);
-	drawMessage();
-	drawMenu(&config.map.screen_menu);
-	drawMenu(&config.map.tower_menu);
-	drawMenu(&config.map.npc_menu);
+	if (config.map.enable!=0){
+		drawMenu(&config.map.screen_menu);
+		drawMenu(&config.map.tower_menu);
+		drawMenu(&config.map.npc_menu);
+	}
 	if (config.map.action_menu.enable!=0)
 		drawMenu(&config.map.action_menu);
 	if (config.menu.enable!=0)
 		drawMenu(&config.menu.root);
 cur:
+	drawMessage();
 	//must be the last
 	if (config.text.enable!=0)
 		drawMenu(&config.text.keyboard);

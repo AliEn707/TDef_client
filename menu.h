@@ -17,5 +17,7 @@ void actionToggleMenu(void * arg); //toggle
 void actionExit(void * arg); //toggle
 
 void actionAuth(void * arg);
+//for debug
+void actionMapTest(void * arg);
 
 void actionTextTest(void * arg);

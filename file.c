@@ -109,6 +109,8 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionExit;
 						if(strcmp(buf,"test")==0)
 							m->objects[i].action=actionTestMenu;
+						if(strcmp(buf,"maptest")==0)
+							m->objects[i].action=actionMapTest;
 						if(strcmp(buf,"auth")==0)
 							m->objects[i].action=actionAuth;
 						if(strcmp(buf,"texttest")==0)
@@ -264,8 +266,10 @@ void loadMap(char* path){
 //		config.map.textures_size=0;
 //	}
 	sprintf(fullpath,"../maps/%s.mp",path);
-	if ((file=fopen(fullpath,"r"))==0) 
+	if ((file=fopen(fullpath,"r"))==0){
 		perror("fopen loadMap");
+		return;
+	}
 	char buf[100];
 	int size;
 	fscanf(file,"%d\n",&size);
@@ -365,8 +369,10 @@ void loadMapGrafics(char* path){
 	}
 		
 	sprintf(fullpath,"../maps/%s.mg",path);
-	if ((file=fopen(fullpath,"r"))==0) 
+	if ((file=fopen(fullpath,"r"))==0){
 		perror("fopen loadMap");
+		return;
+	}
 	
 	while(1){
 		int c;
@@ -837,8 +843,10 @@ void loadFiles(){
 	//set to config file
 	
 	loadMenu(&config.menu.root,"../data/menu.cfg");
+	config.auth_menu.enable=1;
 	loadMenu(&config.loading,"../data/loading.cfg");
 	loadMenu(&config.auth_menu,"../data/authmenu.cfg");
+	config.auth_menu.enable=1;
 	loadMenu(&config.text.keyboard,"../data/keyboard.cfg");
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	loadMenu(&config.map.action_menu,"../data/actionmenu.cfg");

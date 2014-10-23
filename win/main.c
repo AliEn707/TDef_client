@@ -12,6 +12,7 @@
 #include "../threads.h"
 #include "../network.h"
 #include "../lights.h"
+#include "../public.h"
 
 
 
@@ -23,10 +24,10 @@ void drawCube(float xrf, float yrf, float zrf);
 
 #undef main
 int main(int argc, char *argv[]){   
+	printf("build at %s %s:%d\n",__DATE__,__FILE__,__LINE__);
 	printf("Initializing.....");
 	memset(&config,0,sizeof(config));
 	config.time_per_tick=1000/30;
-	
 	config.options.window.width=800;
 	config.options.window.height=600;
 	config.time_per_frame=1000/60;
@@ -100,12 +101,12 @@ int main(int argc, char *argv[]){
 			processEvent(event);
 		}
 		processKeyboard();
-		
 		if (config.auth!=0)
-			if (config.map.enable==0){
+			if (config.map.enable==0 && config.public.enable==0){
 //				mapStart("public");
-				mapStart("test");
-				config.map.enable=1;
+//				config.map.enable=1;
+				publicStart();
+				
 				//add connnection to map
 				//or default to public
 			}
@@ -123,12 +124,15 @@ int main(int argc, char *argv[]){
 	}
 	
 	config.map.enable=0;
+	SDL_Delay(20);
+/*
 //	if (config.map.worker!=0){
 		SDL_WaitThread(config.map.worker, 0);
 		config.map.worker=0;
 		SDL_WaitThread(config.map.connector, 0);
 		config.map.connector=0;
 //	}
+*/
 //	SDL_WaitThread(config.drawer, 0);
 //	glFontDestroy(&font);
 	cleanAll();
