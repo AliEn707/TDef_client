@@ -19,7 +19,7 @@ struct worker_arg{
 
 ///input 
 
-inline void checkMenuPublic(){
+void checkMenuPublic(){
 /*	
 	checkMouseMenu(&config.map.screen_menu);
 	checkMouseMenu(&config.map.tower_menu);
@@ -55,25 +55,47 @@ int publicRestoreConn(){
 	return 0;
 }
 
+//need to correct
 int publicAuth(){
-	//if already connected
 	const char name[10]= "teoto";
 	const char passwd[20]= "testwdhnehodktrfff";
 	int name$;
 	name$=strlen(name);
-	sendData(config.public.network.socket,&name$,sizeof(name$));
-	sendData(config.public.network.socket,name,name$);
+	//not connected
+	if (sendData(config.public.network.socket,&name$,sizeof(name$))<0){
+		config.public.network.socket=networkConn(PUBLIC_SERVER,PUBLIC_PORT);
+		if (config.public.network.socket!=0)
+			sendData(config.public.network.socket,&name$,sizeof(name$));
+		else{
+			printf("error connecting to public\n");
+			setScreenMessage("#public_conn_error");
+			config.public.network.socket=0;
+			return 1;
+		}
+	}
+	if (sendData(config.public.network.socket,name,name$)<0){
+		printf("error connecting to public\n");
+		setScreenMessage("#public_conn_error");
+		config.public.network.socket=0;
+		return 1;
+	}
 	
 	//get salt to add to passwd and generate new
 	recvData(config.public.network.socket,&name$,sizeof(name$));
 	printf("get %d for salt\n",name$);
 	
 	sendData(config.public.network.socket,passwd,SIZE_OF_PASSWD);
-	//if not connected
-	return 0;
-	//set error message
-//	setScreenMessage("auth error");
+	recvData(config.public.network.socket,&name$,sizeof(name$));
+	
+	if (name==0)
+		return 0;
+	//set error message	
+	setScreenMessage("#auth_error");
+	SDLNet_TCP_Close(config.public.network.socket);
+	config.public.network.socket=0;	
 	return 1;
+	
+	//TODO: add oart if allready auth
 }
 
 int recvMesPublic(){
@@ -90,20 +112,16 @@ void publicStart(){
 //	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
 //	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 	//check allready connected
-	if (config.public.network.socket==0){
+	if (config.public.network.socket==0)
 		config.public.network.socket=networkConn(PUBLIC_SERVER,PUBLIC_PORT);
 		//check auth
-		if (config.public.network.socket!=0){
-			if (publicAuth()!=0){
-				setScreenMessage("#auth_error");
-				SDLNet_TCP_Close(config.public.network.socket);
-				config.public.network.socket=0;
-			}
-		} else{
-			printf("error connecting to public\n");
-			setScreenMessage("#public_conn_error");
-		}
+	if (config.public.network.socket!=0){
+		publicAuth();
+	} else {
+		printf("error connecting to public\n");
+		setScreenMessage("#public_conn_error");
 	}
+	
 	//if socket == 0 we could not connect
 	if (config.public.network.socket!=0){
 		config.public.enable=1;

@@ -647,7 +647,7 @@ typedef short char2;
 
 
 
-#define sqr(a) ((a)*(a))
+#define sqr(a) ({typeof(a) $a=(a);($a)*($a);})
 
 #define mapTex(a) ((int)((a)+COMON_TEXTURES_START))
 
@@ -662,7 +662,7 @@ typedef short char2;
 #define getGridLineX(x,y) ((int)(x)+(int)(y))
 #define getGridLineY(x,y) (config.map.grid_size-(int)(x)+(int)(y))
 //in screen check 
-#define checkGridLines(x,y) (config.global.screen.node.l<getGridLineX(x,y) && config.global.screen.node.r>getGridLineX(x,y) && config.global.screen.node.u>getGridLineY(x,y) && config.global.screen.node.d<getGridLineY(x,y))
+#define checkGridLines(x,y) ({int $x=getGridLineX(x,y), $y=getGridLineY(x,y);(config.global.screen.node.l<$x && config.global.screen.node.r>$x && config.global.screen.node.u>$y && config.global.screen.node.d<$y);})
 
 #define posToId(v) (config.map.grid_size*((int)v.x)+((int)v.y))
 #define cursor config.global.cursor

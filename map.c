@@ -51,7 +51,7 @@ void mapStart(char * path){
 	config.loading.enable=0;
 }
 
-inline void checkMenuMap(){
+void checkMenuMap(){
 	checkMouseMenu(&config.map.screen_menu);
 	checkMouseMenu(&config.map.tower_menu);
 	checkMouseMenu(&config.map.npc_menu);
@@ -140,10 +140,10 @@ void processContKeysMap(){
 
 int globalTransformCorrection(){
 	int s=0;
-	float xl=gridToScreenX(0,0)-SCREEN_OFFSET;
-	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size)+SCREEN_OFFSET;
-	float yd=gridToScreenY(config.map.grid_size,0)-SCREEN_OFFSET;
-	float yu=gridToScreenY(0,config.map.grid_size)+SCREEN_OFFSET;
+	float xl=gridToScreenX(0,0);//-SCREEN_OFFSET;
+	float xr=gridToScreenX(config.map.grid_size,config.map.grid_size);//+SCREEN_OFFSET;
+	float yd=gridToScreenY(config.map.grid_size,0);//-SCREEN_OFFSET;
+	float yu=gridToScreenY(0,config.map.grid_size);//+SCREEN_OFFSET;
 	//printf("xl %g %g\n",yd, yu);
 	if (xl>0){
 		config.global.transform.translate.x-=xl;
@@ -235,15 +235,21 @@ float gridToScreenY(float x, float y){
 //0 x
 
 float screenToGridX(float x, float y){
+	//get x y for viewport with borders
+	x=(x-SCREEN_OFFSET)*config.options.window.width/(config.options.window.width-SCREEN_OFFSET*2);
+	y=(y-SCREEN_OFFSET)*config.options.window.height/(config.options.window.height-SCREEN_OFFSET*2);
 		return -(500*y)/(707*sy)+(500*x)/(707*sx)+
-			(500*sx*ty-500*sy*tx)/
-			(707*sx*sy);
+		(500*sx*ty-500*sy*tx)/
+		(707*sx*sy);
 }
 
 float screenToGridY(float x, float y){
-		return (500*y)/(707*sy)+(500*x)/(707*sx)-
-			(500*sx*ty+500*sy*tx)/
-			(707*sx*sy);
+	//get x y for viewport with borders
+	x=(x-SCREEN_OFFSET)*config.options.window.width/(config.options.window.width-SCREEN_OFFSET*2);
+	y=(y-SCREEN_OFFSET)*config.options.window.height/(config.options.window.height-SCREEN_OFFSET*2);
+	return (500*y)/(707*sy)+(500*x)/(707*sx)-
+		(500*sx*ty+500*sy*tx)/
+		(707*sx*sy);
 }
 #undef tx
 #undef ty

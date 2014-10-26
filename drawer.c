@@ -207,7 +207,7 @@ exit:
 	glPopMatrix();
 }
 
-void drawObject(object * o){
+static inline void drawObject(object * o){
 	int i;
 //	printf("%g %g|%g %g\n",o->position.x,o->position.y,o->size.x,o->size.y);
 	if (config.menu.selected!=o)
@@ -231,7 +231,8 @@ void drawMenu(menu * root){
 	
 }
 
-void drawNode(gnode * n){
+static inline void drawNode(gnode * n) __attribute__((always_inline));
+static inline void drawNode(gnode * n){
 //	glBindTexture(GL_TEXTURE_2D, n->tex);
 //	glEnable(GL_TEXTURE_2D);
 	float _x=0;
@@ -299,7 +300,8 @@ void drawNode(gnode * n){
 }
 
 
-void drawMap(){
+static inline void drawMapGrid() __attribute__((always_inline));
+static inline void drawMapGrid(){
 	int i,j;
 	for(i=0;i<config.map.grid_size;i++)
 		for(j=0;j<config.map.grid_size;j++)
@@ -309,44 +311,48 @@ void drawMap(){
 	int k;
 	k=0;
 	for(i=-1;i>-(config.map.grid_size/2+config.map.grid_size%2+1);i--)
-		for(j=-i-1;j<config.map.grid_size-(-i-1);j++)
+		for(j=-i-1;j<config.map.grid_size-(-i-1);j++){
 			if (checkGridLines(i,j)){
 				glPushMatrix();
 					glTranslatef(i,j,0);
 					drawNode(&config.map.grid_out[0][k]);
 				glPopMatrix();
-				k++;
 			}
+			k++;
+		}
 	k=0;
 	for(j=0;j<(config.map.grid_size/2+config.map.grid_size%2+1);j++)
-		for(i=j;i<config.map.grid_size-j;i++)
+		for(i=j;i<config.map.grid_size-j;i++){
 			if (checkGridLines(i,config.map.grid_size+j)){
 				glPushMatrix();
 					glTranslatef(i,config.map.grid_size+j,0);
 					drawNode(&config.map.grid_out[1][k]);
 				glPopMatrix();
-				k++;
 			}
+			k++;
+		}
 	k=0;
 	for(i=0;i<(config.map.grid_size/2+config.map.grid_size%2+1);i++)
-		for(j=i;j<config.map.grid_size-i;j++)
+		for(j=i;j<config.map.grid_size-i;j++){
 			if (checkGridLines(config.map.grid_size+i,j)){
 				glPushMatrix();
 					glTranslatef(config.map.grid_size+i,j,0);
 					drawNode(&config.map.grid_out[2][k]);
 				glPopMatrix();
-				k++;
 			}
+			k++;
+		}
 	k=0;
 	for(j=-1;j>-(config.map.grid_size/2+config.map.grid_size%2+1);j--)
-		for(i=-j-1;i<config.map.grid_size-(-j-1);i++)
+		for(i=-j-1;i<config.map.grid_size-(-j-1);i++){
 			if (checkGridLines(i,j)){
 				glPushMatrix();
 					glTranslatef(i,j,0);
 					drawNode(&config.map.grid_out[3][k]);
 				glPopMatrix();
-				k++;
 			}
+			k++;
+		}
 }
 
 void globalTransform(){
@@ -392,7 +398,8 @@ void drawHealth(vec2 pos,vec2 size,float p){
 //	glPopMatrix();
 }
 
-void drawNpc(npc* n){
+static inline void drawNpc(npc* n) __attribute__((always_inline));
+static inline void drawNpc(npc* n){
 	float size=0.89f;
 	if (config.npc_types[n->type].t_size!=0)
 		size*=config.npc_types[n->type].t_size;
@@ -445,7 +452,8 @@ void drawNpc(npc* n){
 	glPopMatrix();
 }
 
-void drawNpcs(){
+static inline void drawNpcs() __attribute__((always_inline));
+static inline void drawNpcs(){
 	int i;
 	for(i=0;i<config.map.npc_max;i++)
 		if (config.map.npc_array[i].id!=0)
@@ -453,7 +461,8 @@ void drawNpcs(){
 				drawNpc(&config.map.npc_array[i]);
 }
 
-void drawTower(tower* t){
+static inline void drawTower(tower* t) __attribute__((always_inline));
+static inline void drawTower(tower* t){
 	float size=1.4f;
 	if (config.tower_types[t->type].t_size!=0)
 		size*=config.tower_types[t->type].t_size;
@@ -506,7 +515,8 @@ void drawTower(tower* t){
 	glPopMatrix();
 }
 
-void drawTowers(){
+static inline void drawTowers() __attribute__((always_inline));
+static inline void drawTowers(){
 	int i;
 	for(i=0;i<config.map.tower_max;i++)
 		if (config.map.tower_array[i].id!=0)
@@ -514,7 +524,8 @@ void drawTowers(){
 				drawTower(&config.map.tower_array[i]);
 }
 
-void drawBullet(bullet* b){
+static inline void drawBullet(bullet* b) __attribute__((always_inline));
+static inline void drawBullet(bullet* b){
 	glPushMatrix();
 //	printf("%g %g| %g %g %d\n",b->position.x,b->position.y,b->direction.x,b->direction.y,b->type);
 	vec2* pos;
@@ -617,7 +628,8 @@ drawBulletExit:
 	glPopMatrix();
 }
 
-void drawBullets(){
+static inline void drawBullets() __attribute__((always_inline));
+static inline void drawBullets(){
 	int i;
 	for(i=0;i<config.map.bullet_max;i++)
 		if (config.map.bullet_array[i].id!=0)
@@ -627,7 +639,8 @@ void drawBullets(){
 }
 
 
-void drawSplash(splash* s){
+static inline void drawSplash(splash* s) __attribute__((always_inline));
+static inline void drawSplash(splash* s){
 	glPushMatrix();
 	glTranslatef(s->position.x,s->position.y,0);
 	backTransform();
@@ -658,7 +671,8 @@ void drawSplash(splash* s){
 	glPopMatrix();
 }
 
-void drawSplashes(){
+static inline void drawSplashes() __attribute__((always_inline));
+static inline void drawSplashes(){
 	int i;
 	for(i=0;i<config.map.splash_max;i++)
 		if (config.map.splash_array[i].type!=0)
@@ -666,7 +680,8 @@ void drawSplashes(){
 				drawSplash(&config.map.splash_array[i]);
 }
 
-void drawWall(wall* w){
+static inline void drawWall(wall* w) __attribute__((always_inline));
+static inline void drawWall(wall* w){
 	glPushMatrix();
 	glTranslatef(getGridX(w->position),getGridY(w->position),0);
 //	glTranslatef(0,0.2,0);
@@ -703,14 +718,16 @@ void drawWall(wall* w){
 	#undef size
 }
 
-void drawWalls(){
+static inline void drawWalls() __attribute__((always_inline));
+static inline void drawWalls(){
 	int i;
 	for(i=0;i<config.map.walls_size;i++)
 		if (config.map.walls[i].direction!=0)
 			drawWall(&config.map.walls[i]);
 }
 
-void drawMapObject(map_object* o){
+static inline void drawMapObject(map_object* o) __attribute__((always_inline));
+static inline void drawMapObject(map_object* o){
 	glPushMatrix();
 	glTranslatef(o->position.x,o->position.y,0);
 	backTransform();
@@ -739,7 +756,8 @@ void drawMapObject(map_object* o){
 	glPopMatrix();
 }
 
-void drawMapObjects(){
+static inline void drawMapObjects() __attribute__((always_inline));
+static inline void drawMapObjects(){
 	int i;
 	for(i=0;i<config.map.map_objects_size;i++)
 		if (config.map.map_objects[i].tex!=0)
@@ -882,7 +900,8 @@ void drawMessage(){
 		
 }
 
-void drawFrameTime(){
+static inline void drawFrameTime() __attribute__((always_inline));
+static inline void drawFrameTime(){
 	char buf[100];//="test";
 	sprintf(buf,"fps:%.1f ms/f:%.1f ",(1000/(config.global.frame_time+0.0001)),config.global.frame_time);
 	//glScalef(12,12,1); //from glFont1
@@ -916,8 +935,10 @@ void drawScene(){
 			glDisable(GL_DEPTH_TEST);
 			if (config.options.darkness.enable!=0)
 				getLightsMask();
+			//viewport in borders, need for antialiasing
+			glViewport(SCREEN_OFFSET, SCREEN_OFFSET, config.options.window.width-SCREEN_OFFSET*2, config.options.window.height-SCREEN_OFFSET*2);
 			
-			drawMap();
+			drawMapGrid();
 		
 			config.texture_no_change=1;
 			drawWalls();
@@ -942,6 +963,7 @@ void drawScene(){
 		if (config.options.darkness.enable!=0){
 			drawLightsMask();
 		}
+		glViewport(0, 0, config.options.window.width, config.options.window.height);
 		
 		drawMinimap();
 	}
@@ -961,11 +983,11 @@ void drawScene(){
 	if (config.menu.enable!=0)
 		drawMenu(&config.menu.root);
 cur:
-	drawMessage();
 	//must be the last
 	if (config.text.enable!=0)
 		drawMenu(&config.text.keyboard);
 	drawCursor(); 
+	drawMessage();
 out:	
 	//must be the last
 	drawFrameTime();

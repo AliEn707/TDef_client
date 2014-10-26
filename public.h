@@ -1,7 +1,7 @@
 
 
 ///events
-inline void checkMenuPublic();
+void checkMenuPublic();
 
 void processKeysPublic(SDL_Event event);
 

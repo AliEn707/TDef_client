@@ -11,7 +11,7 @@
 //int config.options.lights.tex_height=64;//config.options.window.height;
 static char *mem;
 
-texture * lights;
+static texture * lights;
 
 void initLights(){
 	//move to configuration
@@ -58,7 +58,8 @@ int createLightsTexture(){
 	return tex;
 }
 
-void drawLight(vec2 * pos, float size){
+static inline void drawLight(vec2 * pos, float size) __attribute__((always_inline));
+static inline void drawLight(vec2 * pos, float size){
 	glPushMatrix();
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();

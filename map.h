@@ -1,7 +1,7 @@
 
 void mapStart(char * path);
 
-inline void checkMenuMap();
+void checkMenuMap();
 
 void checkMouseMap();
 

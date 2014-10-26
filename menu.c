@@ -85,6 +85,12 @@ void actionMapStart(void * arg){
 void actionMapTest(void * arg){
 	actionAuth(arg);
 //	config.map.enable=1;
+	{
+		FILE * file=fopen("connect.txt","r");
+		fscanf(file,"%s\n",config.map.network.server);
+		fscanf(file,"%d\n",&config.map.network.port);
+		fclose(file);
+	}
 	mapStart("test");
 }
 
