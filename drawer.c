@@ -219,7 +219,7 @@ static inline void drawObject(object * o){
 	glPopMatrix();
 }
 
-void drawMenu(menu * root){
+int drawMenu(menu * root){
 	menu* m=0;
 	m=root;
 	int i;
@@ -228,7 +228,7 @@ void drawMenu(menu * root){
 		m=&m->submenu[config.menu.path[i]];
 	for(i=0;i<m->objects_size;i++)
 		drawObject(&m->objects[i]);
-	
+	return 0;
 }
 
 static inline void drawNode(gnode * n) __attribute__((always_inline));

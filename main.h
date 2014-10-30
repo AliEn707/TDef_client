@@ -43,7 +43,8 @@
 #define BUILDABLE 3
 #define NO_SEE 4
 #define LIGHT 5
-#define COMON_TEXTURES_START 6
+#define DARKNESS 6
+#define COMON_TEXTURES_START 7
 
 //process object
 #define MOUSE 1
@@ -76,6 +77,7 @@
 #define TEX_ATTACK_LEFT_UP 17
 #define TEX_ATTACK_LEFT_DOWN 18
 
+//map
 //msg to client
 #define MSG_TEST 0
 #define MSG_NPC 1
@@ -86,6 +88,23 @@
 #define MSG_SPAWN_TOWER 1
 #define MSG_SPAWN_NPC 2
 
+//public
+//msg to server
+#define MESSAGE_LOBBY 76//'L'
+#define MESSAGE_MOVE 77//'M'
+
+//msg from server
+#define MESSAGE_PLAYER_CHANGE 1
+
+//statuses
+#define PLAYER_CONNECTED 2
+#define PLAYER_IN_LOBBY 2
+#define PLAYER_IN_GAME 3
+
+//player bitmasks
+#define BM_PLAYER_CONNECTED 1
+#define BM_PLAYER_STATUS 2
+#define BM_PLAYER_TIMESTAMP 4
 
 //bit mask
 #define setMask(z,x) z->bit_mask|=x
@@ -466,7 +485,7 @@ struct {
 	int level;
 	
 	int money;	
-	int status;
+	short status;
 	//add hero info
 } player_public;
 
@@ -564,7 +583,10 @@ struct global_conf{
 typedef
 struct public_conf{
 	int enable;
+	player_public player;
 	netw network;
+	
+	menu lobby;
 }public_conf;
 
 typedef
@@ -678,5 +700,7 @@ typedef short char2;
 #define checkNpcTexWalk(x) (x==TEX_WALK_UP || x==TEX_WALK_DOWN || x==TEX_WALK_LEFT || x==TEX_WALK_LEFT_UP || x==TEX_WALK_LEFT_DOWN || x==TEX_WALK_RIGHT || x==TEX_WALK_RIGHT_UP || x==TEX_WALK_RIGHT_DOWN)
 
 #define Color4f(red,green,blue,alpha) glColor4f((red)*config.options.brightness*config.options.color.r,(green)*config.options.brightness*config.options.color.g,(blue)*config.options.brightness*config.options.color.b,alpha)
+
+#define recvData SDLNet_TCP_Recv
 
 g_config config;

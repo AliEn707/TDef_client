@@ -19,3 +19,7 @@ SDL_Thread* workerPublicStart();
 
 SDL_Thread* connectorPublicStart();
 
+
+//actions
+
+void actionPublicMove(void * arg);

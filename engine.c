@@ -69,10 +69,12 @@ void frameSync(unsigned int *time){
 	}
 	unsigned int t,_t;
 		t=config.time_per_frame-(_t=(SDL_GetTicks()-*time));
+/*	
 	if (t<0){
 		perror("Time");
 		t=0;
 	}
+*/
 	_t+=t<=config.time_per_frame?t:0;
 //	if (_t<config.global.frame_time)
 		config.global.frame_time=(config.global.frame_time+_t)/2.0f;

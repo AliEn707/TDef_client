@@ -92,6 +92,32 @@ void drawLights(){
 					drawLight(&config.map.npc_array[i].position,1);	
 //	glPopMatrix();
 }
+#define scale 4.0f
+void drawLightsMap(){
+//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+//	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	glBlendFunc(GL_SRC_ALPHA,GL_SRC_ALPHA);
+	Color4f(1,1,1,1);
+	
+/*	if (config.options.darkness.tex_size>128){
+		setTexture(&config.map.tex[DARKNESS]);
+		glBegin(GL_TRIANGLE_FAN);
+			glTexCoord2f (config.global.screen.coord.ld.x/scale,config.global.screen.coord.ld.y/scale);
+			glVertex2f(config.global.screen.coord.ld.x,config.global.screen.coord.ld.y);
+			glTexCoord2f(config.global.screen.coord.lu.x/scale,config.global.screen.coord.lu.y/scale);
+			glVertex2f(config.global.screen.coord.lu.x,config.global.screen.coord.lu.y);
+			glTexCoord2f(config.global.screen.coord.ru.x/scale,config.global.screen.coord.ru.y/scale);
+			glVertex2f(config.global.screen.coord.ru.x,config.global.screen.coord.ru.y);
+			glTexCoord2f(config.global.screen.coord.rd.x/scale,config.global.screen.coord.rd.y/scale);
+			glVertex2f(config.global.screen.coord.rd.x,config.global.screen.coord.rd.y);
+		glEnd();
+	}
+*/
+	drawLights(drawLight);
+	
+//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+}
 
 void getLightsMask(){
 #define width config.options.window.width
@@ -101,6 +127,7 @@ void getLightsMask(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glViewport(0, 0,  config.options.darkness.tex_size, config.options.darkness.tex_size);
+	
 	
 	drawLightsMap();
 	setTexture(lights);
@@ -118,30 +145,19 @@ void getLightsMask(){
 #undef height
 }
 
-void drawLightsMap(){
-//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-//	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	glBlendFunc(GL_SRC_ALPHA,GL_SRC_ALPHA);
-	Color4f(1,1,1,1);
-	drawLights(drawLight);
-	
-//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-}
-
 void drawLightsMask(){
 	Color4f(1,1,1,0.95);
 	setTexture(lights);
 //	glEnable(GL_TEXTURE_2D);
 //	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);
 	glBegin(GL_TRIANGLE_FAN);
-		glTexCoord2f (0.0f, 0.0f);
+		glTexCoord2f (0.01f, 0.01f);
 		glVertex2f(0,0);
-		glTexCoord2f (0.0f, 1.0f);
+		glTexCoord2f (0.01f, 0.99f);
 		glVertex2f(0,config.options.window.height);
-		glTexCoord2f (1.0f, 1.0f);
+		glTexCoord2f (0.99f, 0.99f);
 		glVertex2f(config.options.window.width,config.options.window.height);
-		glTexCoord2f (1.0f, 0.0f);
+		glTexCoord2f (0.99f, 0.01f);
 		glVertex2f(config.options.window.width,0);
 	glEnd();
 //	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

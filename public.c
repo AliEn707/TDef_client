@@ -9,6 +9,10 @@
 */
 
 #define sendData SDLNet_TCP_Send
+#define recvPublic(b,c) if (recvData(config.public.network.socket,b,c)<=0) return -1
+
+#define checkMask(x,y) x&y
+
 #define SIZE_OF_PASSWD 16
 
 typedef
@@ -17,9 +21,16 @@ struct worker_arg{
 }worker_arg;
 
 
-///input 
+//universal function to work with menus
+static void $CheckDraw(int (action)(menu * root)){
+	if (config.public.player.status==PLAYER_IN_LOBBY){
+		action(&config.public.lobby);
+	}
+}
 
+///input 
 void checkMenuPublic(){
+	$CheckDraw(checkMouseMenu);
 /*	
 	checkMouseMenu(&config.map.screen_menu);
 	checkMouseMenu(&config.map.tower_menu);
@@ -44,80 +55,98 @@ void processKeysPublic(SDL_Event event){
 ///drawing
 
 void publicDraw(){
-	
+	$CheckDraw(drawMenu);
 }
 
 
 ///connection
 
 
-int publicRestoreConn(){
-	return 0;
-}
-
 //need to correct
 int publicAuth(){
+	//fake auth
 	const char name[10]= "teoto";
 	const char passwd[20]= "testwdhnehodktrfff";
-	int name$;
-	name$=strlen(name);
+	//size of name   $a for size of a
+	int $name;
+	$name=strlen(name);
 	//not connected
-	if (sendData(config.public.network.socket,&name$,sizeof(name$))<0){
-		config.public.network.socket=networkConn(PUBLIC_SERVER,PUBLIC_PORT);
-		if (config.public.network.socket!=0)
-			sendData(config.public.network.socket,&name$,sizeof(name$));
-		else{
-			printf("error connecting to public\n");
-			setScreenMessage("#public_conn_error");
-			config.public.network.socket=0;
-			return 1;
-		}
+	if (sendData(config.public.network.socket,&$name,sizeof($name))<0){
+		config.public.network.socket=0;
+		return 1;
 	}
-	if (sendData(config.public.network.socket,name,name$)<0){
-		printf("error connecting to public\n");
-		setScreenMessage("#public_conn_error");
+	if (sendData(config.public.network.socket,name,$name)<0){
 		config.public.network.socket=0;
 		return 1;
 	}
 	
 	//get salt to add to passwd and generate new
-	recvData(config.public.network.socket,&name$,sizeof(name$));
-	printf("get %d for salt\n",name$);
+	recvData(config.public.network.socket,&$name,sizeof($name));
+	printf("get %d for salt\n",$name);
 	
 	sendData(config.public.network.socket,passwd,SIZE_OF_PASSWD);
-	recvData(config.public.network.socket,&name$,sizeof(name$));
-	
-	if (name==0)
+	recvData(config.public.network.socket,&$name,sizeof($name));
+	//we get normal answer
+	if ($name!=0)
 		return 0;
 	//set error message	
 	setScreenMessage("#auth_error");
 	SDLNet_TCP_Close(config.public.network.socket);
 	config.public.network.socket=0;	
 	return 1;
-	
-	//TODO: add oart if allready auth
 }
 
 int recvMesPublic(){
+	//must do recv
+	char mes; 
+	int bitmask;
+	recvPublic(&mes,sizeof(mes));
+	if (mes==MESSAGE_PLAYER_CHANGE){
+		printf("mes %d\n",mes);
+		recvPublic(&bitmask,sizeof(bitmask));
+		printf("bitmask %d\n",bitmask);
+		if (checkMask(bitmask,BM_PLAYER_STATUS)){
+			recvPublic(&config.public.player.status,sizeof(config.public.player.status));
+		}
+	}else
+	printf("something strange %d \n",mes);
 	return 1;
 }
 
 void publicStart(){
+	char mes;
 	config.loading.enable=1;
 	cleanMap();
 	loadMap("public");
 	loadMapGrafics("public");
+	//lobby menu
+	if (config.public.lobby.objects_size==0)
+		loadMenu(&config.public.lobby,"../data/lobbymenu.cfg");
+	
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	setActionMenu();
 //	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
 //	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 	//check allready connected
-	if (config.public.network.socket==0)
+	if (config.public.network.socket!=0){
+		mes=MESSAGE_MOVE;
+		if (sendData(config.public.network.socket,&mes,sizeof(mes))<=0)
+			config.public.network.socket=0;
+		mes=MESSAGE_LOBBY;
+		if (config.public.network.socket!=0)
+			if (sendData(config.public.network.socket,&mes,sizeof(mes))<=0)
+				config.public.network.socket=0;
+	}
+	
+	if (config.public.network.socket==0){
 		config.public.network.socket=networkConn(PUBLIC_SERVER,PUBLIC_PORT);
-		//check auth
+	}
+	
 	if (config.public.network.socket!=0){
 		publicAuth();
-	} else {
+	}
+	
+	if (config.public.network.socket==0){
 		printf("error connecting to public\n");
 		setScreenMessage("#public_conn_error");
 	}
@@ -126,7 +155,7 @@ void publicStart(){
 	if (config.public.network.socket!=0){
 		config.public.enable=1;
 //			config.map.worker=workerPublicStart();
-//			config.map.connector=connectorPublicStart();
+			config.map.connector=connectorPublicStart();
 	}else{
 		config.auth=0;
 		//set error message
@@ -138,23 +167,22 @@ void publicStart(){
 
 int connectorPublic(void *ptr){
 //	worker_arg * arg=ptr;
-
 	SDLNet_SocketSet socketset;
 	socketset = SDLNet_AllocSocketSet(1); 
-	if (SDLNet_TCP_AddSocket(socketset, config.public.network.socket)<0)
+	if (SDLNet_TCP_AddSocket(socketset, config.public.network.socket)<0){
 		perror("add to sockset");
-	
+		exit(1);
+	}
 	printf("done\n");
-	while(config.map.enable){
+	while(config.public.enable){
 	//	config.map.time_now=SDL_GetTicks();
 		//get data from server
-		if(SDLNet_CheckSockets(socketset, 5)==0)
-			SDL_Delay(5);
-		if(recvMesPublic()<0){
-			perror("network error");
-			setScreenMessage("network error");
-			config.map.enable=0;
-		}
+		if(SDLNet_CheckSockets(socketset, 10)!=0)
+			if(recvMesPublic()<0){
+				perror("network error");
+				setScreenMessage("network error");
+				config.public.enable=0;
+			}
 	}
 	SDLNet_FreeSocketSet(socketset);
 	printf("exit connectorPublic\n");
@@ -173,9 +201,8 @@ int workerPublic(void *ptr){
 	Uint32 time=0;
 	SDL_Delay(900);
 	printf("done\n");
-	while(config.map.enable){
+	while(config.public.enable){
 		tickSync(&time);
-		int i;
 
 	}
 	printf("exit workerMap\n");
@@ -184,6 +211,24 @@ int workerPublic(void *ptr){
 
 SDL_Thread* workerPublicStart(){
 	worker_arg arg;
-	printf("start worker....\n");
+	printf("start wrker....\n");
 	return SDL_CreateThread(workerPublic, "WorkerPublic", (void*)&arg);
+}
+
+
+//actions
+
+void actionPublicMove(void * arg){
+	object * o=arg;
+	int * p=(o->arg);
+	char mtype;
+	if (config.map.network.socket==0)
+		return;
+	mtype=MESSAGE_MOVE;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+	mtype=*p;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+
 }

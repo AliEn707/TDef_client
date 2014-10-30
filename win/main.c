@@ -1,4 +1,4 @@
-#include <windows.h> 
+//#include <windows.h> 
 
 
 #include "../main.h"
@@ -23,7 +23,8 @@ void drawCube(float xrf, float yrf, float zrf);
 
 
 #undef main
-int main(int argc, char *argv[]){   
+//int main(int argc, char *argv[]){   
+int main(){   
 	printf("build at %s %s:%d\n",__DATE__,__FILE__,__LINE__);
 	printf("Initializing.....");
 	memset(&config,0,sizeof(config));

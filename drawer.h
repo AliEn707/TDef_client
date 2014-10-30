@@ -6,7 +6,7 @@ void drawCursor();
 
 //void drawElement(element * e,int focus);
 
-//void drawObject(object * o);
+int drawMenu(menu * root);
 
 void drawScene();
 

@@ -179,9 +179,7 @@ int connectorMap(void *ptr){
 		//get data from server
 			if(recvMesMap()<0){
 				perror("network error");
-	//			printf("error %s  \n",SDLNet_GetError());
 				setScreenMessage("network error");
-				//need to find problem
 				config.map.enable=0;
 			}
 	}
@@ -246,6 +244,7 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[WALKABLE],"global/walk");
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	loadTexture(&config.map.tex[LIGHT],"global/light_mask");
+	loadTexture(&config.map.tex[DARKNESS],"global/darkness");
 	initLights();
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	

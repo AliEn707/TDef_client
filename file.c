@@ -123,6 +123,9 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionSpawnNpc;
 							config.map.npc_objects[m->objects[i].arg[0]]=&m->objects[i];
 						}
+						if(strcmp(buf,"publicmove")==0){
+							m->objects[i].action=actionPublicMove;
+						}
 						continue;
 					}
 					//something else
@@ -691,7 +694,7 @@ void loadTypes(char * filepath){
 			continue;
 		}
 		if (strcmp(buf,"tex_size")==0){
-			fscanf(file,"%f\n",&config.tower_types[i].t_size);
+			fscanf(file,"%f\n",&config.npc_types[i].t_size);
 			continue;
 		}
 		

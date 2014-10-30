@@ -14,6 +14,7 @@
 //check may be need to check <0
 #define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))==0) return -1
 
+/*
 int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
 	int get;
@@ -31,7 +32,7 @@ int recvData(TCPsocket sock, void * buf, int size){
 	}
 	return size;
 }
-
+*/
 
 int networkInit(){
 	if(SDLNet_Init()==-1)
