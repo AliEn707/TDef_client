@@ -581,6 +581,6 @@ typedef short char2;
 
 #define Color4f(red,green,blue,alpha) glColor4f((red)*config.options.brightness*config.options.color.r,(green)*config.options.brightness*config.options.color.g,(blue)*config.options.brightness*config.options.color.b,alpha)
 
-#define recvData SDLNet_TCP_Recv
+//#define recvData SDLNet_TCP_Recv
 
 g_config config;

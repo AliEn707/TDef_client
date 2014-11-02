@@ -14,7 +14,7 @@
 //check may be need to check <0
 #define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))==0) return -1
 
-/*
+
 int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
 	int get;
@@ -32,7 +32,7 @@ int recvData(TCPsocket sock, void * buf, int size){
 	}
 	return size;
 }
-*/
+
 
 int networkInit(){
 	if(SDLNet_Init()==-1)
@@ -203,15 +203,16 @@ int recvBulletMap(){
 		recvMap(b->owner);
 	
 		n=getNpcById(b->owner);
-		if (n->id!=0){
-//			n->current_tex=TEX_ATTACK;
-			n->attack_prepare++;
-			vec2 dir={b->position.x-n->position.x,b->position.y-n->position.y};
-			dir.x/=5;
-			dir.y/=5;
-			memcpy(&n->direction,&dir,sizeof(vec2));
-			memcpy(&n->position,&n->destination,sizeof(vec2));
-		}
+		if (n!=0)
+			if (n->id!=0){
+	//			n->current_tex=TEX_ATTACK;
+				n->attack_prepare++;
+				vec2 dir={b->position.x-n->position.x,b->position.y-n->position.y};
+				dir.x/=5;
+				dir.y/=5;
+				memcpy(&n->direction,&dir,sizeof(vec2));
+				memcpy(&n->position,&n->destination,sizeof(vec2));
+			}
 		recvMap(b->source);
 //		recvMap(b->destination);
 	}
