@@ -21,5 +21,8 @@ SDL_Thread* connectorPublicStart();
 
 
 //actions
+void actionEventChoose(void * arg);
 
 void actionPublicMove(void * arg);
+
+void actionRoomMgmt(void * arg);

@@ -90,7 +90,12 @@ void drawCursor(){
 		}
 }
 
+static int current_tex;
 int setTexture(texture * t){
+	if (t==0){
+		current_tex=0;
+		return 0;
+	}
 	if (t->frames==-1){
 		glDisable(GL_TEXTURE_2D);
 		return 0;
@@ -102,7 +107,10 @@ int setTexture(texture * t){
 	}
 	//add some stuff
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
+	if (current_tex!=t->tex[(int)t->current_frame]){
+		glBindTexture(GL_TEXTURE_2D, t->tex[(int)t->current_frame]);
+		current_tex=t->tex[(int)t->current_frame];
+	}// else printf("no tex change\n");
 	//if (config.global_count%FpF==0) //check next texture
 	return textureFrameNext(t);
 }
@@ -207,14 +215,14 @@ exit:
 	glPopMatrix();
 }
 
-static inline void drawObject(object * o){
+void drawObject(object * o){
 	int i;
 //	printf("%g %g|%g %g\n",o->position.x,o->position.y,o->size.x,o->size.y);
 	if (config.menu.selected!=o)
 		o->in_focus=0;
 	glPushMatrix();
 		glTranslatef(o->position.x,o->position.y,0);
-		for(i=0;i<o->elements_size;i++)
+		for(i=0;i<o->$elements;i++)
 			drawElement(&o->elements[i],o->in_focus);
 	glPopMatrix();
 }
@@ -226,7 +234,7 @@ int drawMenu(menu * root){
 	glDisable(GL_TEXTURE_2D);
 	for(i=0;i<config.menu.depth;i++)
 		m=&m->submenu[config.menu.path[i]];
-	for(i=0;i<m->objects_size;i++)
+	for(i=0;i<m->$objects;i++)
 		drawObject(&m->objects[i]);
 	return 0;
 }
@@ -759,7 +767,7 @@ static inline void drawMapObject(map_object* o){
 static inline void drawMapObjects() __attribute__((always_inline));
 static inline void drawMapObjects(){
 	int i;
-	for(i=0;i<config.map.map_objects_size;i++)
+	for(i=0;i<config.map.map_$objects;i++)
 		if (config.map.map_objects[i].tex!=0)
 			drawMapObject(&config.map.map_objects[i]);
 }

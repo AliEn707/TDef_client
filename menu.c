@@ -25,12 +25,12 @@ int checkMouseMenu(menu* root){
 	int o=0;
 	for(i=0;i<config.menu.depth;i++)
 		m=&m->submenu[config.menu.path[i]];
-	for(i=0;i<m->objects_size;i++){
+	for(i=0;i<m->$objects;i++){
 		object* tmp;
 		if ((tmp=checkMouseOnObject(&m->objects[i]))!=0){
-			config.menu.selected=tmp;
+//			config.menu.selected=tmp;
 			//if (*tmp->text!=0)
-				cursor.text=tmp->text;
+//				cursor.text=tmp->text;
 			o++;
 		}
 	}

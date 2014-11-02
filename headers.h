@@ -11,4 +11,5 @@
 #include "tga.h"
 #include "lights.h"
 #include "locale.h"
+#include "events.h"
 #include "public.h"

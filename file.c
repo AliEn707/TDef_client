@@ -41,13 +41,13 @@ void loadMenu(menu* root,char* path){
 			}
 		}
 		if (strcmp(buf,"objects")==0){
-			fscanf(file,"%d\n",&m->objects_size);
-			if (m->objects_size>0){
-				if ((m->objects=malloc(m->objects_size*sizeof(object)))==0)
+			fscanf(file,"%d\n",&m->$objects);
+			if (m->$objects>0){
+				if ((m->objects=malloc(m->$objects*sizeof(object)))==0)
 					perror("malloc objects loadMenu");
-				memset(m->objects,0,m->objects_size*sizeof(object));
+				memset(m->objects,0,m->$objects*sizeof(object));
 				int i=0;
-				while(i<m->objects_size){
+				while(i<m->$objects){
 					fscanf(file,"%s ",buf);
 					if(strncmp(buf,"//",2)==0){
 						i++;
@@ -126,16 +126,19 @@ void loadMenu(menu* root,char* path){
 						if(strcmp(buf,"publicmove")==0){
 							m->objects[i].action=actionPublicMove;
 						}
+						if(strcmp(buf,"roommgmt")==0){
+							m->objects[i].action=actionRoomMgmt;
+						}
 						continue;
 					}
 					//something else
 					if(strcmp(buf,"elements")==0){
-						fscanf(file,"%d\n",&m->objects[i].elements_size);
-						if ((m->objects[i].elements=malloc(m->objects[i].elements_size*sizeof(element)))==0)
+						fscanf(file,"%d\n",&m->objects[i].$elements);
+						if ((m->objects[i].elements=malloc(m->objects[i].$elements*sizeof(element)))==0)
 							perror("malloc elements loadMenu");
-						memset(m->objects[i].elements,0,m->objects[i].elements_size*sizeof(element));
+						memset(m->objects[i].elements,0,m->objects[i].$elements*sizeof(element));
 						int j=0;
-						while(j<m->objects[i].elements_size){
+						while(j<m->objects[i].$elements){
 							fscanf(file,"%s ",buf);
 							if(strncmp(buf,"//",2)==0){
 								j++;
@@ -236,8 +239,8 @@ void loadMenu(menu* root,char* path){
 	printf("\n");
 	int i,j;
 	m=&config.menu.root;
-	for(i=0;i<m->objects_size;i++)
-		for(j=0;j<m->objects[i].elements_size;j++)
+	for(i=0;i<m->$objects;i++)
+		for(j=0;j<m->objects[i].$elements;j++)
 			printf("o%d e%d\n",i,j);
 	
 */	
@@ -249,7 +252,7 @@ void realizeMenu(menu* m){
 	int i,j;
 	for(i=0;i<m->submenu_size;i++)
 		realizeMenu(&m->submenu[i]);
-	for(j=0;j<m->objects_size;j++)
+	for(j=0;j<m->$objects;j++)
 		free(m->objects[j].elements);
 	free(m->objects);
 	free(m->submenu);
@@ -428,7 +431,7 @@ void loadMapGrafics(char* path){
 			int id;
 			if((config.map.map_objects=malloc(sizeof(map_object)*j))==0)
 				perror("malloc objects loadMap");
-			config.map.map_objects_size=j;
+			config.map.map_$objects=j;
 			for(i=0;i<j;i++){
 				fscanf(file,"%f %f %d\n",
 						&config.map.map_objects[i].position.x,

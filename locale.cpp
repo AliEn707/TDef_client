@@ -34,7 +34,7 @@ extern "C" {
 			locale[_key] = value;
 			return 0;
 		}
-		return -1;
+		return 1;
 	}	
 
 	char2 * strToStr2(const char * str);

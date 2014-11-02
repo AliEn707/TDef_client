@@ -137,6 +137,7 @@ void glFontTextOut (char2 *String, float x, float y,  float z)
 		if (glFont->Tex==0)
 			glFontCreate (glFont,localeFontPath(String[0]));
 		glBindTexture(GL_TEXTURE_2D, glFont->Tex);
+		setTexture(0);
 	}	
 	//Begin rendering quads
 	glBegin(GL_TRIANGLE_STRIP);

@@ -26,6 +26,12 @@ static void $CheckDraw(int (action)(menu * root)){
 	if (config.public.player.status==PLAYER_IN_LOBBY){
 		action(&config.public.lobby);
 	}
+	if (config.public.player.status==PLAYER_AT_MAP){
+		action(&config.public.map_main);
+		action(&config.public.map_info);
+		action==checkMouseMenu?eventsCheck():eventsDraw();
+	}
+	action(&config.public.main);
 }
 
 ///input 
@@ -105,10 +111,30 @@ int recvMesPublic(){
 		printf("mes %d\n",mes);
 		recvPublic(&bitmask,sizeof(bitmask));
 		printf("bitmask %d\n",bitmask);
-		if (checkMask(bitmask,BM_PLAYER_STATUS)){
-			recvPublic(&config.public.player.status,sizeof(config.public.player.status));
-		}
-	}else
+		//add some stuff
+//		if (checkMask(bitmask,BM_PLAYER_STATUS)){
+//			recvPublic(&config.public.player.status,sizeof(config.public.player.status));
+//		}
+		return 1;
+	}
+	if (mes==MESSAGE_EVENT_CHANGE){
+		event * e_e;
+		printf("mes %d\n",mes);
+		recvPublic(&bitmask,sizeof(bitmask));
+		printf("get %d\n",bitmask);
+		e_e=eventsAdd(bitmask);
+		//add 0 check
+		recvPublic(&e_e->$rooms,sizeof(e_e->$rooms));
+		printf("get %d\n",bitmask);
+		//get other data
+		e_e->o->arg[0]=e_e->id;
+		//test
+		e_e->o->position.x=300;
+		e_e->o->position.y=300;
+		
+		
+		return 1;
+	}
 	printf("something strange %d \n",mes);
 	return 1;
 }
@@ -120,9 +146,14 @@ void publicStart(){
 	loadMap("public");
 	loadMapGrafics("public");
 	//lobby menu
-	if (config.public.lobby.objects_size==0)
+	if (config.public.lobby.$objects==0)
 		loadMenu(&config.public.lobby,"../data/lobbymenu.cfg");
-	
+	if (config.public.main.$objects==0)
+		loadMenu(&config.public.main,"../data/publicmain.cfg");
+	if (config.public.map_main.$objects==0)
+		loadMenu(&config.public.map_main,"../data/publicmap.cfg");
+	if (config.public.map_info.$objects==0)
+		eventsFillMapMenu();
 //	loadMenu(&config.map.screen_menu,"../data/mapmenu.cfg");
 //	setActionMenu();
 //	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
@@ -218,17 +249,39 @@ SDL_Thread* workerPublicStart(){
 
 //actions
 
+void actionEventChoose(void * arg){
+	object * o=arg;
+	int * p=(o->arg);
+	config.public._map_info.event=*p;
+	sprintf(config.public._map_info.$rooms,"%d",config.public._map_info.event);
+}
+
 void actionPublicMove(void * arg){
 	object * o=arg;
 	int * p=(o->arg);
-	char mtype;
-	if (config.map.network.socket==0)
-		return;
-	mtype=MESSAGE_MOVE;
+/*	
 	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
 		perror("send spawnNpc");
-	mtype=*p;
-	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
-		perror("send spawnNpc");
+*/
+	config.public.player.status=*p;
+}
 
+void actionRoomMgmt(void * arg){
+	object * o=arg;
+	int * p=(o->arg);
+	char mtype;
+	if (config.public.network.socket==0)
+		return;
+	printf("room act %d\n",config.public._map_info.event);
+	mtype=MESSAGE_ROOM_ACT;
+	if (SDLNet_TCP_Send(config.public.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+	
+	mtype=(*p==1?MESSAGE_CREATE_ROOM:MESSAGE_FAST_ROOM);
+	
+	if (SDLNet_TCP_Send(config.public.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+	if (SDLNet_TCP_Send(config.public.network.socket,&config.public._map_info.event,sizeof(config.public._map_info.event))<0)
+		perror("send spawnNpc");
+	
 }

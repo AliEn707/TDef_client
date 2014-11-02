@@ -43,6 +43,7 @@ int createLightsTexture(){
 
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
+	setTexture(0);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, config.options.darkness.tex_size, config.options.darkness.tex_size, 0, GL_RGB, GL_UNSIGNED_INT, 0);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);

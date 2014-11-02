@@ -14,14 +14,14 @@
 #define amenu config.map.action_menu
 void setActionMenu(){
 	int i,j;
-	amenu.objects_size=TOWER_SET_SIZE;
-	if ((amenu.objects=malloc(amenu.objects_size*sizeof(object)))==0)
+	amenu.$objects=TOWER_SET_SIZE;
+	if ((amenu.objects=malloc(amenu.$objects*sizeof(object)))==0)
 		perror("malloc setActionMenu");
-	for(i=0;i<amenu.objects_size;i++){
-		amenu.objects[i].elements_size=1;
-		if ((amenu.objects[i].elements=malloc(amenu.objects[i].elements_size*sizeof(element)))==0)
+	for(i=0;i<amenu.$objects;i++){
+		amenu.objects[i].$elements=1;
+		if ((amenu.objects[i].elements=malloc(amenu.objects[i].$elements*sizeof(element)))==0)
 			perror("malloc setActionMenu");
-		for(j=0;j<amenu.objects[i].elements_size;j++){
+		for(j=0;j<amenu.objects[i].$elements;j++){
 		//	amenu.objects[i].elements[j].
 		}
 	}
@@ -274,7 +274,7 @@ void setActionMenu(){
 	t=getTowerById(config.map.grid[config.map.focus].tower_id);
 	if (t->id==0){
 		int i;
-		for(i=0;i<config.map.action_menu.objects_size;i++){
+		for(i=0;i<config.map.action_menu.$objects;i++){
 			config.map.action_menu.objects[i].arg[0]=config.map.focus;
 			config.map.action_menu.objects[i].arg[1]=i+1;
 			config.map.action_menu.objects[i].action=actionSpawnTower;
@@ -287,7 +287,7 @@ void setActionMenu(){
 	}else{
 		sprintf(config.map.action_menu.objects[0].text,
 				"upgrade");
-		sprintf(config.map.action_menu.objects[config.map.action_menu.objects_size-1].text,
+		sprintf(config.map.action_menu.objects[config.map.action_menu.$objects-1].text,
 				"destroy tower");
 	}
 	config.map.action_menu.enable=1;
