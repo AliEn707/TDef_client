@@ -45,6 +45,8 @@ int main(){
 	config.options.color.r=1;
 	config.options.color.g=1;
 	config.options.color.b=1;
+	//tex quality
+	config.options.tex_quality=TEX_MAX; //TEX_MAX
 	
 	cursor.text="Hello";
 	config.global.latency=8;

@@ -536,6 +536,7 @@ struct g_config{
 		} wether;
 		int tex_filter;  //tex parameters
 		float brightness;
+		int tex_quality;
 		color3 color;
 		float tdf;
 	} options; //params for options menu

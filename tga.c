@@ -76,7 +76,80 @@ typedef struct
 /* texture id for exemple */
 //GLuint texId = 0;
 
-
+/*added by Yarikov Dennis*///////////////
+//reduse quality by 2
+#define effect 0.4
+#define from3d(w,x,y,k) (w*tex->internalFormat*(y)+tex->internalFormat*(x)+(k))
+static void imageQuality(gl_texture_t * tex){
+	int x,y,k;
+	int _x,_y;
+	int $x=1,$y=1; 
+	int _$x,_$y;
+	int width,height;
+	float sum,$_$,n_n;
+	unsigned char * t_t;
+	if (tex->width>16)
+		$x=2;
+	if (tex->height>16)
+		$y=2;
+	if ($x==1 && $y==1)
+		return;
+	width=tex->width/$x;
+	height=tex->height/$y;
+	if ((t_t=malloc(width*height*tex->internalFormat))==0)
+		return;
+	for (y=0;y<height;y++){
+		for (x=0;x<width;x++){
+			_x=x*$x;
+			_y=y*$y;
+			for (k=0;k<tex->internalFormat;k++){
+				//to accum color components
+				sum=0;
+				$_$=0;
+				n_n=1;
+				
+				for (_$x=-1;_$x<=$x;_$x++){
+					if (_x+_$x>=0 && _x+_$x<tex->width){
+						n_n=(_$x==-1||_$x==$x)?effect:1;
+						for (_$y=-1;_$y<=$y;_$y++){
+							if (_y+_$y>=0 && _y+_$y<tex->height){
+								float u_u=n_n;
+								if (_$y==-1||_$y==$y)
+									u_u*=effect;
+								//we need to accum because we had $x by $y quad to 1 pixel
+								sum+=u_u*tex->texels[from3d(tex->width,_x+_$x,_y+_$y,k)];
+								//
+								$_$+=u_u;
+//								printf("%g\n",u_u);
+							}
+						}
+					}
+				}
+				
+				/*
+				//nearest
+				for (_$x=0;_$x<$x;_$x++){
+					for (_$y=0;_$y<$y;_$y++){
+						//we need to accum because we had $x by $y quad to 1 pixel
+						sum+=n_n*tex->texels[from3d(tex->width,_x+_$x,_y+_$y,k)];
+						//
+						$_$+=n_n;
+					}
+				}
+				*/
+				
+				t_t[from3d(width,x,y,k)]=sum/$_$;
+			}
+//			printf("x %d -> %d | y %d -> %d\n",x,_x,y,_y);
+		}
+	}
+	tex->width=width;
+	tex->height=height;
+	free(tex->texels);
+	tex->texels=t_t;
+} 
+#undef from3d
+//////////////
 void
 GetTextureInfo (tga_header_t *header, gl_texture_t *texinfo)
 {
@@ -586,6 +659,7 @@ ReadTGAFile (FILE *fp)
 GLuint
 loadTGATexture (const char *filename)
 {
+	int i;
   gl_texture_t *tga_tex = NULL;
   GLuint tex_id = 0;
   FILE* fp;
@@ -605,9 +679,12 @@ loadTGATexture (const char *filename)
       glBindTexture (GL_TEXTURE_2D, tga_tex->id);
 
       /* setup some parameters for texture filters and mipmapping */
+//      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter/*_MIPMAP_LINEAR GL_NEAREST*/);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter/*_MIPMAP_LINEAR GL_NEAREST*/);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, config.options.tex_filter);
-
+	
+	for(i=0;i<config.options.tex_quality;i++)
+		imageQuality(tga_tex);
 
       glTexImage2D (GL_TEXTURE_2D, 0, tga_tex->internalFormat,
 		    tga_tex->width, tga_tex->height, 0, tga_tex->format,

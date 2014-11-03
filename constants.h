@@ -39,6 +39,13 @@
 #define KEYBOARD 2
 
 
+//tex quality
+#define TEX_MIN 4 
+#define TEX_LOW  3
+#define TEX_MIDDLE 2  
+#define TEX_HIGH  1
+#define TEX_MAX 0 
+
 #define TEXTURES 20
 #define TEXTURE_FRAMES 25
 
