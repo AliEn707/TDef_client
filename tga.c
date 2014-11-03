@@ -30,7 +30,7 @@
 //#include <GL/glut.h>
 //#include <stdio.h>
 //#include <stdlib.h>
-//#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "headers.h"
 /* OpenGL texture info */
@@ -680,21 +680,21 @@ loadTGATexture (const char *filename)
 
       /* setup some parameters for texture filters and mipmapping */
 //      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter/*_MIPMAP_LINEAR GL_NEAREST*/);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter/*_MIPMAP_LINEAR GL_NEAREST*/);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR/* GL_NEAREST*/);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, config.options.tex_filter);
 	
 	for(i=0;i<config.options.tex_quality;i++)
 		imageQuality(tga_tex);
-
+/*
       glTexImage2D (GL_TEXTURE_2D, 0, tga_tex->internalFormat,
 		    tga_tex->width, tga_tex->height, 0, tga_tex->format,
 		    GL_UNSIGNED_BYTE, tga_tex->texels);
-
-      /*
+*/
+      
       gluBuild2DMipmaps (GL_TEXTURE_2D, tga_tex->internalFormat,
 			 tga_tex->width, tga_tex->height,
 			 tga_tex->format, GL_UNSIGNED_BYTE, tga_tex->texels);
-      */
+      
 
       tex_id = tga_tex->id;
 

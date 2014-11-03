@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-//#include <GL/gl.h>
+#include <GL/glu.h>
 #include "headers.h"
 
 //#include "glfont.h"
@@ -72,14 +72,20 @@ int glFontCreate (GLFONT *Font, char *FileName)
 		GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
 		GL_LINEAR); 
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		GL_LINEAR);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
+//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+//		GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR/* GL_NEAREST*/);
+     	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
 		GL_MODULATE);  
 	
 	//Create texture
+/*
 	glTexImage2D(GL_TEXTURE_2D, 0, 2, Font->TexWidth,
 		Font->TexHeight, 0, GL_LUMINANCE_ALPHA, 
+		GL_UNSIGNED_BYTE, (void *)TexBytes);
+*/
+      gluBuild2DMipmaps(GL_TEXTURE_2D, 2, Font->TexWidth,
+		Font->TexHeight, GL_LUMINANCE_ALPHA, 
 		GL_UNSIGNED_BYTE, (void *)TexBytes);
 
 	//Clean up
