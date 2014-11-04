@@ -48,8 +48,14 @@ extern "C" {
 	}
 	
 	int eventsDel(int id){
-		//$_$ helps us
-		return 0;
+		map <int, event * >::iterator it = events.find(id);
+		if (it != events.end()) {
+			eventsFreeEvent(it->second);
+			events.erase(it);
+			//$_$ helps us
+			return 0;
+		}
+		return 1;
 	}
 
 	struct object * checkMouseOnObject(struct object * o);// from engine.h

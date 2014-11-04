@@ -87,6 +87,13 @@ void eventsFillMapMenu(){
 	printf("set mapinfo menu\n");
 }
 
+int eventsFreeEvent(event* e) {
+	free(e->o->elements);
+	free(e->o);
+	free(e);
+	return 0;
+}
+
 
 //actions 
 

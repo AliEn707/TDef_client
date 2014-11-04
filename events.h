@@ -19,3 +19,5 @@ int eventsDel(int id);
 int eventsCheck();
 
 int eventsDraw();
+
+int eventsFreeEvent(event* e);
