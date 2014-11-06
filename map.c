@@ -30,7 +30,7 @@ void setActionMenu(){
 */
 void mapStart(char * path){
 	config.loading.enable=1;
-	config.public.enable=0;
+	printf("start map %s\n",path);
 	cleanMap();
 	loadMap(path);
 	loadMapGrafics(path);
@@ -41,22 +41,32 @@ void mapStart(char * path){
 	if (networkConnMap(config.map.network.server,config.map.network.port)!=0){
 		if (networkMapAuth()==0){
 			config.map.enable=1;
+			config.public.enable=0;
 			config.map.worker=workerMapStart();
 			config.map.connector=connectorMapStart();
 		}
 	}else{
 		config.map.enable=1;
+		config.public.enable=0;
 		setTestData();
 	}
 	config.loading.enable=0;
 }
 
-void checkMenuMap(){
-	checkMouseMenu(&config.map.screen_menu);
-	checkMouseMenu(&config.map.tower_menu);
-	checkMouseMenu(&config.map.npc_menu);
+static inline void menuCheckDraw(int (action)(menu * root)){
+	action(&config.map.tower_menu);
+	action(&config.map.npc_menu);
+	action(&config.map.screen_menu);
 	if (config.map.action_menu.enable!=0)
-		checkMouseMenu(&config.map.action_menu);
+		action(&config.map.action_menu);
+}
+
+void checkMenuMap(){
+	menuCheckDraw(checkMouseMenu);
+}
+
+void drawMenuMap(){
+	menuCheckDraw(drawMenu);
 }
 
 

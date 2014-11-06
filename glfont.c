@@ -31,7 +31,7 @@ int glFontCreate (GLFONT *Font, char *FileName)
 	char *TexBytes;
 	int Num;
 	char filepath[50];
-	sprintf(filepath,"../locale/%s.glf",FileName);
+	sprintf(filepath,"../fonts/%s.glf",FileName);
 	//Open font file
 	if ((Input = fopen(filepath, "rb")) == NULL)
 		return FALSE;
@@ -71,10 +71,9 @@ int glFontCreate (GLFONT *Font, char *FileName)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
 		GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-		GL_LINEAR); 
-//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-//		GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR/* GL_NEAREST*/);
+		config.options.tex_filter_mag); 
+//	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter_min/* GL_NEAREST*/);
      	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
 		GL_MODULATE);  
 	

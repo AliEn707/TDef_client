@@ -22,7 +22,7 @@ struct worker_arg{
 
 
 //universal function to work with menus
-static void $CheckDraw(int (action)(menu * root)){
+static inline void $CheckDraw(int (action)(menu * root)){
 	if (config.public.player.status==PLAYER_IN_LOBBY){
 		action(&config.public.lobby);
 	}
@@ -106,7 +106,31 @@ int recvMesPublic(){
 	//must do recv
 	char mes; 
 	int bitmask;
+	event * e_e;
+	short l_l;
+		
 	recvPublic(&mes,sizeof(mes));
+	printf("get mes %d\n",mes);
+	if (mes==MESSAGE_GAME_START){
+		memset(config.map.network.server,0,sizeof(config.map.network.server));
+//		printf("mes game start\n");
+		//get sizeof hostname
+		recvPublic(&l_l,sizeof(l_l));
+		//get hostname
+		recvPublic(config.map.network.server,l_l);
+		//get port
+		recvPublic(&config.map.network.port,sizeof(config.map.network.port));
+		printf("ready to start game\n");
+		recvPublic(&bitmask,sizeof(bitmask));
+		e_e=eventsGet(bitmask);
+		printf("start map %s on port %d\n",e_e->map,config.map.network.port);
+		mapStart(e_e->map);
+		//add some stuff
+//		if (checkMask(bitmask,BM_PLAYER_STATUS)){
+//			recvPublic(&config.public.player.status,sizeof(config.public.player.status));
+//		}
+		return 1;
+	}
 	if (mes==MESSAGE_PLAYER_CHANGE){
 		printf("mes %d\n",mes);
 		recvPublic(&bitmask,sizeof(bitmask));
@@ -118,14 +142,15 @@ int recvMesPublic(){
 		return 1;
 	}
 	if (mes==MESSAGE_EVENT_CHANGE){
-		event * e_e;
-		printf("mes %d\n",mes);
+		printf("mes event\n");
 		recvPublic(&bitmask,sizeof(bitmask));
-		printf("get %d\n",bitmask);
+//		printf("get %d\n",bitmask);
 		e_e=eventsAdd(bitmask);
 		//add 0 check
 		recvPublic(&e_e->$rooms,sizeof(e_e->$rooms));
-		printf("get %d\n",bitmask);
+		recvPublic(&l_l,sizeof(l_l));
+		recvPublic(e_e->map,l_l);
+//		printf("get %d\n",bitmask);
 		//get other data
 		e_e->o->arg[0]=e_e->id;
 		//test

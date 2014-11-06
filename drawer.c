@@ -976,18 +976,15 @@ void drawScene(){
 		drawMinimap();
 	}
 	
+	glDisable(GL_DEPTH_TEST);
+	
 	//draw screen controls
 	if (config.public.enable!=0){
 		publicDraw();
 	}
-	glDisable(GL_DEPTH_TEST);
 	if (config.map.enable!=0){
-		drawMenu(&config.map.screen_menu);
-		drawMenu(&config.map.tower_menu);
-		drawMenu(&config.map.npc_menu);
+		drawMenuMap();
 	}
-	if (config.map.action_menu.enable!=0)
-		drawMenu(&config.map.action_menu);
 	if (config.menu.enable!=0)
 		drawMenu(&config.menu.root);
 cur:

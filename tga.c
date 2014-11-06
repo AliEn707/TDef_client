@@ -680,8 +680,8 @@ loadTGATexture (const char *filename)
 
       /* setup some parameters for texture filters and mipmapping */
 //      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter/*_MIPMAP_LINEAR GL_NEAREST*/);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR/* GL_NEAREST*/);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, config.options.tex_filter);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config.options.tex_filter_min/* GL_NEAREST*/);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, config.options.tex_filter_mag);
 	
 	for(i=0;i<config.options.tex_quality;i++)
 		imageQuality(tga_tex);

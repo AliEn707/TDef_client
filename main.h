@@ -432,6 +432,7 @@ struct global_conf{
 	int keys[5000];
 	int mouse[100];
 	g_params transform;
+	g_params _transform;
 
 	float frame_time;
 	struct {
@@ -534,7 +535,8 @@ struct g_config{
 		struct {
 			int elements;
 		} wether;
-		int tex_filter;  //tex parameters
+		int tex_filter_mag;  //tex parameters
+		int tex_filter_min;  //tex parameters
 		float brightness;
 		int tex_quality;
 		color3 color;
@@ -581,6 +583,9 @@ typedef short char2;
 #define checkNpcTexWalk(x) (x==TEX_WALK_UP || x==TEX_WALK_DOWN || x==TEX_WALK_LEFT || x==TEX_WALK_LEFT_UP || x==TEX_WALK_LEFT_DOWN || x==TEX_WALK_RIGHT || x==TEX_WALK_RIGHT_UP || x==TEX_WALK_RIGHT_DOWN)
 
 #define Color4f(red,green,blue,alpha) glColor4f((red)*config.options.brightness*config.options.color.r,(green)*config.options.brightness*config.options.color.g,(blue)*config.options.brightness*config.options.color.b,alpha)
+#define Vertex2f(x,y) 1
+#define Vertex3f(x,y,z) 1
+#define TexCoord2f(x,y) 1
 
 //#define recvData SDLNet_TCP_Recv
 

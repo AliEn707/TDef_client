@@ -1,4 +1,5 @@
 //#include <windows.h> 
+#include <time.h> 
 
 
 #include "../main.h"
@@ -31,11 +32,13 @@ int main(){
 	config.time_per_tick=1000/30;
 	config.options.window.width=800;
 	config.options.window.height=600;
-	config.time_per_frame=1000/60;
+	config.time_per_frame=1000/700;//60;
 	CAMERA_SPEED=8;
 	CAMERA_ZOOM=4;
 	CURSOR_SPEED=9;
-	config.options.tex_filter=GL_LINEAR; // GL_NEAREST
+	config.options.tex_filter_mag=GL_LINEAR; // GL_NEAREST
+	config.options.tex_filter_min=GL_LINEAR; // GL_NEAREST
+	config.options.tex_filter_min=GL_LINEAR_MIPMAP_LINEAR;
 	//night mode switch
 	config.options.darkness.enable=0;
 	config.options.darkness.tex_size=32;
@@ -47,15 +50,15 @@ int main(){
 	config.options.color.b=1;
 	//tex quality
 	config.options.tex_quality=TEX_MAX; //TEX_MAX
+	config.global.latency=8;//must be this
 	
 	cursor.text="Hello";
-	config.global.latency=8;
 	
 	graficsInit(); // инициализация
 	config.main_running=1;
 	printf("done\n");
 	
-	srand(SDL_GetTicks());
+	srand(time(0));
 	loadFiles();
 	
 //	FreeConsole();

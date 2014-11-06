@@ -42,7 +42,7 @@
 //tex quality
 #define TEX_MIN 4 
 #define TEX_LOW  3
-#define TEX_MIDDLE 2  
+#define TEX_MEDIUM 2  
 #define TEX_HIGH  1
 #define TEX_MAX 0 
 
@@ -98,6 +98,7 @@
 //msg from server
 #define MESSAGE_PLAYER_CHANGE 1
 #define MESSAGE_EVENT_CHANGE 2
+#define MESSAGE_GAME_START 3
 //
 #define MESSAGE_CREATED 2
 #define MESSAGE_CHANGED 2
