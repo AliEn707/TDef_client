@@ -50,16 +50,25 @@ event * eventsCreateEvent(){
 #define setfcolor(x,R,G,B,A) x.fcolor.r=R;x.fcolor.g=G;x.fcolor.b=B;x.fcolor.a=A
 
 void eventsFillMapMenu(){
-	int left_border;
+	int left_border,info_width;
 	menu* m_m=&config.public.map_info;
 	static element e_e[1];
-	static object o_o[2];
+	static object o_o[3];
 	memset(e_e,0,sizeof(e_e));
 	memset(o_o,0,sizeof(o_o));
+	//left down corner of map
+	config.public._map_info.position=SCREEN_OFFSET+MAP_OFFSET+OFFSET;
+	//size of map
+	config.public._map_info.size=config.options.window.height-2*(SCREEN_OFFSET+MAP_OFFSET+OFFSET);
+	printf("map position %d size %d\n",config.public._map_info.position,config.public._map_info.size);
+	//load world map
 	
+	//left border of info column
 	left_border=SCREEN_OFFSET+MAP_OFFSET+config.options.window.height-2*(SCREEN_OFFSET+MAP_OFFSET);
-	
+	//width of info column
+	info_width=(config.options.window.width-(SCREEN_OFFSET+MAP_OFFSET))-left_border;
 	//under map
+	
 	o_o[0].elements=&e_e[0];
 	o_o[0].$elements=1; 
 	o_o[0].elements[0].tex.frames=-1;

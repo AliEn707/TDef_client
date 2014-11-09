@@ -69,6 +69,13 @@ void actionExit(void * arg){
 	config.main_running=0;
 }
 
+void actionExitRoom(void * arg){
+	config.loading.enable=1;
+	config.map.enable=0;
+	config.menu.enable=0;
+	config.loading.enable=0;
+}
+
 void actionMapStart(void * arg){
 //	config.loading.enable=1;
 //	mapStart("global");
@@ -83,7 +90,9 @@ void actionMapStart(void * arg){
 }
 
 void actionMapTest(void * arg){
-	actionAuth(arg);
+	config.auth++;
+	config.map.enable=0;
+	config.public.enable=0;
 //	config.map.enable=1;
 	{
 		FILE * file=fopen("connect.txt","r");
@@ -99,6 +108,7 @@ void actionAuth(void * arg){
 //	actionMapStart(0);
 	config.map.enable=0;
 	config.public.enable=0;
+	publicStart();
 }
 
 void actionTextTest(void * arg){

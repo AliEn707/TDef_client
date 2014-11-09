@@ -107,6 +107,8 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionToggleMenu;
 						if(strcmp(buf,"exit")==0)
 							m->objects[i].action=actionExit;
+						if(strcmp(buf,"exitroom")==0)
+							m->objects[i].action=actionExitRoom;
 						if(strcmp(buf,"test")==0)
 							m->objects[i].action=actionTestMenu;
 						if(strcmp(buf,"maptest")==0)

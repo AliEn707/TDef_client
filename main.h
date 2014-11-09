@@ -466,6 +466,9 @@ struct public_conf{
 	menu map_info;  //when map on screen
 	struct {
 		int event;
+		int position;
+		int size;
+		
 		char* $rooms;
 	} _map_info;
 }public_conf;

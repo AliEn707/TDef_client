@@ -124,7 +124,8 @@ int recvMesPublic(){
 		recvPublic(&bitmask,sizeof(bitmask));
 		e_e=eventsGet(bitmask);
 		printf("start map %s on port %d\n",e_e->map,config.map.network.port);
-		mapStart(e_e->map);
+		if (config.map.enable==0)
+			mapStart(e_e->map);
 		//add some stuff
 //		if (checkMask(bitmask,BM_PLAYER_STATUS)){
 //			recvPublic(&config.public.player.status,sizeof(config.public.player.status));
@@ -154,8 +155,11 @@ int recvMesPublic(){
 		//get other data
 		e_e->o->arg[0]=e_e->id;
 		//test
-		e_e->o->position.x=300;
-		e_e->o->position.y=300;
+		e_e->position.x=0.5;
+		e_e->position.y=0.5;
+		
+		e_e->o->position.x=config.public._map_info.position+e_e->position.x*config.public._map_info.size;
+		e_e->o->position.y=config.public._map_info.position+e_e->position.y*config.public._map_info.size;
 		
 		
 		return 1;
@@ -165,7 +169,7 @@ int recvMesPublic(){
 }
 
 void publicStart(){
-	char mes;
+//	char mes;
 	config.loading.enable=1;
 	cleanMap();
 	loadMap("public");
@@ -184,7 +188,7 @@ void publicStart(){
 //	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
 //	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 	//check allready connected
-	if (config.public.network.socket!=0){
+/*	if (config.public.network.socket!=0){
 		mes=MESSAGE_MOVE;
 		if (sendData(config.public.network.socket,&mes,sizeof(mes))<=0)
 			config.public.network.socket=0;
@@ -193,7 +197,7 @@ void publicStart(){
 			if (sendData(config.public.network.socket,&mes,sizeof(mes))<=0)
 				config.public.network.socket=0;
 	}
-	
+*/	
 	if (config.public.network.socket==0){
 		config.public.network.socket=networkConn(PUBLIC_SERVER,PUBLIC_PORT);
 	}
@@ -230,17 +234,20 @@ int connectorPublic(void *ptr){
 		exit(1);
 	}
 	printf("done\n");
-	while(config.public.enable){
+	while(config.auth){
 	//	config.map.time_now=SDL_GetTicks();
 		//get data from server
 		if(SDLNet_CheckSockets(socketset, 10)!=0)
 			if(recvMesPublic()<0){
 				perror("network error");
 				setScreenMessage("network error");
+				config.auth=0;
 				config.public.enable=0;
 			}
 	}
 	SDLNet_FreeSocketSet(socketset);
+	SDLNet_TCP_Close(config.public.network.socket);
+	config.public.network.socket=0;
 	printf("exit connectorPublic\n");
 	return 0;
 }

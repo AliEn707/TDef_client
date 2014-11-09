@@ -1,4 +1,4 @@
- #define PUBLIC_SERVER "localhost" //"public.tdef.tk"
+ #define PUBLIC_SERVER  "192.168.56.56"//"localhost" //"public.tdef.tk"
  #define PUBLIC_PORT 7001
  
  
@@ -16,7 +16,7 @@
 
 //global drawing
 #define SCREEN_OFFSET 20
-#define MAP_OFFSET 30
+#define MAP_OFFSET 100
 
 //minimap
 #define MINIMAP_SIZE 190

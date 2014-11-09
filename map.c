@@ -50,6 +50,7 @@ void mapStart(char * path){
 		config.public.enable=0;
 		setTestData();
 	}
+	config.public.player.status=PLAYER_NONE;
 	config.loading.enable=0;
 }
 

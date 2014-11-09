@@ -89,7 +89,7 @@ int main(){
 	config.map.minimap.obj.touch=1;
 	config.map.minimap.obj.action=actionMinimap;
 	
-	sprintf(config.message,"hello my frend\n dont worry");
+	sprintf(config.message,"dont worry, its only test");
 	while(config.main_running){ 
 		workSync(&time);
 		Df=TEX_FPS/(1000.0f/(config.global.frame_time+0.001));
@@ -103,11 +103,11 @@ int main(){
 		}
 		processKeyboard();
 		if (config.auth!=0)
-			if (config.map.enable==0 && config.public.enable==0){
+			if (config.map.enable==0 ){
 //				mapStart("public");
 //				config.map.enable=1;
-				publicStart();
-				
+//				publicStart();
+				config.public.enable=1;
 				//add connnection to map
 				//or default to public
 			}

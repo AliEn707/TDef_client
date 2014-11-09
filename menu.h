@@ -14,7 +14,9 @@ void actionTestMenu(void * arg); //test
 
 void actionToggleMenu(void * arg); //toggle
 
-void actionExit(void * arg); //toggle
+void actionExit(void * arg);
+
+void actionExitRoom(void * arg); 
 
 void actionAuth(void * arg);
 //for debug

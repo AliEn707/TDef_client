@@ -2,6 +2,10 @@ typedef
 struct event{
 	int id;
 	int $rooms;
+	struct {
+		float x;
+		float y;
+	} position;
 	char map[20];
 	char name[20];
 	struct object * o;

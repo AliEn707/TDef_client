@@ -185,8 +185,9 @@ int connectorMap(void *ptr){
 	}
 	SDLNet_FreeSocketSet(socketset);
 	//try to read from public
-	if (config.public.network.socket!=0){
-	
+	if (config.map.network.socket!=0){
+		SDLNet_TCP_Close(config.map.network.socket);
+		config.map.network.socket=0;
 	}
 	printf("exit connectorMap\n");
 	return 0;
