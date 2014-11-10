@@ -235,13 +235,13 @@ void processEvent(SDL_Event event){
 void processKeyboard(){
 	//global keys
 	//mouse motion
-	if (config.global.keys[SDLK_UP])
+	if (config.global.keys[SDLK_UP&~SDLK_SCANCODE_MASK])
 		cursorMove(0,CURSOR_SPEED);
-	if (config.global.keys[SDLK_DOWN])
+	if (config.global.keys[SDLK_DOWN&~SDLK_SCANCODE_MASK])
 		cursorMove(0,-CURSOR_SPEED);
-	if (config.global.keys[SDLK_LEFT])
+	if (config.global.keys[SDLK_LEFT&~SDLK_SCANCODE_MASK])
 		cursorMove(-CURSOR_SPEED,0);
-	if (config.global.keys[SDLK_RIGHT])
+	if (config.global.keys[SDLK_RIGHT&~SDLK_SCANCODE_MASK])
 		cursorMove(CURSOR_SPEED,0);
 	//
 

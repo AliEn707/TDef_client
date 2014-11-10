@@ -22,7 +22,7 @@ struct worker_arg{
 
 
 //universal function to work with menus
-static inline void $CheckDraw(int (action)(menu * root)){
+static inline void _CheckDraw(int (action)(menu * root)){
 	if (config.public.player.status==PLAYER_IN_LOBBY){
 		action(&config.public.lobby);
 	}
@@ -36,7 +36,7 @@ static inline void $CheckDraw(int (action)(menu * root)){
 
 ///input 
 void checkMenuPublic(){
-	$CheckDraw(checkMouseMenu);
+	_CheckDraw(checkMouseMenu);
 /*	
 	checkMouseMenu(&config.map.screen_menu);
 	checkMouseMenu(&config.map.tower_menu);
@@ -61,7 +61,7 @@ void processKeysPublic(SDL_Event event){
 ///drawing
 
 void publicDraw(){
-	$CheckDraw(drawMenu);
+	_CheckDraw(drawMenu);
 }
 
 
@@ -274,7 +274,7 @@ int workerPublic(void *ptr){
 
 SDL_Thread* workerPublicStart(){
 	worker_arg arg;
-	printf("start wrker....\n");
+	printf("start worker....\n");
 	return SDL_CreateThread(workerPublic, "WorkerPublic", (void*)&arg);
 }
 
