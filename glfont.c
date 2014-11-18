@@ -121,11 +121,11 @@ void glFontEnd (void)
 }
 */
 //*********************************************************
-#define size 0.606f //0.72f/*16*/ //0.66f /*17*/
+#define size 0.626f //0.72f/*16*/ //0.66f /*17*/
 #define  glFont_TexWidth  glFont->TexWidth*size
 #define  glFont_TexHeight  glFont->TexHeight*size
 
-void glFontTextOut (char2 *String, float x, float y,  float z)
+void glFontTextOut (char2 *String, float x, float y)
 {
 	int i;
 //	float height=0;
@@ -145,7 +145,7 @@ void glFontTextOut (char2 *String, float x, float y,  float z)
 		setTexture(0);
 	}	
 	//Begin rendering quads
-	glBegin(GL_TRIANGLE_STRIP);
+	Begin(GL_TRIANGLE_STRIP);
 		
 	//Loop through characters
 	for (i = 0; String[i] !=0; i++)
@@ -157,12 +157,12 @@ void glFontTextOut (char2 *String, float x, float y,  float z)
 		//check if font need to change
 		if (_glFont!=glFont){
 //			printf("font change\n");
-			glEnd();
+			End();
 			glFont=_glFont;
 			if (glFont->Tex==0)
 				glFontCreate (glFont,localeFontPath(String[i]));
 			glBindTexture(GL_TEXTURE_2D, glFont->Tex);
-			glBegin(GL_TRIANGLE_STRIP);
+			Begin(GL_TRIANGLE_STRIP);
 			
 		}
 //		printf("0x%x %d\n",String[i],glFont->IntStart);
@@ -174,14 +174,14 @@ void glFontTextOut (char2 *String, float x, float y,  float z)
 		_height =  Char->dy * glFont_TexHeight;
 		
 		//Specify vertices and texture coordinates
-		glTexCoord2f(Char->tx1, Char->ty1);
-		glVertex3f(x, y, z);
-		glTexCoord2f(Char->tx1, Char->ty2);
-		glVertex3f(x, y - _height, z);
-		glTexCoord2f(Char->tx2, Char->ty1);
-		glVertex3f(x + _width, y, z);
-		glTexCoord2f(Char->tx2, Char->ty2);
-		glVertex3f(x + _width, y - _height, z);
+		TexCoord2f(Char->tx1, Char->ty1);
+		Vertex2f(x, y);
+		TexCoord2f(Char->tx1, Char->ty2);
+		Vertex2f(x, y - _height);
+		TexCoord2f(Char->tx2, Char->ty1);
+		Vertex2f(x + _width, y);
+		TexCoord2f(Char->tx2, Char->ty2);
+		Vertex2f(x + _width, y - _height);
 		
 //		if (height<_height)
 //			height=_height;
@@ -190,7 +190,7 @@ void glFontTextOut (char2 *String, float x, float y,  float z)
 		
 	}
 	//Stop rendering quads
-	glEnd();
+	End();
 	
 	
 }

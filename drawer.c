@@ -32,7 +32,7 @@ void drawText(char2* text){
 //	glScalef(15,15,1);
 //	glTranslatef(0,glFontHeight(&mainfont,text),0);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(text,0,0,0);
+	glFontTextOut(text,0,0);
 //	glPopMatrix();
 }
 
@@ -41,7 +41,7 @@ void drawTextCentered(char2* text){
 //	glScalef(15,15,1);
 	glTranslatef(-glFontWigth(text)/2,0,0);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(text,0,0,0);
+	glFontTextOut(text,0,0);
 	glPopMatrix();
 }
 
@@ -52,16 +52,17 @@ void drawCursor(){
 	glDisable(GL_DEPTH_TEST);
 	setTexture(&cursor.tex);
 	float cur_size=50;
-	glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(cursor.state.x+cur_size,cursor.state.y-cur_size);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(cursor.state.x,cursor.state.y-cur_size);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(cursor.state.x,cursor.state.y);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(cursor.state.x+cur_size,cursor.state.y);
-		glTexCoord2f(1.0f, 0.0f);
-	glEnd();
+	Begin(GL_TRIANGLE_FAN);
+		Vertex2f(cursor.state.x+cur_size,cursor.state.y-cur_size);
+		TexCoord2f(1.0f, 0.0f);
+		Vertex2f(cursor.state.x,cursor.state.y-cur_size);
+		TexCoord2f(0.0f, 0.0f);
+		Vertex2f(cursor.state.x,cursor.state.y);
+		TexCoord2f(0.0f, 1.0f);
+		Vertex2f(cursor.state.x+cur_size,cursor.state.y);
+		TexCoord2f(1.0f, 1.0f);
+		
+	End();
 	if (cursor.text!=0)
 		if (cursor.text[0]!=0){
 			float length;
@@ -72,17 +73,21 @@ void drawCursor(){
 			glPushMatrix();
 				glDisable(GL_TEXTURE_2D);
 				//glTranslatef(cursor.state.x,cursor.state.y,0);
-				glTranslatef(cursor.state.x+41,cursor.state.y-24,0);
+				glTranslatef(cursor.state.x+41-length,cursor.state.y-22,0);
 				//glScalef(15,15,1); //need to correct
-				glTranslatef(-length,0,0);
+				//glTranslatef(-length,0,0);
 				//glTranslatef(-length/2.0f,height,0);
 				Color4f(0.0f, 0.0f, 0.0f, 0.8f);
-				glBegin(GL_TRIANGLE_FAN);
-					glVertex3f(-shift,shift,0);
-					glVertex3f(-shift,-height-shift,0);
-					glVertex3f(length+shift+1,-height-shift,0);
-					glVertex3f(length+shift+1,shift,0);
-				glEnd();
+				Begin(GL_TRIANGLE_FAN);
+					Vertex3f(-shift,shift,0);
+					TexCoord2f(1.0f, 0.0f);
+					Vertex3f(-shift,-height-shift,0);
+					TexCoord2f(0.0f, 0.0f);
+					Vertex3f(length+shift+1,-height-shift,0);
+					TexCoord2f(0.0f, 1.0f);
+					Vertex3f(length+shift+1,shift,0);
+					TexCoord2f(1.0f, 1.0f);
+				End();
 					glEnable(GL_TEXTURE_2D);
 					Color4f(1.0f, 1.0f, 1.0f,1.0f);
 					drawText(cur_text);
@@ -159,16 +164,16 @@ void drawElement(element * e,int focus){
 	if (e->tile_size.y!=0)
 		tiles.y=e->size.y/e->tile_size.y;
 	
-	glBegin(GL_TRIANGLE_FAN);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0,0);
-		glTexCoord2f(0.0f, tiles.y);
-		glVertex2f(0,e->size.y);
-		glTexCoord2f(tiles.x, tiles.y);
-		glVertex2f(e->size.x,e->size.y);
-		glTexCoord2f(tiles.x, 0.0f);
-		glVertex2f(e->size.x,0);
-	glEnd();
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f(0.0f, 0.0f);
+		Vertex2f(0,0);
+		TexCoord2f(0.0f, tiles.y);
+		Vertex2f(0,e->size.y);
+		TexCoord2f(tiles.x, tiles.y);
+		Vertex2f(e->size.x,e->size.y);
+		TexCoord2f(tiles.x, 0.0f);
+		Vertex2f(e->size.x,0);
+	End();
 	
 texbreak:
 	//now draw wire
@@ -182,16 +187,16 @@ texbreak:
 		Color4f(e->fwirecolor.r,e->fwirecolor.g,e->fwirecolor.b,e->fwirecolor.a);
 	}
 	glDisable(GL_TEXTURE_2D);
-	glBegin(GL_LINE_LOOP);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0,0);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0,e->size.y);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(e->size.x,e->size.y);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(e->size.x,0);
-	glEnd();
+	Begin(GL_LINE_LOOP);
+		TexCoord2f(0.0f, 0.0f);
+		Vertex2f(0,0);
+		TexCoord2f(0.0f, 1.0f);
+		Vertex2f(0,e->size.y);
+		TexCoord2f(1.0f, 1.0f);
+		Vertex2f(e->size.x,e->size.y);
+		TexCoord2f(1.0f, 0.0f);
+		Vertex2f(e->size.x,0);
+	End();
 	
 wirebreak:	
 	glEnable(GL_TEXTURE_2D);
@@ -260,29 +265,29 @@ static inline void drawNode(gnode * n){
 	}
 //		if (n->id>=0)
 //			glTranslatef(n->id/config.map.grid_size,n->id%config.map.grid_size,0);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(_x,_y);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(_x+1.0f,_y);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(_x+1.0f,_y+1.0f);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(_x,_y+1.0f);
-		glEnd();
+//		Begin(GL_LINE_LOOP);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.0f, 0.0f);
+			Vertex2f(_x,_y);
+			TexCoord2f (1.0f, 0.0f);
+			Vertex2f(_x+1.0f,_y);
+			TexCoord2f (1.0f, 1.0f);
+			Vertex2f(_x+1.0f,_y+1.0f);
+			TexCoord2f (0.0f, 1.0f);
+			Vertex2f(_x,_y+1.0f);
+		End();
 		if (n->buildable!=0){
 			setTexture(&config.map.tex[BUILDABLE]);
-			glBegin(GL_TRIANGLE_FAN);
-				glTexCoord2f (0.0f, 0.0f);
-				glVertex2f(_x,_y);
-				glTexCoord2f (1.0f, 0.0f);
-				glVertex2f(_x+1.0f,_y);
-				glTexCoord2f (1.0f, 1.0f);
-				glVertex2f(_x+1.0f,_y+1.0f);
-				glTexCoord2f (0.0f, 1.0f);
-				glVertex2f(_x,_y+1.0f);
-			glEnd();
+			Begin(GL_TRIANGLE_FAN);
+				TexCoord2f (0.0f, 0.0f);
+				Vertex2f(_x,_y);
+				TexCoord2f (1.0f, 0.0f);
+				Vertex2f(_x+1.0f,_y);
+				TexCoord2f (1.0f, 1.0f);
+				Vertex2f(_x+1.0f,_y+1.0f);
+				TexCoord2f (0.0f, 1.0f);
+				Vertex2f(_x,_y+1.0f);
+			End();
 		}
 		if (config.map.show_walk!=0){
 			Color4f(1,1,1,1);
@@ -291,16 +296,16 @@ static inline void drawNode(gnode * n){
 					setTexture(&config.map.tex[WALKABLE]);
 				else
 					setTexture(&config.map.tex[NO_SEE]);
-				glBegin(GL_TRIANGLE_FAN);
-					glTexCoord2f (0.0f, 0.0f);
-					glVertex2f(_x,_y);
-					glTexCoord2f (1.0f, 0.0f);
-					glVertex2f(_x+1.0f,_y);
-					glTexCoord2f (1.0f, 1.0f);
-					glVertex2f(_x+1.0f,_y+1.0f);
-					glTexCoord2f (0.0f, 1.0f);
-					glVertex2f(_x,_y+1.0f);
-				glEnd();
+				Begin(GL_TRIANGLE_FAN);
+					TexCoord2f (0.0f, 0.0f);
+					Vertex2f(_x,_y);
+					TexCoord2f (1.0f, 0.0f);
+					Vertex2f(_x+1.0f,_y);
+					TexCoord2f (1.0f, 1.0f);
+					Vertex2f(_x+1.0f,_y+1.0f);
+					TexCoord2f (0.0f, 1.0f);
+					Vertex2f(_x,_y+1.0f);
+				End();
 			}
 		}
 //	glPopMatrix();	
@@ -389,20 +394,20 @@ void drawHealth(vec2 pos,vec2 size,float p){
 //	glTranslatef(0,0,0.03);//why?
 	glDisable(GL_TEXTURE_2D);
 	Color4f(0,0,0,0.8);
-	glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(pos.x+size.x*p,pos.y);
-		glVertex2f(pos.x+size.x,pos.y);
-		glVertex2f(pos.x+size.x,pos.y+size.y);
-		glVertex2f(pos.x+size.x*p,pos.y+size.y);
-	glEnd();
+	Begin(GL_TRIANGLE_FAN);
+		Vertex2f(pos.x+size.x*p,pos.y);
+		Vertex2f(pos.x+size.x,pos.y);
+		Vertex2f(pos.x+size.x,pos.y+size.y);
+		Vertex2f(pos.x+size.x*p,pos.y+size.y);
+	End();
 	Color4f(1.2*(1-p),0.8*p,0,1);
-	glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(pos.x,pos.y);
-		glVertex2f(pos.x+size.x*p,pos.y);
-		glVertex2f(pos.x+size.x*p,pos.y+size.y);
-		glVertex2f(pos.x,pos.y+size.y);
+	Begin(GL_TRIANGLE_FAN);
+		Vertex2f(pos.x,pos.y);
+		Vertex2f(pos.x+size.x*p,pos.y);
+		Vertex2f(pos.x+size.x*p,pos.y+size.y);
+		Vertex2f(pos.x,pos.y+size.y);
 		
-	glEnd();
+	End();
 //	glPopMatrix();
 }
 
@@ -417,7 +422,7 @@ static inline void drawNpc(npc* n){
 //	printf("n->type - %d\n",n->type);
 	glScalef(size,size,1);
 //	glTranslatef(0,0,.56f);
-	glTranslatef(0,0,.3f);
+//	glTranslatef(0,0,.3f);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				//npc stored in global tex memory
@@ -429,17 +434,17 @@ static inline void drawNpc(npc* n){
 //		else
 //			n->anim_ended=0;
 		Color4f(1,1,1,1);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.005f, 0.005f);
-			glVertex2f(-0.5f,0.0f);
-			glTexCoord2f (0.995f, 0.005f);
-			glVertex2f(0.5f,0.0f);
-			glTexCoord2f (0.995f, 0.995f);
-			glVertex2f(0.5f,1.0f);
-			glTexCoord2f (0.005f, 0.995f);
-			glVertex2f(-0.5f,1.0f);
-		glEnd();
+//		Begin(GL_LINE_LOOP);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.005f, 0.005f);
+			Vertex2f(-0.5f,0.0f);
+			TexCoord2f (0.995f, 0.005f);
+			Vertex2f(0.5f,0.0f);
+			TexCoord2f (0.995f, 0.995f);
+			Vertex2f(0.5f,1.0f);
+			TexCoord2f (0.005f, 0.995f);
+			Vertex2f(-0.5f,1.0f);
+		End();
 		
 //		glTranslatef(0,0,0.1169);
 		glTranslatef(0,0,5);
@@ -481,7 +486,7 @@ static inline void drawTower(tower* t){
 		backTransform();
 		glScalef(size,size,1);
 //		glTranslatef(0,0.21,.56f);
-		glTranslatef(0,0.21,0.37f);
+		glTranslatef(0,0.21,0.0f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
 			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
@@ -493,17 +498,17 @@ static inline void drawTower(tower* t){
 			t->anim_ended=1;
 		
 			Color4f(1,1,1,1);
-//			glBegin(GL_LINE_LOOP);
-			glBegin(GL_TRIANGLE_FAN);
-				glTexCoord2f (0.005f, 0.005f);
-				glVertex2f(-0.5f,-0.5f);
-				glTexCoord2f (0.995f, 0.005f);
-				glVertex2f(0.5f,-0.5f);
-				glTexCoord2f (0.995f, 0.995f);
-				glVertex2f(0.5f,0.5f);
-				glTexCoord2f (0.005f, 0.995f);
-				glVertex2f(-0.5f,0.5f);
-			glEnd();
+//			Begin(GL_LINE_LOOP);
+			Begin(GL_TRIANGLE_FAN);
+				TexCoord2f (0.005f, 0.005f);
+				Vertex2f(-0.5f,-0.5f);
+				TexCoord2f (0.995f, 0.005f);
+				Vertex2f(0.5f,-0.5f);
+				TexCoord2f (0.995f, 0.995f);
+				Vertex2f(0.5f,0.5f);
+				TexCoord2f (0.005f, 0.995f);
+				Vertex2f(-0.5f,0.5f);
+			End();
 			//draw level and health
 			glTranslatef(0,0,5);//need to draw over all
 			float health;
@@ -622,20 +627,20 @@ static inline void drawBullet(bullet* b){
 		Color4f(1,1,1,1);
 		if (setTexture(&b->tex[b->current_tex]))
 			b->anim_ended=1;
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (tx1, ty1);
-			glVertex2f(0.0f,-height);
-			glTexCoord2f (tx1, ty2);
-			glVertex2f(0.0f,height);
-			glTexCoord2f (tx2, ty2);
-			glVertex2f(vx,height);
-			glTexCoord2f (tx2, ty1);
-			glVertex2f(vx,-height);
+//		Begin(GL_LINE_LOOP);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (tx1, ty1);
+			Vertex2f(0.0f,-height);
+			TexCoord2f (tx1, ty2);
+			Vertex2f(0.0f,height);
+			TexCoord2f (tx2, ty2);
+			Vertex2f(vx,height);
+			TexCoord2f (tx2, ty1);
+			Vertex2f(vx,-height);
 			//texture 1:2
 			//texture solid 1:4
 			
-		glEnd();
+		End();
 drawBulletExit:		
 	glPopMatrix();
 }
@@ -674,18 +679,18 @@ static inline void drawSplash(splash* s){
 		s->anim_ended=1;
 	
 		Color4f(1,1,1,1);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(-0.5f,0.0f);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(0.5f,0.0f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(0.5f,1.0f);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(-0.5f,1.0f);
+//		Begin(GL_LINE_LOOP);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.0f, 0.0f);
+			Vertex2f(-0.5f,0.0f);
+			TexCoord2f (1.0f, 0.0f);
+			Vertex2f(0.5f,0.0f);
+			TexCoord2f (1.0f, 1.0f);
+			Vertex2f(0.5f,1.0f);
+			TexCoord2f (0.0f, 1.0f);
+			Vertex2f(-0.5f,1.0f);
 			
-		glEnd();
+		End();
 	glPopMatrix();
 }
 
@@ -723,17 +728,17 @@ static inline void drawWall(wall* w){
 	}
 	setTexture(&config.map.tex[w->tex]);
 		Color4f(1,1,1,1);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.005f, 0.005f);
-			glVertex3f(-x,y,0);
-			glTexCoord2f (0.995f, 0.005f);
-			glVertex3f(x,-y,0);
-			glTexCoord2f (0.995f, 0.995f);
-			glVertex3f(x,-y,2*size);
-			glTexCoord2f (0.005f, 0.995f);
-			glVertex3f(-x,y,2*size);
-		glEnd();
+//		Begin(GL_LINE_LOOP);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.005f, 0.005f);
+			Vertex3f(-x,y,0);
+			TexCoord2f (0.995f, 0.005f);
+			Vertex3f(x,-y,0);
+			TexCoord2f (0.995f, 0.995f);
+			Vertex3f(x,-y,2*size);
+			TexCoord2f (0.005f, 0.995f);
+			Vertex3f(-x,y,2*size);
+		End();
 	glPopMatrix();
 	#undef size
 }
@@ -764,17 +769,17 @@ static inline void drawMapObject(map_object* o){
 	}
 	setTexture(&config.map.tex[o->tex]);
 		Color4f(1,1,1,1);
-//		glBegin(GL_LINE_LOOP);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(-0.5f,0.0f);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(0.5f,0.0f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(0.5f,1.0f);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(-0.5f,1.0f);
-		glEnd();
+//		Begin(GL_LINE_LOOP);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.0f, 0.0f);
+			Vertex2f(-0.5f,0.0f);
+			TexCoord2f (1.0f, 0.0f);
+			Vertex2f(0.5f,0.0f);
+			TexCoord2f (1.0f, 1.0f);
+			Vertex2f(0.5f,1.0f);
+			TexCoord2f (0.0f, 1.0f);
+			Vertex2f(-0.5f,1.0f);
+		End();
 	glPopMatrix();
 }
 
@@ -809,16 +814,16 @@ void drawMinimap(){
 	Color4f(1,1,1,1);
 	//glEnable(GL_TEXTURE_2D);
 	setTexture(&config.map.minimap.tex);
-	glBegin(GL_TRIANGLE_FAN);
-		glTexCoord2f (0.0f, 0.0f);
-		glVertex2f(config.options.window.width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.options.window.height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
-		glTexCoord2f (0.0f, 1.0f);
-		glVertex2f(config.options.window.width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
-		glTexCoord2f (1.0f, 1.0f);
-		glVertex2f(config.options.window.width-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
-		glTexCoord2f (1.0f, 0.0f);
-		glVertex2f(config.options.window.width-SCREEN_OFFSET,config.options.window.height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
-	glEnd();
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (0.0f, 0.0f);
+		Vertex2f(config.options.window.width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.options.window.height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
+		TexCoord2f (0.0f, 1.0f);
+		Vertex2f(config.options.window.width-dsize-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
+		TexCoord2f (1.0f, 1.0f);
+		Vertex2f(config.options.window.width-SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET);
+		TexCoord2f (1.0f, 0.0f);
+		Vertex2f(config.options.window.width-SCREEN_OFFSET,config.options.window.height-dsize/2-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET);
+	End();
 	scale=MINIMAP_SIZE*1.0/config.map.grid_size;
 	glDisable(GL_TEXTURE_2D);
 	glPushMatrix();
@@ -827,78 +832,78 @@ void drawMinimap(){
 	//need to add tex under map 
 	glScalef(1,0.5,1);
 	glRotatef(-45,0,0,1);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(0.0f,0.0f);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(MINIMAP_SIZE,0.0f);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(MINIMAP_SIZE,MINIMAP_SIZE);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(0.0f,MINIMAP_SIZE);
-		glEnd();
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.0f, 0.0f);
+			Vertex2f(0.0f,0.0f);
+			TexCoord2f (1.0f, 0.0f);
+			Vertex2f(MINIMAP_SIZE,0.0f);
+			TexCoord2f (1.0f, 1.0f);
+			Vertex2f(MINIMAP_SIZE,MINIMAP_SIZE);
+			TexCoord2f (0.0f, 1.0f);
+			Vertex2f(0.0f,MINIMAP_SIZE);
+		End();
 		//draw towers
 		#define t_size 0.4f
 		glEnable(GL_LINE_SMOOTH);
 		glLineWidth(1);
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0){
-				glBegin(config.map.tower_array[i].type!=BASE?GL_LINES:GL_TRIANGLE_FAN);
+				Begin(config.map.tower_array[i].type!=BASE?GL_LINES:GL_TRIANGLE_FAN);
 					//check group and set color
 					setMinimapObjectColor(config.map.tower_array[i].owner);
-					glVertex2f(scale*(config.map.tower_array[i].position.x+t_size),scale*config.map.tower_array[i].position.y);
-					glVertex2f(scale*(config.map.tower_array[i].position.x-t_size),scale*config.map.tower_array[i].position.y);
-					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+t_size));
-					glVertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-t_size));
-				glEnd();
+					Vertex2f(scale*(config.map.tower_array[i].position.x+t_size),scale*config.map.tower_array[i].position.y);
+					Vertex2f(scale*(config.map.tower_array[i].position.x-t_size),scale*config.map.tower_array[i].position.y);
+					Vertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+t_size));
+					Vertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-t_size));
+				End();
 			}
 		glDisable(GL_LINE_SMOOTH);
 		#undef t_size	
 		//draw npcs
 		glPointSize(3);
 		glEnable(GL_POINT_SMOOTH);
-		glBegin(GL_POINTS);
+		Begin(GL_POINTS);
 			for(i=0;i<config.map.npc_max;i++)
 				if (config.map.npc_array[i].id!=0){
 					//Color4f(0.2,1,0.2,1.0);
 					setMinimapObjectColor(config.map.npc_array[i].owner);
-					glVertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
+					Vertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
 				}
-		glEnd();
+		End();
 //		glPointSize(1);
 //		Color4f(1.0f,0.7f,0,1.0);
-//		glBegin(GL_POINTS);
+//		Begin(GL_POINTS);
 //			for(i=0;i<config.map.bullet_max;i++)
 //				if (config.map.bullet_array[i].id!=0)
-//					glVertex2f(scale*config.map.bullet_array[i].position.x,scale*config.map.bullet_array[i].position.y);
-//		glEnd();
+//					Vertex2f(scale*config.map.bullet_array[i].position.x,scale*config.map.bullet_array[i].position.y);
+//		End();
 		glPointSize(1);
 		glDisable(GL_POINT_SMOOTH);
 		//draw minimap grid
 		Color4f(0.8,0.8,0.8,0.4);
 		glEnable(GL_LINE_SMOOTH);
 		glLineWidth(0.7);
-		glBegin(GL_LINES);
+		Begin(GL_LINES);
 			for(i=0;i<=config.map.grid_size;i++){
-				glVertex2f(scale*i,scale*0);
-				glVertex2f(scale*i,scale*config.map.grid_size);
-				glVertex2f(scale*0,scale*i);
-				glVertex2f(scale*config.map.grid_size,scale*i);
+				Vertex2f(scale*i,scale*0);
+				Vertex2f(scale*i,scale*config.map.grid_size);
+				Vertex2f(scale*0,scale*i);
+				Vertex2f(scale*config.map.grid_size,scale*i);
 			}
-		glEnd();
+		End();
 		glDisable(GL_LINE_SMOOTH);
 		//draw screen quad
 		Color4f(1,1,1,1);
-		glBegin(GL_LINE_LOOP);
-			glVertex2f(scale*config.global.screen.coord.ld.x,
+		Begin(GL_LINE_LOOP);
+			Vertex2f(scale*config.global.screen.coord.ld.x,
 					scale*config.global.screen.coord.ld.y);	
-			glVertex2f(scale*config.global.screen.coord.lu.x,
+			Vertex2f(scale*config.global.screen.coord.lu.x,
 					scale*config.global.screen.coord.lu.y);	
-			glVertex2f(scale*config.global.screen.coord.ru.x,
+			Vertex2f(scale*config.global.screen.coord.ru.x,
 					scale*config.global.screen.coord.ru.y);	
-			glVertex2f(scale*config.global.screen.coord.rd.x,
+			Vertex2f(scale*config.global.screen.coord.rd.x,
 					scale*config.global.screen.coord.rd.y);	
-		glEnd();
+		End();
 		
 	glPopMatrix();
 }
@@ -932,9 +937,9 @@ static inline void drawFrameTime(){
 	glScalef(0.85,0.85,1);
 	Color4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(localeTextGet(buf),2,20,0);
+	glFontTextOut(localeTextGet(buf),2,20);
 	char2 t[15]={0xdf,0x41f,0x440,0x438,0x432,0x435,0x422,0xdf,'5',0};
-	glFontTextOut(t,200,20,0);
+	glFontTextOut(t,200,20);
 }
 
 void drawHash(void * c_c){

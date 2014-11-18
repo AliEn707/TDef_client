@@ -53,8 +53,7 @@ void glFontBegin (GLFONT *Font);
 void glFontEnd (void);
 
 //Draws text with a glFont
-void glFontTextOut (char2 *String, float x, float y,
-	float z);
+void glFontTextOut (char2 *String, float x, float y);
 
 //*********************************************************
 float glFontWigth(char2 *String);

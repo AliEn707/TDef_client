@@ -64,16 +64,16 @@ static inline void drawLight(vec2 * pos, float size){
 	glPushMatrix();
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (0.0f, 0.0f);
-			glVertex2f(-size,-size);
-			glTexCoord2f (0.0f, 1.0f);
-			glVertex2f(-size,size);
-			glTexCoord2f (1.0f, 1.0f);
-			glVertex2f(size,size);
-			glTexCoord2f (1.0f, 0.0f);
-			glVertex2f(size,-size);
-		glEnd();
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.0f, 0.0f);
+			Vertex2f(-size,-size);
+			TexCoord2f (0.0f, 1.0f);
+			Vertex2f(-size,size);
+			TexCoord2f (1.0f, 1.0f);
+			Vertex2f(size,size);
+			TexCoord2f (1.0f, 0.0f);
+			Vertex2f(size,-size);
+		End();
 	glPopMatrix();
 }
 
@@ -102,16 +102,16 @@ void drawLightsMap(){
 	
 /*	if (config.options.darkness.tex_size>128){
 		setTexture(&config.map.tex[DARKNESS]);
-		glBegin(GL_TRIANGLE_FAN);
-			glTexCoord2f (config.global.screen.coord.ld.x/scale,config.global.screen.coord.ld.y/scale);
-			glVertex2f(config.global.screen.coord.ld.x,config.global.screen.coord.ld.y);
-			glTexCoord2f(config.global.screen.coord.lu.x/scale,config.global.screen.coord.lu.y/scale);
-			glVertex2f(config.global.screen.coord.lu.x,config.global.screen.coord.lu.y);
-			glTexCoord2f(config.global.screen.coord.ru.x/scale,config.global.screen.coord.ru.y/scale);
-			glVertex2f(config.global.screen.coord.ru.x,config.global.screen.coord.ru.y);
-			glTexCoord2f(config.global.screen.coord.rd.x/scale,config.global.screen.coord.rd.y/scale);
-			glVertex2f(config.global.screen.coord.rd.x,config.global.screen.coord.rd.y);
-		glEnd();
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (config.global.screen.coord.ld.x/scale,config.global.screen.coord.ld.y/scale);
+			Vertex2f(config.global.screen.coord.ld.x,config.global.screen.coord.ld.y);
+			TexCoord2f(config.global.screen.coord.lu.x/scale,config.global.screen.coord.lu.y/scale);
+			Vertex2f(config.global.screen.coord.lu.x,config.global.screen.coord.lu.y);
+			TexCoord2f(config.global.screen.coord.ru.x/scale,config.global.screen.coord.ru.y/scale);
+			Vertex2f(config.global.screen.coord.ru.x,config.global.screen.coord.ru.y);
+			TexCoord2f(config.global.screen.coord.rd.x/scale,config.global.screen.coord.rd.y/scale);
+			Vertex2f(config.global.screen.coord.rd.x,config.global.screen.coord.rd.y);
+		End();
 	}
 */
 	drawLights(drawLight);
@@ -151,15 +151,15 @@ void drawLightsMask(){
 	setTexture(lights);
 //	glEnable(GL_TEXTURE_2D);
 //	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA,GL_SRC_ALPHA);
-	glBegin(GL_TRIANGLE_FAN);
-		glTexCoord2f (0.01f, 0.01f);
-		glVertex2f(0,0);
-		glTexCoord2f (0.01f, 0.99f);
-		glVertex2f(0,config.options.window.height);
-		glTexCoord2f (0.99f, 0.99f);
-		glVertex2f(config.options.window.width,config.options.window.height);
-		glTexCoord2f (0.99f, 0.01f);
-		glVertex2f(config.options.window.width,0);
-	glEnd();
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (0.01f, 0.01f);
+		Vertex2f(0,0);
+		TexCoord2f (0.01f, 0.99f);
+		Vertex2f(0,config.options.window.height);
+		TexCoord2f (0.99f, 0.99f);
+		Vertex2f(config.options.window.width,config.options.window.height);
+		TexCoord2f (0.99f, 0.01f);
+		Vertex2f(config.options.window.width,0);
+	End();
 //	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 }

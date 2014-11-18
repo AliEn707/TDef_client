@@ -236,6 +236,7 @@ int drawerThread(void *ptr){
 	glLoadIdentity();
 	glOrtho(0,config.options.window.width,0,config.options.window.height,-10000,10000);
 	glMatrixMode(GL_MODELVIEW); 
+	glRInit();
 //	glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);//GL_NICEST
 	
 	////////////load global textures
