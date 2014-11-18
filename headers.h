@@ -13,3 +13,4 @@
 #include "locale.h"
 #include "events.h"
 #include "public.h"
+#include "hash.h"

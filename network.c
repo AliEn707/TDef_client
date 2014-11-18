@@ -12,21 +12,21 @@
 #define checkMask(x,y) x&y
 
 //check may be need to check <0
-#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))==0) return -1
+#define recvMap(x) if(recvData(config.map.network.socket,&x,sizeof(x))<=0) return -1
 
 
 int recvData(TCPsocket sock, void * buf, int size){
 	int need=size;
 	int get;
 	get=SDLNet_TCP_Recv(sock,buf,need);
-	if (get==0)
+	if (get<=0)
 		return get;
 	if (get==need)
 		return get;
 //	printf("get not all\n");
 	need-=get;
 	while(need>0){
-		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))==0)
+		if((get=SDLNet_TCP_Recv(sock,buf+(size-need),need))<=0)
 			return get;
 		need-=get;
 	}
@@ -76,7 +76,7 @@ TCPsocket networkConnMap(char * addr,int port){
 }
 
 
-int recvNpcMap(){
+static inline int recvNpcMap(){
 	npc * n;
 	int id,bit_mask;
 	npc tmp;
@@ -128,7 +128,7 @@ int recvNpcMap(){
 }
 
 
-int recvTowerMap(){
+static inline int recvTowerMap(){
 	tower * t;
 	int id,bit_mask;
 	tower tmp;
@@ -166,7 +166,7 @@ int recvTowerMap(){
 	return 0;
 }
 
-int recvBulletMap(){
+static inline int recvBulletMap(){
 	bullet * b;
 	int id,bit_mask;
 	bullet tmp;
@@ -229,7 +229,7 @@ int recvBulletMap(){
 	return 0;
 }
 
-int recvPlayerMap(){
+static inline int recvPlayerMap(){
 	int id,bit_mask;
 	recvMap(id);
 	//check npc
@@ -242,6 +242,10 @@ int recvPlayerMap(){
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
 		recvMap(config.map.players[id].base_health);
+	}
+	if(checkMask(bit_mask,PLAYER_MONEY) || checkMask(bit_mask,PLAYER_CREATE)){
+		recvMap(config.map.players[id].money);
+		printf("player money %d \n",config.map.players[id].money);
 	}
 	return 0;
 }

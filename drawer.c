@@ -363,7 +363,7 @@ static inline void drawMapGrid(){
 		}
 }
 
-void globalTransform(){
+inline void globalTransform(){
 	glTranslatef(config.global.transform.translate.x,config.global.transform.translate.y,-100);
 	glScalef(config.global.transform.scale,config.global.transform.scale,1);
 	glRotatef(-60,1,0,0);
@@ -372,7 +372,7 @@ void globalTransform(){
 	
 }
 
-void backTransform(){
+inline void backTransform(){
 	glRotatef(45,0,0,1);
 
 	glRotatef(60,1,0,0);
@@ -417,7 +417,7 @@ static inline void drawNpc(npc* n){
 //	printf("n->type - %d\n",n->type);
 	glScalef(size,size,1);
 //	glTranslatef(0,0,.56f);
-	glTranslatef(0,0,.26f);
+	glTranslatef(0,0,.3f);
 		if (n->tex[n->current_tex].frames==0){
 			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
 				//npc stored in global tex memory
@@ -465,8 +465,10 @@ static inline void drawNpcs(){
 	int i;
 	for(i=0;i<config.map.npc_max;i++)
 		if (config.map.npc_array[i].id!=0)
-			if (checkGridLines(config.map.npc_array[i].position.x,config.map.npc_array[i].position.y))
-				drawNpc(&config.map.npc_array[i]);
+			if (checkGridLines(config.map.npc_array[i].position.x,config.map.npc_array[i].position.y)){
+//				drawNpc(&config.map.npc_array[i]);
+				hashAdd(config.map.npc_array[i].position.x+config.map.grid_size-config.map.npc_array[i].position.y,&config.map.npc_array[i]);
+			}
 }
 
 static inline void drawTower(tower* t) __attribute__((always_inline));
@@ -528,8 +530,10 @@ static inline void drawTowers(){
 	int i;
 	for(i=0;i<config.map.tower_max;i++)
 		if (config.map.tower_array[i].id!=0)
-			if (checkGridLines(config.map.tower_array[i].position.x,config.map.tower_array[i].position.y))
-				drawTower(&config.map.tower_array[i]);
+			if (checkGridLines(config.map.tower_array[i].position.x,config.map.tower_array[i].position.y)){
+//				drawTower(&config.map.tower_array[i]);
+				hashAdd(config.map.tower_array[i].position.x+config.map.grid_size-config.map.tower_array[i].position.y,&config.map.tower_array[i]);
+			}
 }
 
 static inline void drawBullet(bullet* b) __attribute__((always_inline));
@@ -557,7 +561,7 @@ static inline void drawBullet(bullet* b){
 	{
 		float ang;
 		vec2 dir={b->destination.x-pos->x,b->destination.y-pos->y};
-		length=sqrt(sqr(dir.x)+sqr(dir.y));
+		length=sqrtf(sqr(dir.x)+sqr(dir.y));
 		
 		float y;
 		x=gridToScreenX(b->destination.x,b->destination.y);
@@ -576,7 +580,7 @@ static inline void drawBullet(bullet* b){
 //		if (x==0 )
 //			goto drawBulletExit;
 		
-		float l=sqrt(sqr(x)+sqr(y));
+		float l=sqrtf(sqr(x)+sqr(y));
 		float cos=x/l;
 		float sin=y/l;
 		ang=acosf(cos);
@@ -642,8 +646,14 @@ static inline void drawBullets(){
 	for(i=0;i<config.map.bullet_max;i++)
 		if (config.map.bullet_array[i].id!=0)
 			if (config.bullet_types[config.map.bullet_array[i].type].solid!=0 || 
-					checkGridLines(config.map.bullet_array[i].position.x,config.map.bullet_array[i].position.y))
-				drawBullet(&config.map.bullet_array[i]);
+					checkGridLines(config.map.bullet_array[i].position.x,config.map.bullet_array[i].position.y)){
+//				drawBullet(&config.map.bullet_array[i]);
+				hashAdd(config.bullet_types[config.map.bullet_array[i].type].solid!=0?
+							max(config.map.bullet_array[i].position.x+config.map.grid_size-config.map.bullet_array[i].position.y,
+									config.map.bullet_array[i].source.x+config.map.grid_size-config.map.bullet_array[i].source.y):
+						config.map.bullet_array[i].position.x+config.map.grid_size-config.map.bullet_array[i].position.y,
+						&config.map.bullet_array[i]);
+			}
 }
 
 
@@ -684,8 +694,10 @@ static inline void drawSplashes(){
 	int i;
 	for(i=0;i<config.map.splash_max;i++)
 		if (config.map.splash_array[i].type!=0)
-			if (checkGridLines(config.map.splash_array[i].position.x,config.map.splash_array[i].position.y))
-				drawSplash(&config.map.splash_array[i]);
+			if (checkGridLines(config.map.splash_array[i].position.x,config.map.splash_array[i].position.y)){
+//				drawSplash(&config.map.splash_array[i]);
+				hashAdd(config.map.splash_array[i].position.x+config.map.grid_size-config.map.splash_array[i].position.y,&config.map.splash_array[i]);
+			}
 }
 
 static inline void drawWall(wall* w) __attribute__((always_inline));
@@ -730,8 +742,10 @@ static inline void drawWalls() __attribute__((always_inline));
 static inline void drawWalls(){
 	int i;
 	for(i=0;i<config.map.walls_size;i++)
-		if (config.map.walls[i].direction!=0)
-			drawWall(&config.map.walls[i]);
+		if (config.map.walls[i].direction!=0){
+//			drawWall(&config.map.walls[i]);
+				hashAdd(getGridX(config.map.walls[i].position)-getGridY(config.map.walls[i].position)+config.map.grid_size,&config.map.walls[i]);
+		}
 }
 
 static inline void drawMapObject(map_object* o) __attribute__((always_inline));
@@ -768,8 +782,10 @@ static inline void drawMapObjects() __attribute__((always_inline));
 static inline void drawMapObjects(){
 	int i;
 	for(i=0;i<config.map.map_$objects;i++)
-		if (config.map.map_objects[i].tex!=0)
-			drawMapObject(&config.map.map_objects[i]);
+		if (config.map.map_objects[i].tex!=0){
+//			drawMapObject(&config.map.map_objects[i]);
+			hashAdd(config.map.map_objects[i].position.x+config.map.grid_size-config.map.map_objects[i].position.y,&config.map.map_objects[i]);
+		}
 }
 
 void setMinimapObjectColor(int owner){
@@ -921,7 +937,31 @@ static inline void drawFrameTime(){
 	glFontTextOut(t,200,20,0);
 }
 
-		
+void drawHash(void * c_c){
+	int i_i=*((char*)c_c);
+	switch(i_i){
+		case STRUCT_NPC:
+			drawNpc(c_c);
+			break;
+		case STRUCT_TOWER:
+			drawTower(c_c);
+			break;
+		case STRUCT_BULLET:
+			drawBullet(c_c);
+			break;
+		case STRUCT_MAPOBJECT:
+			drawMapObject(c_c);
+			break;
+		case STRUCT_SPLASH:
+			drawSplash(c_c);
+			break;
+		case STRUCT_WALL:
+			drawWall(c_c);
+			break;
+	}
+}
+
+
 void drawScene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //	glClear(GL_DEPTH_BUFFER_BIT);
@@ -947,26 +987,27 @@ void drawScene(){
 			glViewport(SCREEN_OFFSET, SCREEN_OFFSET, config.options.window.width-SCREEN_OFFSET*2, config.options.window.height-SCREEN_OFFSET*2);
 			
 			drawMapGrid();
-		
-			config.texture_no_change=1;
-			drawWalls();
-			drawMapObjects();
-			drawNpcs();
-			drawTowers();
-			drawBullets();
-			drawSplashes();
+//			morefast way 		
+//			config.texture_no_change=1;
+//			drawWalls();
+//			drawMapObjects();
+//			drawNpcs();
+//			drawTowers();
+//			drawBullets();
+//			drawSplashes();
 			//draw map
-			glEnable(GL_DEPTH_TEST);
-			config.texture_no_change--;
+//			glEnable(GL_DEPTH_TEST);
+//			config.texture_no_change--;
 			drawWalls();
 			drawMapObjects();
 			drawNpcs();
 			drawTowers();
 			drawBullets();
 			drawSplashes();
+			hashForEach(drawHash);
 			//draw map egain
 		glPopMatrix();
-		glDisable(GL_DEPTH_TEST);
+//		glDisable(GL_DEPTH_TEST);
 
 		if (config.options.darkness.enable!=0){
 			drawLightsMask();

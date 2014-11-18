@@ -425,6 +425,7 @@ void loadMapGrafics(char* path){
 						&config.map.walls[i].position,
 						&config.map.walls[i].direction,
 						&id);
+				config.map.walls[i].$$$=STRUCT_WALL;
 				config.map.walls[i].tex=mapTex(id);
 			}
 		}
@@ -439,6 +440,7 @@ void loadMapGrafics(char* path){
 						&config.map.map_objects[i].position.x,
 						&config.map.map_objects[i].position.y,
 						&id);
+				config.map.map_objects[i].$$$=STRUCT_MAPOBJECT;
 				config.map.map_objects[i].tex=mapTex(id);
 			}
 		}
@@ -876,24 +878,28 @@ void setTestData(){
 	config.map.player=&config.map.players[config.map.player_id];
 	config.map.players[2].group=1;
 	
+	config.map.npc_array[1].$$$=STRUCT_NPC;
 	config.map.npc_array[1].position.x=x1;
 	config.map.npc_array[1].position.y=y1;
 	config.map.npc_array[1].id=-100;
 	config.map.npc_array[1].type=1;
 	config.map.npc_array[1].owner=2;
 	config.map.npc_array[1].health=36;
+	config.map.npc_array[0].$$$=STRUCT_NPC;
 	config.map.npc_array[0].position.x=x2;
 	config.map.npc_array[0].position.y=y2;
 	config.map.npc_array[0].id=-200;
 	config.map.npc_array[0].type=1;
 	config.map.npc_array[0].health=87;
 	
+	config.map.tower_array[0].$$$=STRUCT_TOWER;
 	config.map.tower_array[0].id=-1;
 	config.map.tower_array[0].type=1;
 	config.map.tower_array[0].owner=1;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
 	
+	config.map.bullet_array[0].$$$=STRUCT_BULLET;
 	config.map.bullet_array[0].id=-1;
 	config.map.bullet_array[0].type=2;
 	config.map.bullet_array[0].position.x=x1;
@@ -909,6 +915,7 @@ void setTestData(){
 	int i,j,k=2;
 	for (i=1;i<config.map.grid_size;i++)
 		for (j=i;j<config.map.grid_size;j++){
+			config.map.npc_array[k].$$$=STRUCT_NPC;
 			config.map.npc_array[k].position.x=i+rand()%100/100.0;
 			config.map.npc_array[k].position.y=j+rand()%100/100.0;
 			config.map.npc_array[k].id=-100;

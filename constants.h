@@ -121,6 +121,7 @@
 //#define checkMask(z,x) z->bit_mask&x
 
 #define PLAYER_HEALTH 1
+#define PLAYER_MONEY 2
 #define PLAYER_CREATE 4
 
 #define NPC_HEALTH 1
@@ -148,3 +149,11 @@
 
 //brush
 #define BRUSH_TOWER_SPAWN 1
+
+//struct objects types
+#define STRUCT_NPC 2
+#define STRUCT_TOWER 3
+#define STRUCT_BULLET 4
+#define STRUCT_MAPOBJECT 5
+#define STRUCT_SPLASH 6
+#define STRUCT_WALL 7

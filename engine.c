@@ -22,8 +22,10 @@ int sign(float x){
 splash* getSplashNew(){
 	int i;
 	for(i=0;i<config.map.splash_max;i++)
-		if (config.map.splash_array[i].type==0)
+		if (config.map.splash_array[i].type==0){
+			config.map.splash_array[i].$$$=STRUCT_SPLASH;
 			return &config.map.splash_array[i];
+			}
 	return 0;
 }
 
@@ -33,8 +35,10 @@ npc* getNpcById(int id){
 		if (config.map.npc_array[i].id==id)
 			return &config.map.npc_array[i];
 	for(i=0;i<config.map.npc_max;i++)
-		if (config.map.npc_array[i].id==0)
+		if (config.map.npc_array[i].id==0){
+			config.map.npc_array[i].$$$=STRUCT_NPC;
 			return &config.map.npc_array[i];
+		}
 	return 0;
 }
 
@@ -44,8 +48,10 @@ tower* getTowerById(int id){
 		if (config.map.tower_array[i].id==id)
 			return &config.map.tower_array[i];
 	for(i=0;i<config.map.tower_max;i++)
-		if (config.map.tower_array[i].id==0)
+		if (config.map.tower_array[i].id==0){
+			config.map.tower_array[i].$$$=STRUCT_TOWER;
 			return &config.map.tower_array[i];
+		}
 	return 0;
 }
 
@@ -55,8 +61,10 @@ bullet* getBulletById(int id){
 		if (config.map.bullet_array[i].id==id)
 			return &config.map.bullet_array[i];
 	for(i=0;i<config.map.bullet_max;i++)
-		if (config.map.bullet_array[i].id==0)
+		if (config.map.bullet_array[i].id==0){
+			config.map.bullet_array[i].$$$=STRUCT_BULLET;
 			return &config.map.bullet_array[i];
+		}
 	return 0;
 }
 

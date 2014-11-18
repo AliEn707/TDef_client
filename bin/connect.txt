@@ -1,2 +1,2 @@
-haphost.tdef.tk
+localhost
 34140

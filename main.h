@@ -117,6 +117,7 @@ struct bullet_type{
 
 typedef
 struct tower{
+	char $$$;//type of struct,must be first
 	int id;
 	vec2 position;
 	short target;
@@ -135,6 +136,7 @@ struct tower{
 
 typedef
 struct npc{
+	char $$$;//type of struct,must be first
 	int id;
 	char status;
 	int owner;
@@ -156,6 +158,7 @@ struct npc{
 
 typedef
 struct bullet{
+	char $$$;//type of struct,must be first
 	int id;
 	vec2 position;
 	vec2 destination;
@@ -183,6 +186,7 @@ struct {
 
 typedef 
 struct {
+	char $$$;//type of struct,must be first
 	vec2 position;
 	short type;
 	short anim_ended;
@@ -193,6 +197,7 @@ struct {
 
 typedef 
 struct {
+	char $$$;//type of struct,must be first
 	int position;
 	char direction;
 	
@@ -202,6 +207,7 @@ struct {
 
 typedef 
 struct {
+	char $$$;//type of struct,must be first
 	vec2 position;
 	
 	int tex;
@@ -556,6 +562,7 @@ typedef short char2;
 
 
 #define sqr(a) ({typeof(a) $a=(a);($a)*($a);})
+#define max(a,b) ({typeof(a) $a=(a);typeof(b) $b=(b);$a<$b?$b:$a;})
 
 #define mapTex(a) ((int)((a)+COMON_TEXTURES_START))
 
