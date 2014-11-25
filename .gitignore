@@ -18,6 +18,7 @@
 # Executables
 test/*/*.exe
 win/*.exe
+bin/*.exe
 *.out
 *.app
 
