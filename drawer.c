@@ -854,12 +854,16 @@ void drawMinimap(){
 		glLineWidth(1);
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0){
+				setMinimapObjectColor(config.map.tower_array[i].owner);
 				Begin(config.map.tower_array[i].type!=BASE?GL_LINES:GL_TRIANGLE_FAN);
 					//check group and set color
-					setMinimapObjectColor(config.map.tower_array[i].owner);
+					TexCoord2f (0.0f, 0.0f);
 					Vertex2f(scale*(config.map.tower_array[i].position.x+t_size),scale*config.map.tower_array[i].position.y);
+					TexCoord2f (1.0f, 0.0f);
 					Vertex2f(scale*(config.map.tower_array[i].position.x-t_size),scale*config.map.tower_array[i].position.y);
+					TexCoord2f (1.0f, 1.0f);
 					Vertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y+t_size));
+					TexCoord2f (0.0f, 1.0f);
 					Vertex2f(scale*config.map.tower_array[i].position.x,scale*(config.map.tower_array[i].position.y-t_size));
 				End();
 			}
@@ -868,15 +872,16 @@ void drawMinimap(){
 		//draw npcs
 		glPointSize(3);
 		glEnable(GL_POINT_SMOOTH);
-		Begin(GL_POINTS);
 			for(i=0;i<config.map.npc_max;i++)
 				if (config.map.npc_array[i].id!=0){
 					//Color4f(0.2,1,0.2,1.0);
 					setMinimapObjectColor(config.map.npc_array[i].owner);
-					Vertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
+					Begin(GL_POINTS);
+						TexCoord2f (0.0f, 0.0f);
+						Vertex2f(scale*config.map.npc_array[i].position.x,scale*config.map.npc_array[i].position.y);
+					End();
 				}
-		End();
-//		glPointSize(1);
+		glPointSize(1);
 //		Color4f(1.0f,0.7f,0,1.0);
 //		Begin(GL_POINTS);
 //			for(i=0;i<config.map.bullet_max;i++)
@@ -891,9 +896,13 @@ void drawMinimap(){
 		glLineWidth(0.7);
 		Begin(GL_LINES);
 			for(i=0;i<=config.map.grid_size;i++){
+				TexCoord2f (0.0f, 0.0f);
 				Vertex2f(scale*i,scale*0);
+				TexCoord2f (0.0f, 1.0f);
 				Vertex2f(scale*i,scale*config.map.grid_size);
+				TexCoord2f (1.0f, 1.0f);
 				Vertex2f(scale*0,scale*i);
+				TexCoord2f (0.0f, 1.0f);
 				Vertex2f(scale*config.map.grid_size,scale*i);
 			}
 		End();
@@ -901,12 +910,16 @@ void drawMinimap(){
 		//draw screen quad
 		Color4f(1,1,1,1);
 		Begin(GL_LINE_LOOP);
+			TexCoord2f (0.0f, 0.0f);
 			Vertex2f(scale*config.global.screen.coord.ld.x,
 					scale*config.global.screen.coord.ld.y);	
+			TexCoord2f (1.0f, 0.0f);
 			Vertex2f(scale*config.global.screen.coord.lu.x,
 					scale*config.global.screen.coord.lu.y);	
+			TexCoord2f (1.0f, 1.0f);
 			Vertex2f(scale*config.global.screen.coord.ru.x,
 					scale*config.global.screen.coord.ru.y);	
+			TexCoord2f (0.0f, 1.0f);
 			Vertex2f(scale*config.global.screen.coord.rd.x,
 					scale*config.global.screen.coord.rd.y);	
 		End();
