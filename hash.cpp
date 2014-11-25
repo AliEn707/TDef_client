@@ -2,7 +2,7 @@
 #include <map>
 #include <cstdlib>
 
-#define SHIFT 1e-4
+#define SHIFT 1e-3
 
 using namespace std;
 
@@ -28,8 +28,10 @@ extern "C" {
 	}
 	
 	int hashForEach(void (function)(void*v)) {
+//		cout << "map size before"<<hashMap.size()<< endl;
 		for (it i = hashMap.begin(); i != hashMap.end(); i++)
 			function(i->second);
+//		cout << "map size "<<hashMap.size()<< endl;
 		hashMap.clear();
 		return 0;
 	}	
@@ -38,6 +40,10 @@ extern "C" {
 		for (it i = hashMap.begin(); i != hashMap.end(); i++)
 			cout << i->first << " : " << i->second << endl;
 		return 0;
+	}
+	
+	int hashSize(){
+		return hashMap.size();
 	}
 }
 /*

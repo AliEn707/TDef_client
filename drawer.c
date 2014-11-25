@@ -746,10 +746,16 @@ static inline void drawWall(wall* w){
 static inline void drawWalls() __attribute__((always_inline));
 static inline void drawWalls(){
 	int i;
+	float x;
+	float y;
 	for(i=0;i<config.map.walls_size;i++)
-		if (config.map.walls[i].direction!=0){
-//			drawWall(&config.map.walls[i]);
-				hashAdd(getGridX(config.map.walls[i].position)-getGridY(config.map.walls[i].position)+config.map.grid_size,&config.map.walls[i]);
+		if (config.map.walls[i].$$$!=0){
+			x=getGridX(config.map.walls[i].position);
+			y=getGridY(config.map.walls[i].position);
+			if (checkGridLines(x,y)){
+//				drawWall(&config.map.walls[i]);
+				hashAdd(x-y+config.map.grid_size,&config.map.walls[i]);
+			}
 		}
 }
 
