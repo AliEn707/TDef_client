@@ -1,0 +1,308 @@
+{"latin_extended_a",
+	{0,0,0,0x100/*256*/,0x17f/*383*/,0}},	//Latin Extended-A
+{"latin_extended_b",
+	{0,0,0,0x180/*384*/,0x24f/*591*/,0}},	//Latin Extended-B
+{"ipa_extensions",
+	{0,0,0,0x250/*592*/,0x2af/*687*/,0}},	//IPA Extensions
+{"spacing_modifier_letters",
+	{0,0,0,0x2b0/*688*/,0x2ff/*767*/,0}},	//Spacing Modifier Letters
+{"combining_diacritical_marks",
+	{0,0,0,0x300/*768*/,0x36f/*879*/,0}},	//Combining Diacritical Marks
+{"greek_and_coptic",
+	{0,0,0,0x370/*880*/,0x3ff/*1023*/,0}},	//Greek and Coptic
+{"cyrillic_supplement",
+	{0,0,0,0x500/*1280*/,0x52f/*1327*/,0}},	//Cyrillic Supplement
+{"armenian",
+	{0,0,0,0x530/*1328*/,0x58f/*1423*/,0}},	//Armenian
+{"hebrew",
+	{0,0,0,0x590/*1424*/,0x5ff/*1535*/,0}},	//Hebrew
+{"arabic",
+	{0,0,0,0x600/*1536*/,0x6ff/*1791*/,0}},	//Arabic
+{"syriac",
+	{0,0,0,0x700/*1792*/,0x74f/*1871*/,0}},	//Syriac
+{"arabic_supplement",
+	{0,0,0,0x750/*1872*/,0x77f/*1919*/,0}},	//Arabic Supplement
+{"thaana",
+	{0,0,0,0x780/*1920*/,0x7bf/*1983*/,0}},	//Thaana
+{"nko",
+	{0,0,0,0x7c0/*1984*/,0x7ff/*2047*/,0}},	//NKo
+{"samaritan",
+	{0,0,0,0x800/*2048*/,0x83f/*2111*/,0}},	//Samaritan
+{"mandaic",
+	{0,0,0,0x840/*2112*/,0x85f/*2143*/,0}},	//Mandaic
+{"arabic_extended_a",
+	{0,0,0,0x8a0/*2208*/,0x8ff/*2303*/,0}},	//Arabic Extended-A
+{"devanagari",
+	{0,0,0,0x900/*2304*/,0x97f/*2431*/,0}},	//Devanagari
+{"bengali",
+	{0,0,0,0x980/*2432*/,0x9ff/*2559*/,0}},	//Bengali
+{"gurmukhi",
+	{0,0,0,0xa00/*2560*/,0xa7f/*2687*/,0}},	//Gurmukhi
+{"gujarati",
+	{0,0,0,0xa80/*2688*/,0xaff/*2815*/,0}},	//Gujarati
+{"oriya",
+	{0,0,0,0xb00/*2816*/,0xb7f/*2943*/,0}},	//Oriya
+{"tamil",
+	{0,0,0,0xb80/*2944*/,0xbff/*3071*/,0}},	//Tamil
+{"telugu",
+	{0,0,0,0xc00/*3072*/,0xc7f/*3199*/,0}},	//Telugu
+{"kannada",
+	{0,0,0,0xc80/*3200*/,0xcff/*3327*/,0}},	//Kannada
+{"malayalam",
+	{0,0,0,0xd00/*3328*/,0xd7f/*3455*/,0}},	//Malayalam
+{"sinhala",
+	{0,0,0,0xd80/*3456*/,0xdff/*3583*/,0}},	//Sinhala
+{"thai",
+	{0,0,0,0xe00/*3584*/,0xe7f/*3711*/,0}},	//Thai
+{"lao",
+	{0,0,0,0xe80/*3712*/,0xeff/*3839*/,0}},	//Lao
+{"tibetan",
+	{0,0,0,0xf00/*3840*/,0xfff/*4095*/,0}},	//Tibetan
+{"myanmar",
+	{0,0,0,0x1000/*4096*/,0x109f/*4255*/,0}},	//Myanmar
+{"georgian",
+	{0,0,0,0x10a0/*4256*/,0x10ff/*4351*/,0}},	//Georgian
+{"hangul_jamo",
+	{0,0,0,0x1100/*4352*/,0x11ff/*4607*/,0}},	//Hangul Jamo
+{"ethiopic",
+	{0,0,0,0x1200/*4608*/,0x137f/*4991*/,0}},	//Ethiopic
+{"ethiopic_supplement",
+	{0,0,0,0x1380/*4992*/,0x139f/*5023*/,0}},	//Ethiopic Supplement
+{"cherokee",
+	{0,0,0,0x13a0/*5024*/,0x13ff/*5119*/,0}},	//Cherokee
+{"unified_canadian_aboriginal_syllabics",
+	{0,0,0,0x1400/*5120*/,0x167f/*5759*/,0}},	//Unified Canadian Aboriginal Syllabics
+{"ogham",
+	{0,0,0,0x1680/*5760*/,0x169f/*5791*/,0}},	//Ogham
+{"runic",
+	{0,0,0,0x16a0/*5792*/,0x16ff/*5887*/,0}},	//Runic
+{"tagalog",
+	{0,0,0,0x1700/*5888*/,0x171f/*5919*/,0}},	//Tagalog
+{"hanunoo",
+	{0,0,0,0x1720/*5920*/,0x173f/*5951*/,0}},	//Hanunoo
+{"buhid",
+	{0,0,0,0x1740/*5952*/,0x175f/*5983*/,0}},	//Buhid
+{"tagbanwa",
+	{0,0,0,0x1760/*5984*/,0x177f/*6015*/,0}},	//Tagbanwa
+{"khmer",
+	{0,0,0,0x1780/*6016*/,0x17ff/*6143*/,0}},	//Khmer
+{"mongolian",
+	{0,0,0,0x1800/*6144*/,0x18af/*6319*/,0}},	//Mongolian
+{"unified_canadian_aboriginal_syllabics_extended",
+	{0,0,0,0x18b0/*6320*/,0x18ff/*6399*/,0}},	//Unified Canadian Aboriginal Syllabics Extended
+{"limbu",
+	{0,0,0,0x1900/*6400*/,0x194f/*6479*/,0}},	//Limbu
+{"tai_le",
+	{0,0,0,0x1950/*6480*/,0x197f/*6527*/,0}},	//Tai Le
+{"new_tai_lue",
+	{0,0,0,0x1980/*6528*/,0x19df/*6623*/,0}},	//New Tai Lue
+{"khmer_symbols",
+	{0,0,0,0x19e0/*6624*/,0x19ff/*6655*/,0}},	//Khmer Symbols
+{"buginese",
+	{0,0,0,0x1a00/*6656*/,0x1a1f/*6687*/,0}},	//Buginese
+{"tai_tham",
+	{0,0,0,0x1a20/*6688*/,0x1aaf/*6831*/,0}},	//Tai Tham
+{"combining_diacritical_marks_extended",
+	{0,0,0,0x1ab0/*6832*/,0x1aff/*6911*/,0}},	//Combining Diacritical Marks Extended
+{"balinese",
+	{0,0,0,0x1b00/*6912*/,0x1b7f/*7039*/,0}},	//Balinese
+{"sundanese",
+	{0,0,0,0x1b80/*7040*/,0x1bbf/*7103*/,0}},	//Sundanese
+{"batak",
+	{0,0,0,0x1bc0/*7104*/,0x1bff/*7167*/,0}},	//Batak
+{"lepcha",
+	{0,0,0,0x1c00/*7168*/,0x1c4f/*7247*/,0}},	//Lepcha
+{"ol_chiki",
+	{0,0,0,0x1c50/*7248*/,0x1c7f/*7295*/,0}},	//Ol Chiki
+{"sundanese_supplement",
+	{0,0,0,0x1cc0/*7360*/,0x1ccf/*7375*/,0}},	//Sundanese Supplement
+{"vedic_extensions",
+	{0,0,0,0x1cd0/*7376*/,0x1cff/*7423*/,0}},	//Vedic Extensions
+{"phonetic_extensions",
+	{0,0,0,0x1d00/*7424*/,0x1d7f/*7551*/,0}},	//Phonetic Extensions
+{"phonetic_extensions_supplement",
+	{0,0,0,0x1d80/*7552*/,0x1dbf/*7615*/,0}},	//Phonetic Extensions Supplement
+{"combining_diacritical_marks_supplement",
+	{0,0,0,0x1dc0/*7616*/,0x1dff/*7679*/,0}},	//Combining Diacritical Marks Supplement
+{"latin_extended_additional",
+	{0,0,0,0x1e00/*7680*/,0x1eff/*7935*/,0}},	//Latin Extended Additional
+{"greek_extended",
+	{0,0,0,0x1f00/*7936*/,0x1fff/*8191*/,0}},	//Greek Extended
+{"general_punctuation",
+	{0,0,0,0x2000/*8192*/,0x206f/*8303*/,0}},	//General Punctuation
+{"superscripts_and_subscripts",
+	{0,0,0,0x2070/*8304*/,0x209f/*8351*/,0}},	//Superscripts and Subscripts
+{"currency_symbols",
+	{0,0,0,0x20a0/*8352*/,0x20cf/*8399*/,0}},	//Currency Symbols
+{"combining_diacritical_marks_for_symbols",
+	{0,0,0,0x20d0/*8400*/,0x20ff/*8447*/,0}},	//Combining Diacritical Marks for Symbols
+{"letterlike_symbols",
+	{0,0,0,0x2100/*8448*/,0x214f/*8527*/,0}},	//Letterlike Symbols
+{"number_forms",
+	{0,0,0,0x2150/*8528*/,0x218f/*8591*/,0}},	//Number Forms
+{"arrows",
+	{0,0,0,0x2190/*8592*/,0x21ff/*8703*/,0}},	//Arrows
+{"mathematical_operators",
+	{0,0,0,0x2200/*8704*/,0x22ff/*8959*/,0}},	//Mathematical Operators
+{"miscellaneous_technical",
+	{0,0,0,0x2300/*8960*/,0x23ff/*9215*/,0}},	//Miscellaneous Technical
+{"control_pictures",
+	{0,0,0,0x2400/*9216*/,0x243f/*9279*/,0}},	//Control Pictures
+{"optical_character_recognition",
+	{0,0,0,0x2440/*9280*/,0x245f/*9311*/,0}},	//Optical Character Recognition
+{"enclosed_alphanumerics",
+	{0,0,0,0x2460/*9312*/,0x24ff/*9471*/,0}},	//Enclosed Alphanumerics
+{"box_drawing",
+	{0,0,0,0x2500/*9472*/,0x257f/*9599*/,0}},	//Box Drawing
+{"block_elements",
+	{0,0,0,0x2580/*9600*/,0x259f/*9631*/,0}},	//Block Elements
+{"geometric_shapes",
+	{0,0,0,0x25a0/*9632*/,0x25ff/*9727*/,0}},	//Geometric Shapes
+{"miscellaneous_symbols",
+	{0,0,0,0x2600/*9728*/,0x26ff/*9983*/,0}},	//Miscellaneous Symbols
+{"dingbats",
+	{0,0,0,0x2700/*9984*/,0x27bf/*10175*/,0}},	//Dingbats
+{"miscellaneous_mathematical_symbols_a",
+	{0,0,0,0x27c0/*10176*/,0x27ef/*10223*/,0}},	//Miscellaneous Mathematical Symbols-A
+{"supplemental_arrows_a",
+	{0,0,0,0x27f0/*10224*/,0x27ff/*10239*/,0}},	//Supplemental Arrows-A
+{"braille_patterns",
+	{0,0,0,0x2800/*10240*/,0x28ff/*10495*/,0}},	//Braille Patterns
+{"supplemental_arrows_b",
+	{0,0,0,0x2900/*10496*/,0x297f/*10623*/,0}},	//Supplemental Arrows-B
+{"miscellaneous_mathematical_symbols_b",
+	{0,0,0,0x2980/*10624*/,0x29ff/*10751*/,0}},	//Miscellaneous Mathematical Symbols-B
+{"supplemental_mathematical_operators",
+	{0,0,0,0x2a00/*10752*/,0x2aff/*11007*/,0}},	//Supplemental Mathematical Operators
+{"miscellaneous_symbols_and_arrows",
+	{0,0,0,0x2b00/*11008*/,0x2bff/*11263*/,0}},	//Miscellaneous Symbols and Arrows
+{"glagolitic",
+	{0,0,0,0x2c00/*11264*/,0x2c5f/*11359*/,0}},	//Glagolitic
+{"latin_extended_c",
+	{0,0,0,0x2c60/*11360*/,0x2c7f/*11391*/,0}},	//Latin Extended-C
+{"coptic",
+	{0,0,0,0x2c80/*11392*/,0x2cff/*11519*/,0}},	//Coptic
+{"georgian_supplement",
+	{0,0,0,0x2d00/*11520*/,0x2d2f/*11567*/,0}},	//Georgian Supplement
+{"tifinagh",
+	{0,0,0,0x2d30/*11568*/,0x2d7f/*11647*/,0}},	//Tifinagh
+{"ethiopic_extended",
+	{0,0,0,0x2d80/*11648*/,0x2ddf/*11743*/,0}},	//Ethiopic Extended
+{"cyrillic_extended_a",
+	{0,0,0,0x2de0/*11744*/,0x2dff/*11775*/,0}},	//Cyrillic Extended-A
+{"supplemental_punctuation",
+	{0,0,0,0x2e00/*11776*/,0x2e7f/*11903*/,0}},	//Supplemental Punctuation
+{"cjk_radicals_supplement",
+	{0,0,0,0x2e80/*11904*/,0x2eff/*12031*/,0}},	//CJK Radicals Supplement
+{"kangxi_radicals",
+	{0,0,0,0x2f00/*12032*/,0x2fdf/*12255*/,0}},	//Kangxi Radicals
+{"ideographic_description_characters",
+	{0,0,0,0x2ff0/*12272*/,0x2fff/*12287*/,0}},	//Ideographic Description Characters
+{"cjk_symbols_and_punctuation",
+	{0,0,0,0x3000/*12288*/,0x303f/*12351*/,0}},	//CJK Symbols and Punctuation
+{"bopomofo",
+	{0,0,0,0x3100/*12544*/,0x312f/*12591*/,0}},	//Bopomofo
+{"hangul_compatibility_jamo",
+	{0,0,0,0x3130/*12592*/,0x318f/*12687*/,0}},	//Hangul Compatibility Jamo
+{"kanbun",
+	{0,0,0,0x3190/*12688*/,0x319f/*12703*/,0}},	//Kanbun
+{"bopomofo_extended",
+	{0,0,0,0x31a0/*12704*/,0x31bf/*12735*/,0}},	//Bopomofo Extended
+{"cjk_strokes",
+	{0,0,0,0x31c0/*12736*/,0x31ef/*12783*/,0}},	//CJK Strokes
+{"katakana_phonetic_extensions",
+	{0,0,0,0x31f0/*12784*/,0x31ff/*12799*/,0}},	//Katakana Phonetic Extensions
+{"enclosed_cjk_letters_and_months",
+	{0,0,0,0x3200/*12800*/,0x32ff/*13055*/,0}},	//Enclosed CJK Letters and Months
+{"cjk_compatibility",
+	{0,0,0,0x3300/*13056*/,0x33ff/*13311*/,0}},	//CJK Compatibility
+{"cjk_unified_ideographs_extension_a",
+	{0,0,0,0x3400/*13312*/,0x4db5/*19893*/,0}},	//CJK Unified Ideographs Extension A
+{"yijing_hexagram_symbols",
+	{0,0,0,0x4dc0/*19904*/,0x4dff/*19967*/,0}},	//Yijing Hexagram Symbols
+{"cjk_unified_ideographs",
+	{0,0,0,0x4e00/*19968*/,0x9fcc/*40908*/,0}},	//CJK Unified Ideographs
+{"yi_syllables",
+	{0,0,0,0xa000/*40960*/,0xa48f/*42127*/,0}},	//Yi Syllables
+{"yi_radicals",
+	{0,0,0,0xa490/*42128*/,0xa4cf/*42191*/,0}},	//Yi Radicals
+{"lisu",
+	{0,0,0,0xa4d0/*42192*/,0xa4ff/*42239*/,0}},	//Lisu
+{"vai",
+	{0,0,0,0xa500/*42240*/,0xa63f/*42559*/,0}},	//Vai
+{"cyrillic_extended_b",
+	{0,0,0,0xa640/*42560*/,0xa69f/*42655*/,0}},	//Cyrillic Extended-B
+{"bamum",
+	{0,0,0,0xa6a0/*42656*/,0xa6ff/*42751*/,0}},	//Bamum
+{"modifier_tone_letters",
+	{0,0,0,0xa700/*42752*/,0xa71f/*42783*/,0}},	//Modifier Tone Letters
+{"latin_extended_d",
+	{0,0,0,0xa720/*42784*/,0xa7ff/*43007*/,0}},	//Latin Extended-D
+{"syloti_nagri",
+	{0,0,0,0xa800/*43008*/,0xa82f/*43055*/,0}},	//Syloti Nagri
+{"common_indic_number_forms",
+	{0,0,0,0xa830/*43056*/,0xa83f/*43071*/,0}},	//Common Indic Number Forms
+{"phags_pa",
+	{0,0,0,0xa840/*43072*/,0xa87f/*43135*/,0}},	//Phags-pa
+{"saurashtra",
+	{0,0,0,0xa880/*43136*/,0xa8df/*43231*/,0}},	//Saurashtra
+{"devanagari_extended",
+	{0,0,0,0xa8e0/*43232*/,0xa8ff/*43263*/,0}},	//Devanagari Extended
+{"kayah_li",
+	{0,0,0,0xa900/*43264*/,0xa92f/*43311*/,0}},	//Kayah Li
+{"rejang",
+	{0,0,0,0xa930/*43312*/,0xa95f/*43359*/,0}},	//Rejang
+{"hangul_jamo_extended_a",
+	{0,0,0,0xa960/*43360*/,0xa97f/*43391*/,0}},	//Hangul Jamo Extended-A
+{"javanese",
+	{0,0,0,0xa980/*43392*/,0xa9df/*43487*/,0}},	//Javanese
+{"myanmar_extended_b",
+	{0,0,0,0xa9e0/*43488*/,0xa9ff/*43519*/,0}},	//Myanmar Extended-B
+{"cham",
+	{0,0,0,0xaa00/*43520*/,0xaa5f/*43615*/,0}},	//Cham
+{"myanmar_extended_a",
+	{0,0,0,0xaa60/*43616*/,0xaa7f/*43647*/,0}},	//Myanmar Extended-A
+{"tai_viet",
+	{0,0,0,0xaa80/*43648*/,0xaadf/*43743*/,0}},	//Tai Viet
+{"meetei_mayek_extensions",
+	{0,0,0,0xaae0/*43744*/,0xaaff/*43775*/,0}},	//Meetei Mayek Extensions
+{"ethiopic_extended_a",
+	{0,0,0,0xab00/*43776*/,0xab2f/*43823*/,0}},	//Ethiopic Extended-A
+{"latin_extended_e",
+	{0,0,0,0xab30/*43824*/,0xab6f/*43887*/,0}},	//Latin Extended-E
+{"meetei_mayek",
+	{0,0,0,0xabc0/*43968*/,0xabff/*44031*/,0}},	//Meetei Mayek
+{"hangul_syllables",
+	{0,0,0,0xac00/*44032*/,0xd7a3/*55203*/,0}},	//Hangul Syllables
+{"hangul_jamo_extended_b",
+	{0,0,0,0xd7b0/*55216*/,0xd7ff/*55295*/,0}},	//Hangul Jamo Extended-B
+{"high_surrogates",
+	{0,0,0,0xd800/*55296*/,0xdb7f/*56191*/,0}},	//High Surrogates
+{"high_private_use_surrogates",
+	{0,0,0,0xdb80/*56192*/,0xdbff/*56319*/,0}},	//High Private Use Surrogates
+{"low_surrogates",
+	{0,0,0,0xdc00/*56320*/,0xdfff/*57343*/,0}},	//Low Surrogates
+{"private_use_area",
+	{0,0,0,0xe000/*57344*/,0xf8ff/*63743*/,0}},	//Private Use Area
+{"cjk_compatibility_ideographs",
+	{0,0,0,0xf900/*63744*/,0xfaff/*64255*/,0}},	//CJK Compatibility Ideographs
+{"alphabetic_presentation_forms",
+	{0,0,0,0xfb00/*64256*/,0xfb4f/*64335*/,0}},	//Alphabetic Presentation Forms
+{"arabic_presentation_forms_a",
+	{0,0,0,0xfb50/*64336*/,0xfdff/*65023*/,0}},	//Arabic Presentation Forms-A
+{"variation_selectors",
+	{0,0,0,0xfe00/*65024*/,0xfe0f/*65039*/,0}},	//Variation Selectors
+{"vertical_forms",
+	{0,0,0,0xfe10/*65040*/,0xfe1f/*65055*/,0}},	//Vertical Forms
+{"combining_half_marks",
+	{0,0,0,0xfe20/*65056*/,0xfe2f/*65071*/,0}},	//Combining Half Marks
+{"cjk_compatibility_forms",
+	{0,0,0,0xfe30/*65072*/,0xfe4f/*65103*/,0}},	//CJK Compatibility Forms
+{"small_form_variants",
+	{0,0,0,0xfe50/*65104*/,0xfe6f/*65135*/,0}},	//Small Form Variants
+{"arabic_presentation_forms_b",
+	{0,0,0,0xfe70/*65136*/,0xfeff/*65279*/,0}},	//Arabic Presentation Forms-B
+{"halfwidth_and_fullwidth_forms",
+	{0,0,0,0xff00/*65280*/,0xffef/*65519*/,0}},	//Halfwidth and Fullwidth Forms
+{"specials",
+	{0,0,0,0xfff0/*65520*/,0xffff/*65535*/,0}},	//Specials

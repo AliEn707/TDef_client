@@ -243,7 +243,7 @@ static inline int recvPlayerMap(){
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
 		recvMap(config.map.players[id].base_health);
 	}
-	if(checkMask(bit_mask,PLAYER_MONEY) || checkMask(bit_mask,PLAYER_CREATE)){
+	if(checkMask(bit_mask,PLAYER_MONEY)){
 		recvMap(config.map.players[id].money);
 		printf("player money %d \n",config.map.players[id].money);
 	}
