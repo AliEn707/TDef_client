@@ -27,21 +27,21 @@ int textureFrameNext(texture *t){
 	return 0;
 }
 
-void drawText(char2* text){
+void drawText(char2* text,float width){
 //	glPushMatrix();		
 //	glScalef(15,15,1);
 //	glTranslatef(0,glFontHeight(&mainfont,text),0);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(text,0,0);
+	glFontTextOut(text,0,0,width);
 //	glPopMatrix();
 }
 
-void drawTextCentered(char2* text){
+void drawTextCentered(char2* text,float width){
 	glPushMatrix();		
 //	glScalef(15,15,1);
 	glTranslatef(-glFontWigth(text)/2,0,0);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(text,0,0);
+	glFontTextOut(text,0,0,width);
 	glPopMatrix();
 }
 
@@ -90,7 +90,7 @@ void drawCursor(){
 				End();
 					glEnable(GL_TEXTURE_2D);
 					Color4f(1.0f, 1.0f, 1.0f,1.0f);
-					drawText(cur_text);
+					drawText(cur_text,0);
 			glPopMatrix();
 		}
 }
@@ -213,9 +213,9 @@ wirebreak:
 			glScalef(e->text_size,e->text_size,1);
 		glTranslatef(0,glFontHeight(text),0);
 		if (e->text_centered!=0)
-			drawTextCentered(text);
+			drawTextCentered(text,e->size.x-e->text_position.x*2);
 		else
-			drawText(text);
+			drawText(text,e->size.x-e->text_position.x*2);
 exit:
 	glPopMatrix();
 }
@@ -459,7 +459,7 @@ static inline void drawNpc(npc* n){
 			glScalef(0.011,0.011,1);
 			char buf[5];
 			sprintf(buf,"%hd",n->level);
-			drawText(localeTextGet(buf));
+			drawText(localeTextGet(buf),0);
 //		glPopMatrix();
 		
 	glPopMatrix();
@@ -525,7 +525,7 @@ static inline void drawTower(tower* t){
 			glScalef(0.0075,0.0075,1);
 			char buf[5];
 			sprintf(buf,"%d",t->level);
-			drawText(localeTextGet(buf));
+			drawText(localeTextGet(buf),0);
 //		glPopMatrix();
 	glPopMatrix();
 }
@@ -939,7 +939,7 @@ void drawMessage(){
 	glPushMatrix();
 		glTranslatef(config.options.window.width/2.0,config.options.window.height/2.0+100,0);	
 		//glScalef(15,15,1);	
-		drawTextCentered(localeTextGet(config.message));
+		drawTextCentered(localeTextGet(config.message),0);
 	glPopMatrix();
 	if (++config.message_ticks>800){
 		config.message_ticks=0;
@@ -956,9 +956,10 @@ static inline void drawFrameTime(){
 	glScalef(0.85,0.85,1);
 	Color4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
-	glFontTextOut(localeTextGet(buf),2,20);
+	glFontTextOut(localeTextGet(buf),2,20,0);
+	///
 	char2 t[15]={0xdf,0x41f,0x440,0x438,0x432,0x435,0x422,0xdf,'5',0};
-	glFontTextOut(t,200,20);
+	glFontTextOut(t,200,20,0);
 }
 
 void drawHash(void * c_c){

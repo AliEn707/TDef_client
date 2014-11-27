@@ -91,8 +91,12 @@ void localeTexSet(char2 chr){
 */
 int localeLoad(char * path){
 	FILE *file; 
-	if((file = fopen(path, "rb"))==0)
+	char fullpath[100];
+	sprintf(fullpath,"../locale/%s",path);
+	if((file = fopen(fullpath, "rb"))==0){
 		perror("fopen localeLoad");
+		return 0;
+	}
 	char2 tmp[500];
 	char *key;
 	char2 chr;
@@ -127,7 +131,7 @@ int localeLoad(char * path){
 				if(localeTextSet(key,value)!=0)
 					perror("add locale text");
 				
-				printf("add %s \n",key);
+//				printf("add %s \n",key);
 				have_key=0;
 				i=0;
 			}

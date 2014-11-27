@@ -124,16 +124,17 @@ void glFontEnd (void)
 #define size 0.626f //0.72f/*16*/ //0.66f /*17*/
 #define  glFont_TexWidth  glFont->TexWidth*size
 #define  glFont_TexHeight  glFont->TexHeight*size
-
-void glFontTextOut (char2 *String, float x, float y)
+#define  glFont_TexDensity  0.6f
+#define c2blank 0x0020
+void glFontTextOut (char2 *String, float x, float y, float width)
 {
 	int i;
 //	float height=0;
-//	float _x=x;
+	float _x=x;
 	GLFONTCHAR *Char;
 	GLFONT *glFont,*_glFont;
 	float _width, _height;
-	
+	float height=0;
 	//Return if we don't have a valid glFont 
 //	if (glFont == NULL)
 //		return;
@@ -146,7 +147,7 @@ void glFontTextOut (char2 *String, float x, float y)
 	}	
 	//Begin rendering quads
 	Begin(GL_TRIANGLE_STRIP);
-		
+	int limiter=0;
 	//Loop through characters
 	for (i = 0; String[i] !=0; i++)
 	{
@@ -163,12 +164,43 @@ void glFontTextOut (char2 *String, float x, float y)
 				glFontCreate (glFont,localeFontPath(String[i]));
 			glBindTexture(GL_TEXTURE_2D, glFont->Tex);
 			Begin(GL_TRIANGLE_STRIP);
+		}
+		if (i==limiter && width!=0){
+			//find end of line
+			int j;
+			float $line=0;
+			GLFONT *__glFont;
+			for (j=i;String[j]!=0;j++){
+				__glFont=localeFontGet(String[j]);
+				Char = &__glFont->Char[(int)String[j] -
+							__glFont->IntStart];
+				_width = Char->dx * glFont_TexWidth;
+				if ($line+_width>width){
+					if (String[j]!=c2blank){
+						for (;String[j]!=c2blank && j>=i;j--);
+					}
+					limiter=j;
+					if (String[limiter]==c2blank)
+						limiter++;
+					break;
+				}
+				$line+=_width;
+				limiter=j;
+			}
+			//add new line
+			if (limiter!=i){
+				End();
+				Begin(GL_TRIANGLE_STRIP);
+				y-=height*glFont_TexDensity;
+				x=_x;
+			}
 			
+//			printf("limiter %d \n",limiter);
 		}
 //		printf("0x%x %d\n",String[i],glFont->IntStart);
 		//Get pointer to glFont character
 		Char = &glFont->Char[(int)String[i] -
-			glFont->IntStart];
+					glFont->IntStart];
 		//Get width and height
 		_width = Char->dx * glFont_TexWidth;
 		_height =  Char->dy * glFont_TexHeight;
@@ -182,16 +214,16 @@ void glFontTextOut (char2 *String, float x, float y)
 		Vertex2f(x + _width, y);
 		TexCoord2f(Char->tx2, Char->ty2);
 		Vertex2f(x + _width, y - _height);
-		
+		height=_height>height?_height:height;
 //		if (height<_height)
 //			height=_height;
 		//Move to next character
 		x += _width;
-		
+//		printf("x= %g\n",x);
 	}
 	//Stop rendering quads
 	End();
-	
+//	SDL_Delay(500);
 	
 }
 //*********************************************************

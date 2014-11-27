@@ -863,8 +863,9 @@ void loadFiles(){
 	
 	
 //	loadMap("test");
+	//add load config
 	//load locales
-	//localeLoad("locale/testutf16.txt");
+	localeLoad("en.txt");
 }
 
 void setTestData(){
