@@ -1,5 +1,5 @@
 
 
 
-GLuint loadTGATexture (const char *filename);
+GLuint loadTGATexture(FILE* fp);
 

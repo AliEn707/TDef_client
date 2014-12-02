@@ -373,14 +373,16 @@ void cursorInit(){
 
 
 
-int loadGlobalTexture(char * path){
-	config.textures[config.textures_size]=loadTGATexture(path);
+int loadGlobalTexture(FILE * path){
+	if ((config.textures[config.textures_size]=loadTGATexture(path))==0)
+		return 0;
 	return config.textures[config.textures_size++];
 }
 
 
-int loadMapTexture(char * path){
-	config.map.textures[config.map.textures_size]=loadTGATexture(path);
+int loadMapTexture(FILE * path){
+	if ((config.map.textures[config.map.textures_size]=loadTGATexture(path))==0)
+		return 0;
 	return config.map.textures[config.map.textures_size++];
 }
 

@@ -657,16 +657,16 @@ ReadTGAFile (FILE *fp)
 
 
 GLuint
-loadTGATexture (const char *filename)
+loadTGATexture (FILE* fp)
 {
 	int i;
   gl_texture_t *tga_tex = NULL;
   GLuint tex_id = 0;
-  FILE* fp;
-  fp = fopen (filename, "rb");
+//  FILE* fp;
+//  fp = fopen (filename, "rb");
   if (!fp)
     {
-      fprintf (stderr, "error: couldn't open \"%s\"!\n", filename);
+//      fprintf (stderr, "error: couldn't open \"%s\"!\n", filename);
       return 0;
     }
 
@@ -706,119 +706,3 @@ loadTGATexture (const char *filename)
   return tex_id;
 }
 
-/*
-void
-init (const char *filename)
-{
-  // init OpenGL 
-  glClearColor (0.5f, 0.5f, 0.5f, 1.0f);
-  glShadeModel (GL_SMOOTH);
-
-  glEnable (GL_DEPTH_TEST);
-
-  glEnable (GL_BLEND);
-  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  // load tga texture 
-  if ( !(texId = loadTGATexture (filename)))
-    {
-      exit (-1);
-    }
-}
-
-
-void
-shutdownApp (void)
-{
-  glDeleteTextures (1, &texId);
-}
-
-
-void
-reshape (int w, int h)
-{
-  if (h == 0)
-    h = 1;
-
-  glViewport (0, 0, (GLsizei)w, (GLsizei)h);
-
-  glMatrixMode (GL_PROJECTION);
-  glLoadIdentity ();
-  gluPerspective (45.0, (GLfloat)w/(GLfloat)h, 0.1, 1000.0);
-
-  glMatrixMode (GL_MODELVIEW);
-  glLoadIdentity ();
-
-  glutPostRedisplay ();
-}
-
-
-void
-display (void)
-{
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glLoadIdentity ();
-
-  glEnable (GL_TEXTURE_2D);
-  glBindTexture (GL_TEXTURE_2D, texId);
-
-  // draw quad 
-  glTranslatef (0.0, 0.0, -5.0);
-  glBegin (GL_TRIANGLE_FAN);
-    glTexCoord2f (0.0f, 0.0f);
-    glVertex3f (-1.0f, -1.0f, 0.0f);
-
-    glTexCoord2f (1.0f, 0.0f);
-    glVertex3f (1.0f, -1.0f, 0.0f);
-
-    glTexCoord2f (1.0f, 1.0f);
-    glVertex3f (1.0f, 1.0f, 0.0f);
-
-    glTexCoord2f (0.0f, 1.0f);
-    glVertex3f (-1.0f, 1.0f, 0.0f);
-  glEnd  ();
-
-  glDisable (GL_TEXTURE_2D);
-
-  glutSwapBuffers ();
-}
-
-
-void
-keyboard (unsigned char key, int x, int y)
-{
-  switch (key)
-    {
-    case 27: // escape 
-      exit(0);
-      break;
-    }
-}
-
-
-int
-main (int argc, char *argv[])
-{
-  if (argc < 2)
-    {
-      fprintf (stderr, "usage: %s filename.tga\n", argv[0]);
-      return -1;
-    }
-
-  glutInit (&argc, argv);
-  glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-  glutInitWindowSize (640, 480);
-  glutCreateWindow ("TGA Texture Demo");
-
-  atexit (shutdownApp);
-  init (argv[1]);
-
-  glutReshapeFunc (reshape);
-  glutDisplayFunc (display);
-  glutKeyboardFunc (keyboard);
-
-  glutMainLoop ();
-
-  return 0;
-}
-*/

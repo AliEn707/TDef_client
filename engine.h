@@ -33,9 +33,9 @@ void checkCursorBorder();
 
 int getNewTexture();
 
-int loadGlobalTexture(char * path);
+int loadGlobalTexture(FILE * path);
 
-int loadMapTexture(char * path);
+int loadMapTexture(FILE * path);
 
 void processEvent(SDL_Event event);
 

@@ -789,17 +789,54 @@ void realizeTypes(){
 	free(config.splash_types);
 }
 
+static inline void parseTexArg(char* str,texture * t){
+	sscanf(str, "frames %d\n",&t->frames);
+	sscanf(str, "loop %hd\n",&t->loop);
+	sscanf(str, "lfdelay %hd\n",&t->lf_delay);
+	sscanf(str, "fddelay %hd\n",&t->fd_delay);
+}
 
-int loadTex(texture * t, char * path, int(load)(char * path)){
+int loadTex(texture * t, char * path, int(load)(FILE * f)){
 	FILE* file;
 	char fullpath[200];
 	if (path==0)
 		goto out;
 	if (*path==0)
 		goto out;
-	//try to load zip
-//	sprintf(fullpath,"../textures/%s.zip",path);
-//	fmemopen to open memory stream	
+	//try to load tar
+	sprintf(fullpath,"../textures/%s.tar",path);
+//	fmemopen to open memory stream
+	if ((file=fopen(fullpath,"rb"))!=0){
+		int size;
+		//TODO: add normal tar loader
+		if (untar(file,"info.cfg",&size)>0){
+			int i;
+			char buf[150];
+			while(size>0){
+				memset(buf,0,sizeof(buf));
+				fgets(buf,sizeof(buf),file);
+				size-=strlen(buf);
+				parseTexArg(buf,t);
+			}
+			//try to read tga data
+			for(i=0;i<t->frames;i++){
+				sprintf(buf,"%d.tga",i+1);//start on 1
+//				printf("try %s\n",buf);
+//				clearerr(file);
+//				fseek(file,0L,SEEK_SET);	
+				//TODO: change to fseek or another
+				fclose (file);
+				file=fopen(fullpath,"rb");
+				if (untar(file, buf, &size)>0){
+//					printf("find %s\n",buf);
+					t->tex[i]=load(file);
+				}
+			}
+		}
+		
+		fclose (file);
+		return 1;
+	}		
 	//try to load cfg
 	sprintf(fullpath,"../textures/%s.cfg",path);
 	if ((file=fopen(fullpath,"r"))!=0){
@@ -807,33 +844,33 @@ int loadTex(texture * t, char * path, int(load)(char * path)){
 		char buf[150];
 		int i;
 		while(feof(file)==0){
-			fscanf(file,"%s ",buf);
-			if (strcmp(buf,"frames")==0)
-				fscanf(file,"%d\n",&t->frames);
-			if (strcmp(buf,"loop")==0)
-				fscanf(file,"%hd\n",&t->loop);
-			if (strcmp(buf,"lfdelay")==0)
-				fscanf(file,"%hd\n",&t->lf_delay);
-			if (strcmp(buf,"fddelay")==0)
-				fscanf(file,"%hd\n",&t->fd_delay);
+			fgets(buf,sizeof(buf),file);
+			parseTexArg(buf,t);
 			//another stuff
 		}
+		fclose(file);
 		for(i=0;i<t->frames;i++){
 			sprintf(buf,"../textures/%s%d.tga",path,i+1);
-			t->tex[i]=load(buf);
+			if ((file=fopen(buf,"rb"))!=0){
+				t->tex[i]=load(file);
+				fclose(file);
+			} //TODO: check if no frames
 		}
-		fclose(file);
 		return 1;
 	}
 	//try to load tga
 	sprintf(fullpath,"../textures/%s.tga",path);
 	int tex;
-	if ((tex=load(fullpath))!=0){
-		t->frames=1;
-		t->tex[0]=tex;
+	if ((file=fopen(fullpath,"rb"))!=0){
+		if ((tex=load(file))!=0){
+			t->frames=1;
+			t->tex[0]=tex;
+		}
+		fclose(file);
 		return 1;
 	}
 out:
+	printf("error: couldn't open \"%s\"!\n", path);
 	memcpy(t,&config.map.tex[ERROR_T],sizeof(texture));
 	return 0;
 }
