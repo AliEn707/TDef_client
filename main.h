@@ -516,14 +516,14 @@ struct g_config{
 	int global_tex[MAX_TEX_GLOBAL];
 	int global_count;
 	
-	unsigned int tower_types_size;
-		tower_type* tower_types;
-	unsigned int npc_types_size;
-		npc_type* npc_types;
-	unsigned int bullet_types_size;
-		bullet_type* bullet_types;
-	unsigned int splash_types_size;
-		splash_type* splash_types;
+//	unsigned int tower_types_size;
+//		tower_type* tower_types;
+//	unsigned int npc_types_size;
+//		npc_type* npc_types;
+//	unsigned int bullet_types_size;
+//		bullet_type* bullet_types;
+//	unsigned int splash_types_size;
+//		splash_type* splash_types;
 		
 	
 	SDL_Thread* drawer;

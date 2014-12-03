@@ -217,8 +217,10 @@ static inline int recvBulletMap(){
 //		recvMap(b->destination);
 	}
 	//need to to correct solid, may be...
-	if (config.bullet_types[b->type].solid!=0)
-		memset(&b->direction,0,sizeof(vec2));
+	bullet_type* type=typesBulletGet(b->type);
+	if (type!=0)
+		if (type->solid!=0)
+			memset(&b->direction,0,sizeof(vec2));
 	
 	if(checkMask(bit_mask,BULLET_DETONATE)){
 		recvMap(b->detonate);

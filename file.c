@@ -274,16 +274,16 @@ void loadMap(char* path){
 //		config.map.textures_size=0;
 //	}
 	sprintf(fullpath,"../maps/%s.mp",path);
-	if ((file=fopen(fullpath,"r"))==0){
+	if ((file=fopen(fullpath,"rt"))==0){
 		perror("fopen loadMap");
 		return;
 	}
 	char buf[100];
 	int size;
 	fscanf(file,"%d\n",&size);
-	if ((grid=malloc(sizeof(gnode)*size*size))==0)
+	if ((grid=malloc(sizeof(gnode)*(size*size+1)))==0)
 		perror("malloc grid loadMap");
-	memset(grid,0,sizeof(gnode)*size*size);
+	memset(grid,0,sizeof(gnode)*(size*size+1));
 	char* walk;
 	char* build;
 	if((walk=malloc((size*size+1)*sizeof(char)))==0)
@@ -369,7 +369,7 @@ void loadMapGrafics(char* path){
 	FILE * file;
 	char fullpath[300];
 	int i,j;
-	char buf[100];
+	char buf[150];
 	printf("load map grafics....");
 	if (config.map.grid_size==0 || config.map.grid==0){
 		printf("error\n");
@@ -377,7 +377,7 @@ void loadMapGrafics(char* path){
 	}
 		
 	sprintf(fullpath,"../maps/%s.mg",path);
-	if ((file=fopen(fullpath,"r"))==0){
+	if ((file=fopen(fullpath,"rt"))==0){
 		perror("fopen loadMap");
 		return;
 	}
@@ -484,6 +484,10 @@ void loadTypes(char * filepath){
 	FILE * file;
 //	printf("loading configuration\n");
 	int TPS=40;
+	npc_type* n_n;
+	tower_type* t_t;
+	bullet_type* b_b;
+	splash_type* s_s;
 	if ((file=fopen(filepath,"r"))==0) 
 		perror("fopen loadTypes");
 	char buf[100];
@@ -495,23 +499,31 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"TOWER_TYPE")==0){
 			int tmp;
 			fscanf(file,"%d\n",&tmp);
-			if((config.tower_types=malloc(sizeof(tower_type)*(tmp+1)))==0)
+//			if((config.tower_types=malloc(sizeof(tower_type)*(tmp+1)))==0)
+//				perror("malloc tower loadTypes");
+			if((t_t=malloc(sizeof(tower_type)))==0)
 				perror("malloc tower loadTypes");
 			continue;
 		}
 		if (strcmp(buf,"NPC_TYPE")==0){
 			int tmp;
 			fscanf(file,"%d\n",&tmp);
-			if((config.npc_types=malloc(sizeof(npc_type)*(tmp+1)))==0)
+//			if((config.npc_types=malloc(sizeof(npc_type)*(tmp+1)))==0)
+//				perror("malloc npc loadTypes");
+			if((n_n=malloc(sizeof(npc_type)))==0)
 				perror("malloc npc loadTypes");
+			
 			break;
 		}
 		if (strcmp(buf,"texidle")==0){
-			fscanf(file,"%s\n",config.tower_types[i].tex_path[TEX_IDLE]);
+			fscanf(file,"%s\n",t_t->tex_path[TEX_IDLE]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			i++;
+			typesTowerAdd(t_t->id,t_t);
+			if((t_t=malloc(sizeof(tower_type)))==0)
+				perror("malloc tower loadTypes");
 			continue;
 		}
 		if (strcmp(buf,"name")==0){
@@ -519,58 +531,58 @@ void loadTypes(char * filepath){
 			continue;
 		}
 		if (strcmp(buf,"id")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].id);
+			fscanf(file,"%d\n",&t_t->id);
 			continue;
 		}
 		if (strcmp(buf,"health")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].health);
+			fscanf(file,"%d\n",&t_t->health);
 			continue;
 		}
 		if (strcmp(buf,"damage")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].damage);
+			fscanf(file,"%d\n",&t_t->damage);
 			continue;
 		}
 		if (strcmp(buf,"energy")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].energy);
+			fscanf(file,"%d\n",&t_t->energy);
 			continue;
 		}
 		if (strcmp(buf,"shield")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].shield);
+			fscanf(file,"%d\n",&t_t->shield);
 			continue;
 		}
 		if (strcmp(buf,"attack_distanse")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].distanse);
+			fscanf(file,"%d\n",&t_t->distanse);
 			continue;
 		}
 		if (strcmp(buf,"attack_speed")==0){
 			float tmp;
 			fscanf(file,"%f\n",&tmp);
-			config.tower_types[i].attack_speed=TPS/tmp;
+			t_t->attack_speed=TPS/tmp;
 			continue;
 		}
 		if (strcmp(buf,"cost")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].cost);
+			fscanf(file,"%d\n",&t_t->cost);
 			continue;
 		}
 		if (strcmp(buf,"ignor_type")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].ignor_type);
+			fscanf(file,"%d\n",&t_t->ignor_type);
 			continue;
 		}
 		if (strcmp(buf,"prior_type")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].prior_type);
+			fscanf(file,"%d\n",&t_t->prior_type);
 			continue;
 		}
 		if (strcmp(buf,"bullet_type")==0){
-			fscanf(file,"%d\n",&config.tower_types[i].bullet_type);
+			fscanf(file,"%d\n",&t_t->bullet_type);
 			continue;
 		}
 		if (strcmp(buf,"tex_size")==0){
-			fscanf(file,"%f\n",&config.tower_types[i].t_size);
+			fscanf(file,"%f\n",&t_t->t_size);
 			continue;
 		}
 		
 	}
-	config.tower_types_size=i;
+//	config.tower_types_size=i;
 //	printf("\t\t%d\n",config.tower_types_size);
 	i=1;
 	while(feof(file)==0){
@@ -580,64 +592,69 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"BULLET_TYPE")==0){
 			int tmp;
 			fscanf(file,"%d\n",&tmp);
-			if((config.bullet_types=malloc(sizeof(bullet_type)*(tmp+1)))==0)
+//			if((config.bullet_types=malloc(sizeof(bullet_type)*(tmp+1)))==0)
+//				perror("malloc bullet loadTypes");
+			if((b_b=malloc(sizeof(bullet_type)))==0)
 				perror("malloc bullet loadTypes");
 			break;
 		}
 		if (strcmp(buf,"texidle")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_IDLE]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_IDLE]);
 		}
 		if (strcmp(buf,"texwalkleft")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_LEFT]);
 		}
 		if (strcmp(buf,"texwalkleftup")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT_UP]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_LEFT_UP]);
 		}
 		if (strcmp(buf,"texwalkleftdown")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_LEFT_DOWN]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_LEFT_DOWN]);
 		}
 		if (strcmp(buf,"texwalkright")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_RIGHT]);
 		}
 		if (strcmp(buf,"texwalkrightup")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT_UP]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_RIGHT_UP]);
 		}
 		if (strcmp(buf,"texwalkrightdown")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_RIGHT_DOWN]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_RIGHT_DOWN]);
 		}
 		if (strcmp(buf,"texwalkup")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_UP]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_UP]);
 		}
 		if (strcmp(buf,"texwalkdown")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_WALK_DOWN]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_WALK_DOWN]);
 		}
 		if (strcmp(buf,"texattackleft")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_LEFT]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_LEFT]);
 		}
 		if (strcmp(buf,"texattackright")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_RIGHT]);
 		}
 		if (strcmp(buf,"texattackleftup")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_LEFT_UP]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_LEFT_UP]);
 		}
 		if (strcmp(buf,"texattackleftdown")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_LEFT_DOWN]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_LEFT_DOWN]);
 		}
 		if (strcmp(buf,"texattackrightup")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT_UP]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_RIGHT_UP]);
 		}
 		if (strcmp(buf,"texattackrightdown")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_RIGHT_DOWN]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_RIGHT_DOWN]);
 		}
 		if (strcmp(buf,"texattackup")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_UP]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_UP]);
 		}
 		if (strcmp(buf,"texattackdown")==0){
-			fscanf(file,"%s\n",config.npc_types[i].tex_path[TEX_ATTACK_DOWN]);
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_DOWN]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			i++;
+			typesNpcAdd(n_n->id,n_n);
+			if((n_n=malloc(sizeof(npc_type)))==0)
+				perror("malloc npc loadTypes");
 			continue;
 		}
 		if (strcmp(buf,"name")==0){
@@ -645,68 +662,68 @@ void loadTypes(char * filepath){
 			continue;
 		}
 		if (strcmp(buf,"id")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].id);
+			fscanf(file,"%d\n",&n_n->id);
 			continue;
 		}
 		if (strcmp(buf,"health")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].health);
+			fscanf(file,"%d\n",&n_n->health);
 			continue;
 		}
 		if (strcmp(buf,"damage")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].damage);
+			fscanf(file,"%d\n",&n_n->damage);
 			continue;
 		}
 		if (strcmp(buf,"shield")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].shield);
+			fscanf(file,"%d\n",&n_n->shield);
 			continue;
 		}
 		if (strcmp(buf,"support")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].support);
+			fscanf(file,"%d\n",&n_n->support);
 			continue;
 		}
 		if (strcmp(buf,"see_distanse")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].see_distanse);
+			fscanf(file,"%d\n",&n_n->see_distanse);
 			continue;
 		}
 		if (strcmp(buf,"attack_distanse")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].attack_distanse);
+			fscanf(file,"%d\n",&n_n->attack_distanse);
 			continue;
 		}
 		if (strcmp(buf,"attack_speed")==0){
 			float tmp;
 			fscanf(file,"%f\n",&tmp);
-			config.npc_types[i].attack_speed=TPS/tmp;
+			n_n->attack_speed=TPS/tmp;
 			continue;
 		}
 		if (strcmp(buf,"move_speed")==0){
 			float tmp;
 			fscanf(file,"%f\n",&tmp);
-			config.npc_types[i].move_speed=tmp/TPS;
+			n_n->move_speed=tmp/TPS;
 			continue;
 		}
 		if (strcmp(buf,"cost")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].cost);
+			fscanf(file,"%d\n",&n_n->cost);
 			continue;
 		}
 		if (strcmp(buf,"receive")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].receive);
+			fscanf(file,"%d\n",&n_n->receive);
 			continue;
 		}
 		if (strcmp(buf,"bullet_type")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].bullet_type);
+			fscanf(file,"%d\n",&n_n->bullet_type);
 			continue;
 		}
 		if (strcmp(buf,"type")==0){
-			fscanf(file,"%d\n",&config.npc_types[i].type);
+			fscanf(file,"%d\n",&n_n->type);
 			continue;
 		}
 		if (strcmp(buf,"tex_size")==0){
-			fscanf(file,"%f\n",&config.npc_types[i].t_size);
+			fscanf(file,"%f\n",&n_n->t_size);
 			continue;
 		}
 		
 	}
-	config.npc_types_size=i;
+//	config.npc_types_size=i;
 	i=1;
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
@@ -715,7 +732,9 @@ void loadTypes(char * filepath){
 		if (strcmp(buf,"SPLASH_TYPE")==0){
 			int tmp;
 			fscanf(file,"%d\n",&tmp);
-			if((config.splash_types=malloc(sizeof(splash_type)*(tmp+1)))==0)
+//			if((config.splash_types=malloc(sizeof(splash_type)*(tmp+1)))==0)
+//				perror("malloc splash loadTypes");
+			if((s_s=malloc(sizeof(splash_type)))==0)
 				perror("malloc splash loadTypes");
 			break;
 		}
@@ -724,57 +743,63 @@ void loadTypes(char * filepath){
 			continue;
 		}
 		if (strcmp(buf,"texidle")==0){
-			fscanf(file,"%s\n",config.bullet_types[i].tex_path[TEX_IDLE]);
+			fscanf(file,"%s\n",b_b->tex_path[TEX_IDLE]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			i++;
+			typesBulletAdd(b_b->id,b_b);
+			if((b_b=malloc(sizeof(bullet_type)))==0)
+				perror("malloc bullet loadTypes");
 			continue;
 		}
 		if (strcmp(buf,"solid")==0){
-			fscanf(file,"%hd\n",&config.bullet_types[i].solid);
+			fscanf(file,"%hd\n",&b_b->solid);
 			continue;
 		}
 		if (strcmp(buf,"id")==0){
-			fscanf(file,"%d\n",&config.bullet_types[i].id);
+			fscanf(file,"%d\n",&b_b->id);
 			continue;
 		}
 		if (strcmp(buf,"speed")==0){
 			float tmp;
 			fscanf(file,"%f\n",&tmp);
-			config.bullet_types[i].speed=tmp/TPS;
+			b_b->speed=tmp/TPS;
 			continue;
 		}
 		if (strcmp(buf,"attack_type")==0){
-			fscanf(file,"%d\n",&config.bullet_types[i].attack_type);
+			fscanf(file,"%d\n",&b_b->attack_type);
 			continue;
 		}
 		if (strcmp(buf,"move_type")==0){
-			fscanf(file,"%d\n",&config.bullet_types[i].move_type);
+			fscanf(file,"%d\n",&b_b->move_type);
 			continue;
 		}
 		
 	}
-	config.bullet_types_size=i;
+//	config.bullet_types_size=i;
 	i=1;
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
 //		printf("%s  ||\n",buf);
 		if (strcmp(buf,"tex")==0){
-			fscanf(file,"%s\n",config.splash_types[i].tex_path);
+			fscanf(file,"%s\n",s_s->tex_path);
 		}
 		if (strcmp(buf,"//-")==0){
 //			fscanf(file,"%s\n",buf);
 			i++;
+			typesSplashAdd(s_s->id,s_s);
+			if((s_s=malloc(sizeof(splash_type)))==0)
+				perror("malloc splash loadTypes");
 			continue;
 		}
 		if (strcmp(buf,"id")==0){
-			fscanf(file,"%d\n",&config.splash_types[i].id);
+			fscanf(file,"%d\n",&s_s->id);
 			continue;
 		}
 	}
-	config.splash_types_size=i;
+//	config.splash_types_size=i;
 	
 	
 //	printf("%d %d\n",config.tower_types_size,config.npc_types_size);
@@ -783,10 +808,14 @@ void loadTypes(char * filepath){
 
 
 void realizeTypes(){
-	free(config.bullet_types);
-	free(config.tower_types);
-	free(config.npc_types);
-	free(config.splash_types);
+//	free(config.bullet_types);
+//	free(config.tower_types);
+//	free(config.npc_types);
+//	free(config.splash_types);
+	typesNpcClear();
+	typesTowerClear();
+	typesBulletClear();
+	typesSplashClear();	
 }
 
 static inline void parseTexArg(char* str,texture * t){

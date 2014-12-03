@@ -1,6 +1,15 @@
-#include <iostream>
+﻿#include <iostream>
 #include <map>
 #include <cstdlib>
+
+/*
+╔══════════════════════════════════════════════════════════════╗
+║ 										                       ║
+║ created by Yaroslav Zotov						                       ║
+║ nov 2014									                       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
 
 #define SHIFT 1e-3
 

@@ -15,3 +15,4 @@
 #include "public.h"
 #include "hash.h"
 #include "tar_reader.h"
+#include "types.h"

@@ -414,8 +414,11 @@ void drawHealth(vec2 pos,vec2 size,float p){
 static inline void drawNpc(npc* n) __attribute__((always_inline));
 static inline void drawNpc(npc* n){
 	float size=0.89f;
-	if (config.npc_types[n->type].t_size!=0)
-		size*=config.npc_types[n->type].t_size;
+	npc_type * type=typesNpcGet(n->type);
+	if (type==0)
+		return;
+	if (type->t_size!=0)
+		size*=type->t_size;
 	glPushMatrix();
 	glTranslatef(n->position.x,n->position.y,0);
 	backTransform();
@@ -424,10 +427,10 @@ static inline void drawNpc(npc* n){
 //	glTranslatef(0,0,.56f);
 //	glTranslatef(0,0,.3f);
 		if (n->tex[n->current_tex].frames==0){
-			if (config.npc_types[n->type].tex[n->current_tex].frames==0)
+			if (type->tex[n->current_tex].frames==0)
 				//npc stored in global tex memory
-				loadTexture(&config.npc_types[n->type].tex[n->current_tex],config.npc_types[n->type].tex_path[n->current_tex]);
-			memcpy(&n->tex[n->current_tex],&config.npc_types[n->type].tex[n->current_tex],sizeof(texture));
+				loadTexture(&type->tex[n->current_tex],type->tex_path[n->current_tex]);
+			memcpy(&n->tex[n->current_tex],&type->tex[n->current_tex],sizeof(texture));
 		}
 		if(setTexture(&n->tex[n->current_tex]))
 			n->anim_ended=1;
@@ -449,7 +452,7 @@ static inline void drawNpc(npc* n){
 //		glTranslatef(0,0,0.1169);
 		glTranslatef(0,0,5);
 		//draw health
-		float health=1.0*n->health/config.npc_types[n->type].health;
+		float health=1.0*n->health/type->health;
 		if (health<0.98)
 			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
 //		glPushMatrix();
@@ -479,8 +482,11 @@ static inline void drawNpcs(){
 static inline void drawTower(tower* t) __attribute__((always_inline));
 static inline void drawTower(tower* t){
 	float size=1.4f;
-	if (config.tower_types[t->type].t_size!=0)
-		size*=config.tower_types[t->type].t_size;
+	tower_type * type=typesTowerGet(t->type);
+	if (type==0)
+		return;
+	if (type->t_size!=0)
+		size*=type->t_size;
 	glPushMatrix();
 		glTranslatef(t->position.x,t->position.y,0);
 		backTransform();
@@ -489,10 +495,10 @@ static inline void drawTower(tower* t){
 		glTranslatef(0,0.21,0.0f);
 //		printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 		if (t->tex[t->current_tex].frames==0){
-			if (config.tower_types[t->type].tex[t->current_tex].frames==0)
+			if (type->tex[t->current_tex].frames==0)
 				//npc stored in global tex memory
-				loadTexture(&config.tower_types[t->type].tex[t->current_tex],config.tower_types[t->type].tex_path[t->current_tex]);
-			memcpy(&t->tex[t->current_tex],&config.tower_types[t->type].tex[t->current_tex],sizeof(texture));
+				loadTexture(&type->tex[t->current_tex],type->tex_path[t->current_tex]);
+			memcpy(&t->tex[t->current_tex],&type->tex[t->current_tex],sizeof(texture));
 		}
 		if(setTexture(&t->tex[t->current_tex]))
 			t->anim_ended=1;
@@ -515,7 +521,7 @@ static inline void drawTower(tower* t){
 			if (t->type==BASE)
 				health=1.0*t->health/config.map.players[t->owner].base_health;
 			else
-				health=1.0*t->health/config.tower_types[t->type].health;
+				health=1.0*t->health/type->health;
 			if (health<0.95)
 				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
 			Color4f(1,1,1,1);
@@ -543,19 +549,22 @@ static inline void drawTowers(){
 
 static inline void drawBullet(bullet* b) __attribute__((always_inline));
 static inline void drawBullet(bullet* b){
-	glPushMatrix();
+	
 //	printf("%g %g| %g %g %d\n",b->position.x,b->position.y,b->direction.x,b->direction.y,b->type);
 	vec2* pos;
 	float length=1;
-//	config.bullet_types[b->type].solid=1;
-	if (config.bullet_types[b->type].solid!=0)
+//	type->solid=1;
+	bullet_type * type=typesBulletGet(b->type);
+	if (type==0)
+		return;
+	if (type->solid!=0)
 		pos=&b->source;
 	else
 		pos=&b->position;
 	
 	if (b->destination.x==pos->x && b->destination.y==pos->y)
 		pos=&b->source;
-	
+	glPushMatrix();
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
 //	glTranslatef(0,0.2,1.01);
@@ -574,7 +583,7 @@ static inline void drawBullet(bullet* b){
 		x-=gridToScreenX(pos->x,pos->y);
 		y-=gridToScreenY(pos->x,pos->y);
 //		printf("%g %g| %g %g\n",dir.x,b->direction.x,dir.y,b->direction.y);
-		if (config.bullet_types[b->type].solid==0){
+		if (type->solid==0){
 			if (sign(b->direction.x)!=sign(dir.x))
 				goto drawBulletExit;
 	//			x*=-1;
@@ -597,13 +606,13 @@ static inline void drawBullet(bullet* b){
 		glRotatef(ang,0,0,1);
 	}
 	if (b->tex[b->current_tex].frames==0){
-		if (config.bullet_types[b->type].tex[b->current_tex].frames==0)
-			loadTexture(&config.bullet_types[b->type].tex[b->current_tex],config.bullet_types[b->type].tex_path[b->current_tex]);
-		memcpy(&b->tex[b->current_tex],&config.bullet_types[b->type].tex[b->current_tex],sizeof(texture));
+		if (type->tex[b->current_tex].frames==0)
+			loadTexture(&type->tex[b->current_tex],type->tex_path[b->current_tex]);
+		memcpy(&b->tex[b->current_tex],&type->tex[b->current_tex],sizeof(texture));
 	}
 	float tx1,ty1,tx2,ty2,vx;
 	float height=0.08f;
-	if (config.bullet_types[b->type].solid==0){
+	if (type->solid==0){
 		tx1=0.005f;
 		ty1=0.005f;
 		tx2=0.995f;
@@ -648,22 +657,29 @@ drawBulletExit:
 static inline void drawBullets() __attribute__((always_inline));
 static inline void drawBullets(){
 	int i;
+	bullet_type * type;
+//	#pragma omp parallel for
 	for(i=0;i<config.map.bullet_max;i++)
-		if (config.map.bullet_array[i].id!=0)
-			if (config.bullet_types[config.map.bullet_array[i].type].solid!=0 || 
+		if (config.map.bullet_array[i].id!=0){
+			type=typesBulletGet(config.map.bullet_array[i].type);
+			if (type->solid!=0 || 
 					checkGridLines(config.map.bullet_array[i].position.x,config.map.bullet_array[i].position.y)){
 //				drawBullet(&config.map.bullet_array[i]);
-				hashAdd(config.bullet_types[config.map.bullet_array[i].type].solid!=0?
+				hashAdd(type->solid!=0?
 							max(config.map.bullet_array[i].position.x+config.map.grid_size-config.map.bullet_array[i].position.y,
 									config.map.bullet_array[i].source.x+config.map.grid_size-config.map.bullet_array[i].source.y):
 						config.map.bullet_array[i].position.x+config.map.grid_size-config.map.bullet_array[i].position.y,
 						&config.map.bullet_array[i]);
 			}
+		}
 }
 
 
 static inline void drawSplash(splash* s) __attribute__((always_inline));
 static inline void drawSplash(splash* s){
+	splash_type * type=typesSplashGet(s->type);
+	if (type==0)
+		return;
 	glPushMatrix();
 	glTranslatef(s->position.x,s->position.y,0);
 	backTransform();
@@ -671,9 +687,9 @@ static inline void drawSplash(splash* s){
 //	glTranslatef(0,0,1);
 //	printf("tower %d health %d on %d\n",t->id,t->health,posToId(t->position));
 	if (s->tex.frames==0){
-		if (config.splash_types[s->type].tex.frames==0)
-			loadTexture(&config.splash_types[s->type].tex,config.splash_types[s->type].tex_path);
-		memcpy(&s->tex,&config.splash_types[s->type].tex,sizeof(texture));
+		if (type->tex.frames==0)
+			loadTexture(&type->tex,type->tex_path);
+		memcpy(&s->tex,&type->tex,sizeof(texture));
 	}
 	if(setTexture(&s->tex))
 		s->anim_ended=1;
