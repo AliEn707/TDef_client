@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 /*
 ╔══════════════════════════════════════════════════════════════╗
@@ -9,11 +9,13 @@
 ╚══════════════════════════════════════════════════════════════╝
 */
 
+ 
+#define TPS 8
 
 
 void loadMenu(menu* root,char* path){
 	FILE* file=0;
-	printf("load menu....");
+	printf("Load menu....");
 	if((file=fopen(path,"r"))==0){
 		perror("fopen loadMenu");
 		return;
@@ -479,125 +481,26 @@ void realizeMap(){
 		free(config.map.grid_out[i]);
 }
 
-
-void loadTypes(char * filepath){
+int loadNpcTypes(){
+	char * filepath="../data/types/npc.cfg";
 	FILE * file;
-//	printf("loading configuration\n");
-	int TPS=40;
-	npc_type* n_n;
-	tower_type* t_t;
-	bullet_type* b_b;
-	splash_type* s_s;
-	if ((file=fopen(filepath,"r"))==0) 
-		perror("fopen loadTypes");
+	npc_type* n_n=0;
 	char buf[100];
-	int i=1;
-	while(feof(file)==0){
-		memset(buf,0,sizeof(buf));
-		fscanf(file,"%s ",buf);
-//		printf("%s  ||\n",buf);
-		if (strcmp(buf,"TOWER_TYPE")==0){
-			int tmp;
-			fscanf(file,"%d\n",&tmp);
-//			if((config.tower_types=malloc(sizeof(tower_type)*(tmp+1)))==0)
-//				perror("malloc tower loadTypes");
-			if((t_t=malloc(sizeof(tower_type)))==0)
-				perror("malloc tower loadTypes");
-			continue;
-		}
-		if (strcmp(buf,"NPC_TYPE")==0){
-			int tmp;
-			fscanf(file,"%d\n",&tmp);
-//			if((config.npc_types=malloc(sizeof(npc_type)*(tmp+1)))==0)
-//				perror("malloc npc loadTypes");
-			if((n_n=malloc(sizeof(npc_type)))==0)
-				perror("malloc npc loadTypes");
-			
-			break;
-		}
-		if (strcmp(buf,"texidle")==0){
-			fscanf(file,"%s\n",t_t->tex_path[TEX_IDLE]);
-		}
-		if (strcmp(buf,"//-")==0){
-			fscanf(file,"%s\n",buf);
-			i++;
-			typesTowerAdd(t_t->id,t_t);
-			if((t_t=malloc(sizeof(tower_type)))==0)
-				perror("malloc tower loadTypes");
-			continue;
-		}
-		if (strcmp(buf,"name")==0){
-			fscanf(file,"%s\n",buf);
-			continue;
-		}
-		if (strcmp(buf,"id")==0){
-			fscanf(file,"%d\n",&t_t->id);
-			continue;
-		}
-		if (strcmp(buf,"health")==0){
-			fscanf(file,"%d\n",&t_t->health);
-			continue;
-		}
-		if (strcmp(buf,"damage")==0){
-			fscanf(file,"%d\n",&t_t->damage);
-			continue;
-		}
-		if (strcmp(buf,"energy")==0){
-			fscanf(file,"%d\n",&t_t->energy);
-			continue;
-		}
-		if (strcmp(buf,"shield")==0){
-			fscanf(file,"%d\n",&t_t->shield);
-			continue;
-		}
-		if (strcmp(buf,"attack_distanse")==0){
-			fscanf(file,"%d\n",&t_t->distanse);
-			continue;
-		}
-		if (strcmp(buf,"attack_speed")==0){
-			float tmp;
-			fscanf(file,"%f\n",&tmp);
-			t_t->attack_speed=TPS/tmp;
-			continue;
-		}
-		if (strcmp(buf,"cost")==0){
-			fscanf(file,"%d\n",&t_t->cost);
-			continue;
-		}
-		if (strcmp(buf,"ignor_type")==0){
-			fscanf(file,"%d\n",&t_t->ignor_type);
-			continue;
-		}
-		if (strcmp(buf,"prior_type")==0){
-			fscanf(file,"%d\n",&t_t->prior_type);
-			continue;
-		}
-		if (strcmp(buf,"bullet_type")==0){
-			fscanf(file,"%d\n",&t_t->bullet_type);
-			continue;
-		}
-		if (strcmp(buf,"tex_size")==0){
-			fscanf(file,"%f\n",&t_t->t_size);
-			continue;
-		}
-		
+	printf("Load npc types....");
+	if ((file=fopen(filepath,"rt"))==0){
+		perror("fopen loadNpcTypes");
+		return 1;
 	}
-//	config.tower_types_size=i;
-//	printf("\t\t%d\n",config.tower_types_size);
-	i=1;
+	
 	while(feof(file)==0){
+		if (n_n==0)
+			if((n_n=malloc(sizeof(npc_type)))==0){
+				perror("malloc npc loadTypes");
+				return 1;
+			}
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
 //		printf("%s  ||\n",buf);
-		if (strcmp(buf,"BULLET_TYPE")==0){
-			int tmp;
-			fscanf(file,"%d\n",&tmp);
-//			if((config.bullet_types=malloc(sizeof(bullet_type)*(tmp+1)))==0)
-//				perror("malloc bullet loadTypes");
-			if((b_b=malloc(sizeof(bullet_type)))==0)
-				perror("malloc bullet loadTypes");
-			break;
-		}
 		if (strcmp(buf,"texidle")==0){
 			fscanf(file,"%s\n",n_n->tex_path[TEX_IDLE]);
 		}
@@ -651,10 +554,8 @@ void loadTypes(char * filepath){
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
-			i++;
 			typesNpcAdd(n_n->id,n_n);
-			if((n_n=malloc(sizeof(npc_type)))==0)
-				perror("malloc npc loadTypes");
+			n_n=0;
 			continue;
 		}
 		if (strcmp(buf,"name")==0){
@@ -723,21 +624,127 @@ void loadTypes(char * filepath){
 		}
 		
 	}
-//	config.npc_types_size=i;
-	i=1;
+	
+	if (n_n!=0)
+		free(n_n);
+	
+	fclose(file);
+	printf("done\n");
+	return 0;
+}
+
+int loadTowerTypes(){
+	char * filepath="../data/types/tower.cfg";
+	FILE * file;
+	tower_type* t_t=0;
+	char buf[100];
+	printf("Load tower types....");
+	if ((file=fopen(filepath,"rt"))==0){
+		perror("fopen loadTowerTypes");
+		return 1;
+	}
+	
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
 //		printf("%s  ||\n",buf);
-		if (strcmp(buf,"SPLASH_TYPE")==0){
-			int tmp;
-			fscanf(file,"%d\n",&tmp);
-//			if((config.splash_types=malloc(sizeof(splash_type)*(tmp+1)))==0)
-//				perror("malloc splash loadTypes");
-			if((s_s=malloc(sizeof(splash_type)))==0)
-				perror("malloc splash loadTypes");
-			break;
+		if (t_t==0)
+			if((t_t=malloc(sizeof(tower_type)))==0)
+				perror("malloc tower loadTypes");
+			
+		if (strcmp(buf,"texidle")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_IDLE]);
 		}
+		if (strcmp(buf,"//-")==0){
+			fscanf(file,"%s\n",buf);
+			typesTowerAdd(t_t->id,t_t);
+			t_t=0;
+			continue;
+		}
+		if (strcmp(buf,"name")==0){
+			fscanf(file,"%s\n",buf);
+			continue;
+		}
+		if (strcmp(buf,"id")==0){
+			fscanf(file,"%d\n",&t_t->id);
+			continue;
+		}
+		if (strcmp(buf,"health")==0){
+			fscanf(file,"%d\n",&t_t->health);
+			continue;
+		}
+		if (strcmp(buf,"damage")==0){
+			fscanf(file,"%d\n",&t_t->damage);
+			continue;
+		}
+		if (strcmp(buf,"energy")==0){
+			fscanf(file,"%d\n",&t_t->energy);
+			continue;
+		}
+		if (strcmp(buf,"shield")==0){
+			fscanf(file,"%d\n",&t_t->shield);
+			continue;
+		}
+		if (strcmp(buf,"attack_distanse")==0){
+			fscanf(file,"%d\n",&t_t->distanse);
+			continue;
+		}
+		if (strcmp(buf,"attack_speed")==0){
+			float tmp;
+			fscanf(file,"%f\n",&tmp);
+			t_t->attack_speed=TPS/tmp;
+			continue;
+		}
+		if (strcmp(buf,"cost")==0){
+			fscanf(file,"%d\n",&t_t->cost);
+			continue;
+		}
+		if (strcmp(buf,"ignor_type")==0){
+			fscanf(file,"%d\n",&t_t->ignor_type);
+			continue;
+		}
+		if (strcmp(buf,"prior_type")==0){
+			fscanf(file,"%d\n",&t_t->prior_type);
+			continue;
+		}
+		if (strcmp(buf,"bullet_type")==0){
+			fscanf(file,"%d\n",&t_t->bullet_type);
+			continue;
+		}
+		if (strcmp(buf,"tex_size")==0){
+			fscanf(file,"%f\n",&t_t->t_size);
+			continue;
+		}
+		
+	}
+	
+	if (t_t!=0)
+		free(t_t);
+	
+	fclose(file);
+	printf("done\n");
+	return 0;
+}
+
+int loadBulletTypes(){
+	char * filepath="../data/types/bullet.cfg";
+	FILE * file;
+	bullet_type* b_b=0;
+	char buf[100];
+	printf("Load bullet types....");
+	if ((file=fopen(filepath,"rt"))==0){
+		perror("fopen loadBulletTypes");
+		return 1;
+	}
+	
+	while(feof(file)==0){
+		memset(buf,0,sizeof(buf));
+		fscanf(file,"%s ",buf);
+		if (b_b==0)
+			if((b_b=malloc(sizeof(bullet_type)))==0)
+				perror("malloc bullet loadTypes");
+			
+//		printf("%s  ||\n",buf);
 		if (strcmp(buf,"name")==0){
 			fscanf(file,"%s\n",buf);
 			continue;
@@ -747,10 +754,8 @@ void loadTypes(char * filepath){
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
-			i++;
 			typesBulletAdd(b_b->id,b_b);
-			if((b_b=malloc(sizeof(bullet_type)))==0)
-				perror("malloc bullet loadTypes");
+			b_b=0;
 			continue;
 		}
 		if (strcmp(buf,"solid")==0){
@@ -777,21 +782,40 @@ void loadTypes(char * filepath){
 		}
 		
 	}
-//	config.bullet_types_size=i;
-	i=1;
+	
+	if (b_b!=0)
+		free(b_b);
+	
+	fclose(file);
+	printf("done\n");
+	return 0;
+}
+
+static int loadSplashTypes(){
+	char * filepath="../data/types/splash.cfg";
+	FILE * file;
+	splash_type* s_s=0;
+	char buf[100];
+	printf("Load splash types....");
+	if ((file=fopen(filepath,"rt"))==0){
+		perror("fopen loadSplashTypes");
+		return 1;
+	}
+	
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
+		if (s_s==0)
+			if((s_s=malloc(sizeof(splash_type)))==0)
+				perror("malloc splash loadTypes");
 //		printf("%s  ||\n",buf);
 		if (strcmp(buf,"tex")==0){
 			fscanf(file,"%s\n",s_s->tex_path);
 		}
 		if (strcmp(buf,"//-")==0){
 //			fscanf(file,"%s\n",buf);
-			i++;
 			typesSplashAdd(s_s->id,s_s);
-			if((s_s=malloc(sizeof(splash_type)))==0)
-				perror("malloc splash loadTypes");
+			s_s=0;
 			continue;
 		}
 		if (strcmp(buf,"id")==0){
@@ -799,12 +823,15 @@ void loadTypes(char * filepath){
 			continue;
 		}
 	}
-//	config.splash_types_size=i;
 	
+	if (s_s!=0)
+		free(s_s);
 	
-//	printf("%d %d\n",config.tower_types_size,config.npc_types_size);
 	fclose(file);
+	printf("done\n");
+	return 0;
 }
+
 
 
 void realizeTypes(){
@@ -915,7 +942,13 @@ int loadMTexture(texture * t, char * path){
 
 
 void loadFiles(){
-	loadTypes("../data/types.cfg");
+//	loadTypes("../data/types.cfg");
+	loadNpcTypes();
+	loadTowerTypes();
+	loadBulletTypes();
+	loadSplashTypes();
+	
+	
 	//set to config file
 	
 	loadMenu(&config.menu.root,"../data/menu.cfg");
