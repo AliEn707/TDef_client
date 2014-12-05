@@ -671,7 +671,7 @@ loadTGATexture (FILE* fp)
     }
 
   tga_tex = ReadTGAFile (fp);
-  fclose(fp);
+//  fclose(fp);
   if (tga_tex && tga_tex->texels)
     {
       /* generate texture */

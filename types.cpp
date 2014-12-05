@@ -120,7 +120,7 @@ extern "C" {
 	}
 
 }
-/*
+
 //not used in mapserver
 map <int, void*> splash_types_map; 
 //Splash
@@ -156,5 +156,5 @@ extern "C" {
 
 }
 
-*/
+
 

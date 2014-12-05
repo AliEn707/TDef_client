@@ -37,7 +37,8 @@ int glFontCreate (GLFONT *Font, char *FileName)
 		return FALSE;
 
 	//Read glFont structure
-	fread(Font, sizeof(GLFONT), 1, Input);
+//	fread(Font, sizeof(GLFONT)-(sizeof(void*)-4), 1, Input); //orig
+	fread(Font, sizeof(int)*6, 1, Input); //some hack for 64 lin 
 
 	//Save texture number
 	Font->Tex=getNewTexture();

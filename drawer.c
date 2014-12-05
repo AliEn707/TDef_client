@@ -395,18 +395,25 @@ void drawHealth(vec2 pos,vec2 size,float p){
 	glDisable(GL_TEXTURE_2D);
 	Color4f(0,0,0,0.8);
 	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (1.0f, 0.0f);
 		Vertex2f(pos.x+size.x*p,pos.y);
+		TexCoord2f (0.0f, 0.0f);
 		Vertex2f(pos.x+size.x,pos.y);
+		TexCoord2f (0.0f, 1.0f);
 		Vertex2f(pos.x+size.x,pos.y+size.y);
+		TexCoord2f (1.0f, 1.0f);
 		Vertex2f(pos.x+size.x*p,pos.y+size.y);
 	End();
 	Color4f(1.2*(1-p),0.8*p,0,1);
 	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (0.0f, 0.0f);
 		Vertex2f(pos.x,pos.y);
+		TexCoord2f (1.0f, 0.0f);
 		Vertex2f(pos.x+size.x*p,pos.y);
+		TexCoord2f (1.0f, 1.0f);
 		Vertex2f(pos.x+size.x*p,pos.y+size.y);
+		TexCoord2f (0.0f, 1.0f);
 		Vertex2f(pos.x,pos.y+size.y);
-		
 	End();
 //	glPopMatrix();
 }

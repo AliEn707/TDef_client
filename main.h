@@ -6,6 +6,7 @@
 #include <math.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
+#include <SDL2/SDL_mixer.h>
 #include <GL/gl.h>
 #include <locale.h>
 #include "glfont.h"

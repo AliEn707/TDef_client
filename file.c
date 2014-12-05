@@ -493,11 +493,13 @@ int loadNpcTypes(){
 	}
 	
 	while(feof(file)==0){
-		if (n_n==0)
+		if (n_n==0){
 			if((n_n=malloc(sizeof(npc_type)))==0){
 				perror("malloc npc loadTypes");
 				return 1;
 			}
+			memset(n_n,0,sizeof(npc_type));
+		}
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
 //		printf("%s  ||\n",buf);
@@ -648,10 +650,13 @@ int loadTowerTypes(){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
 //		printf("%s  ||\n",buf);
-		if (t_t==0)
-			if((t_t=malloc(sizeof(tower_type)))==0)
+		if (t_t==0){
+			if((t_t=malloc(sizeof(tower_type)))==0){
 				perror("malloc tower loadTypes");
-			
+				return 1;
+			}
+			memset(t_t,0,sizeof(tower_type));
+		}
 		if (strcmp(buf,"texidle")==0){
 			fscanf(file,"%s\n",t_t->tex_path[TEX_IDLE]);
 		}
@@ -737,13 +742,17 @@ int loadBulletTypes(){
 		return 1;
 	}
 	
+	
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
-		if (b_b==0)
-			if((b_b=malloc(sizeof(bullet_type)))==0)
+		if (b_b==0){
+			if((b_b=malloc(sizeof(bullet_type)))==0){
 				perror("malloc bullet loadTypes");
-			
+				return 1;
+			}
+			memset(b_b,0,sizeof(bullet_type));
+		}
 //		printf("%s  ||\n",buf);
 		if (strcmp(buf,"name")==0){
 			fscanf(file,"%s\n",buf);
@@ -805,9 +814,13 @@ static int loadSplashTypes(){
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
-		if (s_s==0)
-			if((s_s=malloc(sizeof(splash_type)))==0)
+		if (s_s==0){
+			if((s_s=malloc(sizeof(splash_type)))==0){
 				perror("malloc splash loadTypes");
+				return 1;
+			}
+			memset(s_s,0,sizeof(splash_type));
+		}
 //		printf("%s  ||\n",buf);
 		if (strcmp(buf,"tex")==0){
 			fscanf(file,"%s\n",s_s->tex_path);
