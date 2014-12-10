@@ -1026,6 +1026,10 @@ void setTestData(){
 	
 	//hard test data
 	int i,j,k=2;
+	int h=100;
+	npc_type * type=typesNpcGet(1);
+	if (type!=0)
+		h=type->health;
 	for (i=1;i<config.map.grid_size;i++)
 		for (j=i;j<config.map.grid_size;j++){
 			config.map.npc_array[k].$$$=STRUCT_NPC;
@@ -1034,7 +1038,7 @@ void setTestData(){
 			config.map.npc_array[k].id=-100;
 			config.map.npc_array[k].type=1;//rand()%4;
 			config.map.npc_array[k].owner=rand()%3;
-			config.map.npc_array[k].health=rand()%300;
+			config.map.npc_array[k].health=rand()%h;
 			k++;
 		}
 	

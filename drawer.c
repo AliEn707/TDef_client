@@ -73,7 +73,7 @@ void drawCursor(){
 			glPushMatrix();
 				glDisable(GL_TEXTURE_2D);
 				//glTranslatef(cursor.state.x,cursor.state.y,0);
-				glTranslatef(cursor.state.x+41-length,cursor.state.y-22,0);
+				glTranslatef(cursor.state.x+41-length,cursor.state.y-23,0);
 				//glScalef(15,15,1); //need to correct
 				//glTranslatef(-length,0,0);
 				//glTranslatef(-length/2.0f,height,0);
@@ -389,34 +389,78 @@ inline void backTransform(){
 	//glScalef(1,4*1,1);
 }
 
-void drawHealth(vec2 pos,vec2 size,float p){
+#define add (size.y*0.4f)
+void drawHealth(vec2 pos,vec2 size,float p,float s){
+	float $paper=size.y;
+	if (s==0)
+		$paper=0;
 //	glPushMatrix();
 //	glTranslatef(0,0,0.03);//why?
-	glDisable(GL_TEXTURE_2D);
-	Color4f(0,0,0,0.8);
+//	glDisable(GL_TEXTURE_2D);
+	setTexture(&config.map.tex[HEALTH_PAPER]);
+	Color4f(1,1,1,1);
 	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (0, 0.0f);
+		Vertex2f(pos.x-add,pos.y-add-$paper);
 		TexCoord2f (1.0f, 0.0f);
-		Vertex2f(pos.x+size.x*p,pos.y);
-		TexCoord2f (0.0f, 0.0f);
-		Vertex2f(pos.x+size.x,pos.y);
-		TexCoord2f (0.0f, 1.0f);
-		Vertex2f(pos.x+size.x,pos.y+size.y);
+		Vertex2f(pos.x+size.x+add,pos.y-add-$paper);
 		TexCoord2f (1.0f, 1.0f);
-		Vertex2f(pos.x+size.x*p,pos.y+size.y);
+		Vertex2f(pos.x+size.x+add,pos.y+size.y+add);
+		TexCoord2f (0, 1.0f);
+		Vertex2f(pos.x-add,pos.y+size.y+add);
 	End();
-	Color4f(1.2*(1-p),0.8*p,0,1);
+	setTexture(&config.map.tex[HEALTH]);
+	//health
+	Color4f(1.2*(1-p),0.9*p,0,1);
 	Begin(GL_TRIANGLE_FAN);
 		TexCoord2f (0.0f, 0.0f);
 		Vertex2f(pos.x,pos.y);
-		TexCoord2f (1.0f, 0.0f);
+		TexCoord2f (p, 0.0f);
 		Vertex2f(pos.x+size.x*p,pos.y);
-		TexCoord2f (1.0f, 1.0f);
+		TexCoord2f (p, 1.0f);
 		Vertex2f(pos.x+size.x*p,pos.y+size.y);
 		TexCoord2f (0.0f, 1.0f);
 		Vertex2f(pos.x,pos.y+size.y);
 	End();
+	Color4f(0,0,0,0.8);
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (p, 0.0f);
+		Vertex2f(pos.x+size.x*p,pos.y);
+		TexCoord2f (1.0f, 0.0f);
+		Vertex2f(pos.x+size.x,pos.y);
+		TexCoord2f (1.0f, 1.0f);
+		Vertex2f(pos.x+size.x,pos.y+size.y);
+		TexCoord2f (p, 1.0f);
+		Vertex2f(pos.x+size.x*p,pos.y+size.y);
+	End();
+	if (s!=0){
+		//shield
+//		Color4f(0,0.75,1,1);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (s, 0.0f);
+			Vertex2f(pos.x+size.x*s,pos.y-size.y);
+			TexCoord2f (1.0f, 0.0f);
+			Vertex2f(pos.x+size.x,pos.y-size.y);
+			TexCoord2f (1.0f, 1.0f);
+			Vertex2f(pos.x+size.x,pos.y);
+			TexCoord2f (s, 1.0f);
+			Vertex2f(pos.x+size.x*s,pos.y);
+		End();
+		Color4f(0.27,0.51,0.71,1);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.0f, 0.0f);
+			Vertex2f(pos.x,pos.y-size.y);
+			TexCoord2f (s, 0.0f);
+			Vertex2f(pos.x+size.x*s,pos.y-size.y);
+			TexCoord2f (s, 1.0f);
+			Vertex2f(pos.x+size.x*s,pos.y);
+			TexCoord2f (0.0f, 1.0f);
+			Vertex2f(pos.x,pos.y);
+		End();
+	}
 //	glPopMatrix();
 }
+#undef add
 
 static inline void drawNpc(npc* n) __attribute__((always_inline));
 static inline void drawNpc(npc* n){
@@ -460,8 +504,9 @@ static inline void drawNpc(npc* n){
 		glTranslatef(0,0,5);
 		//draw health
 		float health=1.0*n->health/type->health;
-		if (health<0.98)
-			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.09},health);
+		float shield=type->shield?1.0*n->shield/type->shield:0;
+		if (health<0.98 || shield<0.98)
+			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.05},health,shield);
 //		glPushMatrix();
 			Color4f(1,1,1,1);
 			glTranslatef(-0.5,0.9,0);
@@ -525,12 +570,17 @@ static inline void drawTower(tower* t){
 			//draw level and health
 			glTranslatef(0,0,5);//need to draw over all
 			float health;
-			if (t->type==BASE)
-				health=1.0*t->health/config.map.players[t->owner].base_health;
-			else
+			float shield;
+			if (t->type==BASE){
+				health=1.0*t->health/config.map.players[t->owner].base_type.health;
+				health=config.map.players[t->owner].base_type.shield?1.0*t->shield/config.map.players[t->owner].base_type.shield:0;
+			}else{
 				health=1.0*t->health/type->health;
-			if (health<0.95)
-				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.075},health);
+				shield=type->shield?1.0*t->shield/type->shield:0;
+		
+			}
+			if (health<0.95 || shield<0.95)
+				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.035},health,shield);
 			Color4f(1,1,1,1);
 //		glPushMatrix();
 			glTranslatef(-0.325,0.5,0);

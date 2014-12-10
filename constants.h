@@ -32,7 +32,9 @@
 #define NO_SEE 4
 #define LIGHT 5
 #define DARKNESS 6
-#define COMON_TEXTURES_START 7
+#define HEALTH 7
+#define HEALTH_PAPER 8
+#define COMON_TEXTURES_START 9
 
 //process object
 #define MOUSE 1

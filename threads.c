@@ -247,6 +247,8 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[NO_SEE],"global/see");
 	loadTexture(&config.map.tex[LIGHT],"global/light_mask");
 	loadTexture(&config.map.tex[DARKNESS],"global/darkness");
+	loadTexture(&config.map.tex[HEALTH],"global/health");
+	loadTexture(&config.map.tex[HEALTH_PAPER],"global/health_paper");
 	initLights();
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	

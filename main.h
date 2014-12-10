@@ -342,8 +342,8 @@ struct {
 	int level;
 	int group;
 
-	int money;	
-	int base_health;
+	int money;
+	tower_type base_type;
 	tower * base;
 	//add hero info
 } player;

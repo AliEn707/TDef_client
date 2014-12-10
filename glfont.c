@@ -122,7 +122,9 @@ void glFontEnd (void)
 }
 */
 //*********************************************************
-#define size 0.626f //0.72f/*16*/ //0.66f /*17*/
+//#define size 0.304f //for 40
+//#define size 0.626f //0.72f/*16*/ //0.66f /*17*/
+#define size 0.626f //for 20 kegl
 #define  glFont_TexWidth  glFont->TexWidth*size
 #define  glFont_TexHeight  glFont->TexHeight*size
 #define  glFont_TexDensity  0.6f
