@@ -390,9 +390,9 @@ inline void backTransform(){
 }
 
 #define add (size.y*0.4f)
-void drawHealth(vec2 pos,vec2 size,float p,float s){
+void drawHealth(vec2 pos,vec2 size,float p,float s,int shield){
 	float $paper=size.y;
-	if (s==0)
+	if (shield==0)
 		$paper=0;
 //	glPushMatrix();
 //	glTranslatef(0,0,0.03);//why?
@@ -433,7 +433,7 @@ void drawHealth(vec2 pos,vec2 size,float p,float s){
 		TexCoord2f (p, 1.0f);
 		Vertex2f(pos.x+size.x*p,pos.y+size.y);
 	End();
-	if (s!=0){
+	if (shield!=0){
 		//shield
 //		Color4f(0,0.75,1,1);
 		Begin(GL_TRIANGLE_FAN);
@@ -506,7 +506,7 @@ static inline void drawNpc(npc* n){
 		float health=1.0*n->health/type->health;
 		float shield=type->shield?1.0*n->shield/type->shield:0;
 		if (health<0.98 || shield<0.98)
-			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.05},health,shield);
+			drawHealth((vec2){-0.5,0.9},(vec2){0.9,0.05},health,shield,type->shield);
 //		glPushMatrix();
 			Color4f(1,1,1,1);
 			glTranslatef(-0.5,0.9,0);
@@ -580,7 +580,7 @@ static inline void drawTower(tower* t){
 		
 			}
 			if (health<0.95 || shield<0.95)
-				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.035},health,shield);
+				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.035},health,shield,type->shield);
 			Color4f(1,1,1,1);
 //		glPushMatrix();
 			glTranslatef(-0.325,0.5,0);

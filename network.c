@@ -117,11 +117,13 @@ static inline int recvNpcMap(){
 		n->current_tex=getWalkTex(n->direction);
 	}
 //	}
-	if(checkMask(bit_mask,NPC_LEVEL) || checkMask(bit_mask,NPC_CREATE)){
+	if(checkMask(bit_mask,NPC_LEVEL)){
 		recvMap(n->level);
 	}
-	if(checkMask(bit_mask,NPC_HEALTH) || checkMask(bit_mask,NPC_CREATE))
+	if(checkMask(bit_mask,NPC_HEALTH))
 		recvMap(n->health);
+	if(checkMask(bit_mask,NPC_SHIELD))
+		recvMap(n->shield);
 	if (n->id==0 && checkMask(bit_mask,NPC_CREATE))
 		n->id=id;
 	return 0;
@@ -155,12 +157,14 @@ static inline int recvTowerMap(){
 //		printf("tower on %g %g\n",t->position.x,t->position.y);
 		
 	}
-	if (checkMask(bit_mask,TOWER_TARGET) || checkMask(bit_mask,TOWER_CREATE))
+	if (checkMask(bit_mask,TOWER_TARGET))
 		recvMap(t->target);
-	if(checkMask(bit_mask,TOWER_LEVEL) || checkMask(bit_mask,TOWER_CREATE))
+	if(checkMask(bit_mask,TOWER_LEVEL))
 		recvMap(t->level);
-	if(checkMask(bit_mask,TOWER_HEALTH) || checkMask(bit_mask,TOWER_CREATE))
+	if(checkMask(bit_mask,TOWER_HEALTH))
 		recvMap(t->health);
+	if(checkMask(bit_mask,TOWER_SHIELD))
+		recvMap(t->shield);
 	if (t->id==0 && checkMask(bit_mask,TOWER_CREATE))
 		t->id=id;
 	return 0;

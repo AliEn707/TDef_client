@@ -83,8 +83,10 @@ typedef
 struct npc_type{
 	int id;
 	int health;
+	float armor;
 	int damage;
 	int shield;
+	int energy;
 	int attack_distanse;
 	int see_distanse;
 	int attack_speed;
@@ -147,6 +149,7 @@ struct npc{
 	int type;
 	int health;
 	int shield;
+	int energy;
 	short level;
 	
 	int current_tex;

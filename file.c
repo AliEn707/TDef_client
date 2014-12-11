@@ -576,8 +576,16 @@ int loadNpcTypes(){
 			fscanf(file,"%d\n",&n_n->damage);
 			continue;
 		}
+		if (strcmp(buf,"armor")==0){
+			fscanf(file,"%f\n",&n_n->armor);
+			continue;
+		}		
 		if (strcmp(buf,"shield")==0){
 			fscanf(file,"%d\n",&n_n->shield);
+			continue;
+		}
+		if (strcmp(buf,"energy")==0){
+			fscanf(file,"%d\n",&n_n->energy);
 			continue;
 		}
 		if (strcmp(buf,"support")==0){

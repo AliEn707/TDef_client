@@ -106,14 +106,14 @@ int workerMap(void *ptr){
 						config.map.npc_array[i].current_tex!=TEX_DESTROY){
 					config.map.npc_array[i].anim_ended=0;
 					
-					config.map.npc_array[i].id=0; 
+					config.map.npc_array[i].$$$=0; 
 					memset(&config.map.npc_array[i],0,sizeof(npc));
 //					config.map.npc_array[i].current_tex=TEX_DESTROY; 
 					continue;
 				}
 				if (config.map.npc_array[i].current_tex==TEX_DESTROY && 
 						config.map.npc_array[i].anim_ended!=0){
-					config.map.npc_array[i].id=0; 
+					config.map.npc_array[i].$$$=0; 
 					memset(&config.map.npc_array[i],0,sizeof(npc));					
 				}
 				if (checkNpcTexWalk(config.map.npc_array[i].current_tex)){
@@ -127,7 +127,7 @@ int workerMap(void *ptr){
 			if (config.map.tower_array[i].id!=0){
 				if (config.map.tower_array[i].health<=0 && 
 						config.map.tower_array[i].anim_ended!=0){
-					config.map.tower_array[i].id=0;
+					config.map.tower_array[i].$$$=0;
 					config.map.grid[posToId(config.map.tower_array[i].position)].tower_id=0;
 					memset(&config.map.tower_array[i],0,sizeof(tower));
 					//change to set animation

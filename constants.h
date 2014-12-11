@@ -130,11 +130,13 @@
 #define NPC_POSITION 2
 #define NPC_CREATE 4
 #define NPC_LEVEL 8
+#define NPC_SHIELD 16
 
 #define TOWER_HEALTH 1
 #define TOWER_TARGET 2
 #define TOWER_CREATE 4
 #define TOWER_LEVEL 8
+#define TOWER_SHIELD 16
 
 #define BULLET_POSITION 1
 #define BULLET_DETONATE 2
