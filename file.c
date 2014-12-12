@@ -119,6 +119,12 @@ void loadMenu(menu* root,char* path){
 							m->objects[i].action=actionAuth;
 						if(strcmp(buf,"texttest")==0)
 							m->objects[i].action=actionTextTest;
+						if(strcmp(buf,"textlogin")==0)
+							m->objects[i].action=actionTextLogin;
+						if(strcmp(buf,"textpass")==0)
+							m->objects[i].action=actionTextPass;
+						if(strcmp(buf,"key")==0)
+							m->objects[i].action=actionKeyboard;
 						if(strcmp(buf,"towerbrush")==0){
 							m->objects[i].action=actionTowerSpawnBrush;
 							config.map.tower_objects[m->objects[i].arg[0]]=&m->objects[i];

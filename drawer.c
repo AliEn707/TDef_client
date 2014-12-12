@@ -1129,7 +1129,8 @@ void drawScene(){
 cur:
 	//must be the last
 	if (config.text.enable!=0)
-		drawMenu(&config.text.keyboard);
+		if (config.text.keyboard.enable!=0)
+			drawMenu(&config.text.keyboard);
 	drawCursor(); 
 	drawMessage();
 out:	

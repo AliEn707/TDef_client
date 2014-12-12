@@ -143,11 +143,16 @@ void processNodeAction(){
 }
 
 void processObjectAction(int type,int key){
-	if(config.menu.selected==0)
+	if(config.menu.selected==0){
+		textStop();
 		return;
+	}
 	if(config.menu.selected->touch!=0)
 		if(config.menu.selected->action!=0)
+			if (config.menu.selected->action!=actionKeyboard)
+				textStop();
 			config.menu.selected->action(config.menu.selected);
+	
 	if(config.menu.selected->single!=0){
 		if(type==KEYBOARD)
 			config.global.keys[key]=0;
@@ -162,9 +167,16 @@ void processEvent(SDL_Event event){
                {
                    case SDL_TEXTINPUT:
                        /* Add new text onto the end of our text */
-		   printf("get %s\n",event.text.text);
-//                       strcat(text, event.text.text);
-                       break;
+			if (strlen(event.text.text)!=1)
+				break;				
+			if (config.text.pos<ELEM_$TEXT-1){
+				printf("get %s  len %d first 2 char %d %d %d\n",event.text.text,strlen(event.text.text),event.text.text[0],event.text.text[1],((short*)event.text.text)[0]);
+				textAdd(config.text.data, event.text.text,config.text.pos);
+				textShow();
+				config.text.pos++;
+				textSetCur(config.text.show,config.text.pos);
+			}
+			break;
                    case SDL_TEXTEDITING:
                        /*
                        Update the composition text.
@@ -179,21 +191,29 @@ void processEvent(SDL_Event event){
 		   case SDL_KEYDOWN:
 			switch(event.key.keysym.sym){ 
 				case SDLK_ESCAPE: 
-					config.text.enable=0; 
-					SDL_StopTextInput();
-					break;
 				case SDLK_RETURN:
-					config.text.enable=0; 
-					SDL_StopTextInput();
+					textStop();
 					break;
+				case SDLK_BACKSPACE:
+					if (config.text.pos==0)
+						break;
+					config.text.pos--;
+				case SDLK_DELETE:
+					textRemChr(config.text.data,config.text.pos);
+					textShow();
+					textSetCur(config.text.show,config.text.pos);
+					break;
+				case SDLK_LEFT:
+					textMove(-1);
+					break;
+				case SDLK_RIGHT:
+					textMove(1);
+					break;
+				
 			}
                }
-	}
-	
+	} else	
 		switch(event.type){
-			case SDL_QUIT: 
-				config.main_running = 0;
-				break;
 			case SDL_KEYDOWN:
 				config.global.keys[event.key.keysym.sym]=1;
 				switch(event.key.keysym.sym){ 
@@ -212,32 +232,40 @@ void processEvent(SDL_Event event){
 			case SDL_KEYUP:
 				config.global.keys[event.key.keysym.sym]=0;
 				break;
-			case SDL_MOUSEMOTION:
-	//			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
-				if (event.motion.xrel!=0||event.motion.yrel!=0){
-					cursor.state.x=event.motion.x;
-					cursor.state.y=config.options.window.height-event.motion.y;
-				}
-				//cursorMove(event.motion.xrel,-event.motion.yrel);
-				
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				config.global.mouse[event.button.button]=1;
-				//if (config.menu.enable!=0)
-					processMouseMenu(event);
-				//else
-					if (config.map.enable!=0)
-						processMouseMap(event);
-				break;
-			case SDL_MOUSEBUTTONUP:
-				config.global.mouse[event.button.button]=0;
-				break;
-			case SDL_MOUSEWHEEL:
-				setZoom(event.wheel.y*CAMERA_ZOOM);
-				break;
+			
 		}
-		//check mouse over screen
-		checkCursorBorder();
+	switch(event.type){//mouse
+		case SDL_QUIT: 
+			config.main_running = 0;
+			break;
+		case SDL_MOUSEMOTION:
+//			printf("%d %d\n",event.motion.xrel,event.motion.yrel);
+			if (event.motion.xrel!=0||event.motion.yrel!=0){
+				cursor.state.x=event.motion.x;
+				cursor.state.y=config.options.window.height-event.motion.y;
+			}
+			//cursorMove(event.motion.xrel,-event.motion.yrel);
+			
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			config.global.mouse[event.button.button]=1;
+			//if (config.menu.enable!=0)
+				processMouseMenu(event);
+			//else
+				if (config.map.enable!=0)
+					processMouseMap(event);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			config.global.mouse[event.button.button]=0;
+			break;
+		case SDL_MOUSEWHEEL:
+			setZoom(event.wheel.y*CAMERA_ZOOM);
+			break;
+	}
+	
+	
+	//check mouse over screen
+	checkCursorBorder();
 }
 
 void processKeyboard(){
@@ -338,7 +366,7 @@ int checkMouseState(){
 //	printf("%d %d\n",cursor.state.x,cursor.state.y);
 	
 out:	
-	if (config.text.enable!=0)
+	if (config.text.keyboard.enable!=0)
 		checkMouseMenu(&config.text.keyboard);
 	return 0;
 }

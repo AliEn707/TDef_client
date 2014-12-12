@@ -1,7 +1,8 @@
- #define PUBLIC_SERVER  "192.168.56.56"//"localhost" //"public.tdef.tk"
+ #define PUBLIC_SERVER  "localhost"//"192.168.56.56"//"localhost" //"public.tdef.tk"
  #define PUBLIC_PORT 7001
  
- 
+ //sizeof text in element
+ #define ELEM_$TEXT 25
 // screen frames per texture frames
 #define FpF 5
 //write to config

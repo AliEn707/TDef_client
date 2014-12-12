@@ -249,7 +249,7 @@ struct element{
 	color3 fcolor;
 	color3 fwirecolor;
 	
-	char text[20];
+	char text[ELEM_$TEXT];
 	vec2 text_position;
 	short text_centered;
 	float text_size;
@@ -266,7 +266,7 @@ struct object{
 	vec2 position;
 	element * elements;
 	int $elements;
-	char text[20];
+	char text[ELEM_$TEXT];
 	int arg[4];
 	void (*action)(void * arg);
 } object;
@@ -468,6 +468,8 @@ struct public_conf{
 	int enable;
 	player_public player;
 	netw network;
+	char login[ELEM_$TEXT];
+	char pass[ELEM_$TEXT];
 	
 	menu lobby;  //searching room
 	menu main;  //main controls
@@ -486,9 +488,11 @@ struct public_conf{
 typedef
 struct {
 	short enable;
-	short pos;
-	char text[200];
-	char * text_edit;
+	int pos;
+	short hide;
+//	char text[200];
+	char * data;
+	char * show;
 	menu keyboard;
 } text_puts;
 

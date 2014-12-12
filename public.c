@@ -71,30 +71,33 @@ void publicDraw(){
 //need to correct
 int publicAuth(){
 	//fake auth
-	const char name[10]= "teoto";
-	const char passwd[20]= "testwdhnehodktrfff";
+	const char *name = config.public.login;
+	const char *passwd = config.public.pass;
 	//size of name   $a for size of a
 	int $name;
 	$name=strlen(name);
-	//not connected
-	if (sendData(config.public.network.socket,&$name,sizeof($name))<0){
-		config.public.network.socket=0;
-		return 1;
+//		printf("name %d\npass %d\n",$name,$passwd);
+	if ($name!=0 && strlen(passwd)!=0){
+		//not connected
+		if (sendData(config.public.network.socket,&$name,sizeof($name))<0){
+			config.public.network.socket=0;
+			return 1;
+		}
+		if (sendData(config.public.network.socket,name,$name)<0){
+			config.public.network.socket=0;
+			return 1;
+		}
+		
+		//get salt to add to passwd and generate new
+		recvData(config.public.network.socket,&$name,sizeof($name));
+		printf("get %d for salt\n",$name);
+		//TODO: add hash gen
+		sendData(config.public.network.socket,passwd,SIZE_OF_PASSWD);
+		recvData(config.public.network.socket,&$name,sizeof($name));
+		//we get normal answer
+		if ($name!=0)
+			return 0;
 	}
-	if (sendData(config.public.network.socket,name,$name)<0){
-		config.public.network.socket=0;
-		return 1;
-	}
-	
-	//get salt to add to passwd and generate new
-	recvData(config.public.network.socket,&$name,sizeof($name));
-	printf("get %d for salt\n",$name);
-	
-	sendData(config.public.network.socket,passwd,SIZE_OF_PASSWD);
-	recvData(config.public.network.socket,&$name,sizeof($name));
-	//we get normal answer
-	if ($name!=0)
-		return 0;
 	//set error message	
 	setScreenMessage("#auth_error");
 	SDLNet_TCP_Close(config.public.network.socket);
@@ -204,9 +207,7 @@ void publicStart(){
 	
 	if (config.public.network.socket!=0){
 		publicAuth();
-	}
-	
-	if (config.public.network.socket==0){
+	}else{
 		printf("error connecting to public\n");
 		setScreenMessage("#public_conn_error");
 	}

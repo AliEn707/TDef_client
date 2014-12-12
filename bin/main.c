@@ -51,6 +51,8 @@ int main(){
 	//tex quality
 	config.options.tex_quality=TEX_MAX; //TEX_MAX
 	config.global.latency=8;//must be this
+	//screen keyboard
+	config.text.keyboard.enable=0; //not need yet
 	
 	cursor.text="Hello";
 	

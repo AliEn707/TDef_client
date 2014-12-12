@@ -40,16 +40,14 @@ int checkMouseMenu(menu* root){
 
 void processMouseMenu(SDL_Event event){	
 	if (event.button.button==SDL_BUTTON_LEFT){
-		if(config.menu.selected!=0)
-			processObjectAction(MOUSE,SDL_BUTTON_LEFT);
+		processObjectAction(MOUSE,SDL_BUTTON_LEFT);
 		//config.global.mouse[event.button.button]=0;
 	}
 }
 
 void processKeysMenu(SDL_Event event){
 	if (event.key.keysym.sym==SDLK_SPACE){
-		if(config.menu.selected!=0)
-			processObjectAction(KEYBOARD,SDLK_SPACE);
+		processObjectAction(KEYBOARD,SDLK_SPACE);
 		//config.global.keys[event.key.keysym.sym]=0;
 	}
 }
@@ -113,13 +111,6 @@ void actionAuth(void * arg){
 
 void actionTextTest(void * arg){
 	config.text.enable=1;
-	SDL_StartTextInput();
-}
-
-void actionTextStart(void * arg){
-	config.text.enable=1;
-	config.text.text[0]=0;
-	config.text.pos=strlen(config.text.text);
 	SDL_StartTextInput();
 }
 

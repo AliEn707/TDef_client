@@ -15,7 +15,26 @@ buttons
 button size 46
 between buttons 10
 */
+void textShow();
 
+void textAdd(char * text1,char * text2, int pos);
+
+void textRemChr(char * dest, int pos);
+
+void textHide(char * text);
+
+void textSetCur(char* text, int cur);
+void textRemCur(char* text);
+
+void textStop();
+
+void textMove(int i);
 //actions
 
 void actionKeyboard(void * arg);
+
+void actionTextTest(void * arg);
+
+void actionTextLogin(void * arg);
+
+void actionTextPass(void * arg);

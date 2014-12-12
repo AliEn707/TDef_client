@@ -21,5 +21,3 @@ void actionExitRoom(void * arg);
 void actionAuth(void * arg);
 //for debug
 void actionMapTest(void * arg);
-
-void actionTextTest(void * arg);
