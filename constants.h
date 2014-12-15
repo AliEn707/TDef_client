@@ -2,7 +2,7 @@
  #define PUBLIC_PORT 7001
  
  //sizeof text in element
- #define ELEM_$TEXT 25
+ #define ELEM_$TEXT 33
 // screen frames per texture frames
 #define FpF 5
 //write to config

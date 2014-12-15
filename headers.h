@@ -16,3 +16,5 @@
 #include "hash.h"
 #include "tar_reader.h"
 #include "types.h"
+#include "md5.h"
+#include "crc32.h"

@@ -13,7 +13,8 @@
 
 #define checkMask(x,y) x&y
 
-#define SIZE_OF_PASSWD 16
+#define SIZE_OF_PASSWD 32
+#define PASSWORD_SALT "aslkdnfma;owefw-=wafjmswv"
 
 typedef
 struct worker_arg{
@@ -78,6 +79,7 @@ int publicAuth(){
 	$name=strlen(name);
 //		printf("name %d\npass %d\n",$name,$passwd);
 	if ($name!=0 && strlen(passwd)!=0){
+		char pass[33],buf[100];
 		//not connected
 		if (sendData(config.public.network.socket,&$name,sizeof($name))<0){
 			config.public.network.socket=0;
@@ -87,12 +89,15 @@ int publicAuth(){
 			config.public.network.socket=0;
 			return 1;
 		}
-		
+		sprintf(buf,"%s%u",passwd,crc32(PASSWORD_SALT,strlen(PASSWORD_SALT)));
+		md5(buf,strlen(buf),pass);
 		//get salt to add to passwd and generate new
-		recvData(config.public.network.socket,&$name,sizeof($name));
+		sprintf(buf,"%s",pass);
+		recvData(config.public.network.socket,buf+SIZE_OF_PASSWD,sizeof(int));
 		printf("get %d for salt\n",$name);
+		md5(buf,SIZE_OF_PASSWD+4,pass);
 		//TODO: add hash gen
-		sendData(config.public.network.socket,passwd,SIZE_OF_PASSWD);
+		sendData(config.public.network.socket,pass,SIZE_OF_PASSWD);
 		recvData(config.public.network.socket,&$name,sizeof($name));
 		//we get normal answer
 		if ($name!=0)
