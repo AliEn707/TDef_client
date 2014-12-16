@@ -258,11 +258,12 @@ struct element{
 typedef
 struct object{
 	int type;
-	int focus;
+	short focus;
 	int in_focus;
 	int touch;
 	int single;
 	int hide;
+	short disabled;
 	vec2 position;
 	element * elements;
 	int $elements;
@@ -582,17 +583,17 @@ typedef short char2;
 #define getGridY(id) (1.0*idToY(id)+0.5f)
 
 //vetical and horisontal screen lines on grid
-#define getGridLineX(x,y) ((int)(x)+(int)(y))
-#define getGridLineY(x,y) (config.map.grid_size-(int)(x)+(int)(y))
+#define getGridLineX(x,y) ((x)+(y)) //CHECK: maybe need int
+#define getGridLineY(x,y) (config.map.grid_size-(x)+(y)) //CHECK: maybe need int
 //in screen check 
-#define checkGridLines(x,y) ({int $x=getGridLineX(x,y), $y=getGridLineY(x,y);(config.global.screen.node.l<$x && config.global.screen.node.r>$x && config.global.screen.node.u>$y && config.global.screen.node.d<$y);})
+#define checkGridLines(x,y) ({float $x=getGridLineX(x,y), $y=getGridLineY(x,y);(config.global.screen.node.l<$x && config.global.screen.node.r>$x && config.global.screen.node.u>$y && config.global.screen.node.d<$y);})
 
 #define posToId(v) (config.map.grid_size*((int)v.x)+((int)v.y))
 #define cursor config.global.cursor
 
 
-#define to2d(x,y)  ((x)*config.map.grid_size+(y))
-#define to2di(x,y)  (((int)(x))*config.map.grid_size+((int)(y)))
+#define to2d(x,y)  ((x)*config.map.grid_size+(y)) 
+#define to2di(x,y)  (((int)(x))*config.map.grid_size+((int)(y))) //
 
 #define ctoi(i) (i-48)
 

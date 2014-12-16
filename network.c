@@ -236,7 +236,7 @@ static inline int recvBulletMap(){
 }
 
 static inline int recvPlayerMap(){
-	int id,bit_mask;
+	int id,bit_mask,i;
 	recvMap(id);
 	//check npc
 	recvMap(bit_mask);
@@ -244,6 +244,40 @@ static inline int recvPlayerMap(){
 		recvMap(config.map.players[id].id);
 		recvMap(config.map.players[id].tower_set);
 		recvMap(config.map.players[id].npc_set);
+		if (id==config.map.player_id){
+			for(i=0;i<TOWER_SET_SIZE;i++){
+				if (config.map.players[id].tower_set[i].id<=0)
+					continue;
+				tower_type * type=typesTowerGet(config.map.players[id].tower_set[i].id);
+				if (type==0){
+					config.map.tower_menu.objects[i].disabled=1;
+					continue;
+				}
+				strcpy(config.map.tower_menu.objects[i].elements[0].tex_path,
+							type->tex_path[TEX_ICON]);
+				sprintf(config.map.tower_menu.objects[i].elements[1].text,"%-4d",type->cost);
+				if (config.map.players[id].tower_set[i].size<0)
+					sprintf(config.map.tower_menu.objects[i].text,"#%-6d",type->cost);
+				else
+					sprintf(config.map.tower_menu.objects[i].text,"&%-6d",config.map.players[id].tower_set[i].size);
+			}
+			for(i=0;i<NPC_SET_SIZE;i++){
+				if (config.map.players[id].npc_set[i].id<=0)
+					continue;
+				npc_type * type=typesNpcGet(config.map.players[id].npc_set[i].id);
+				if (type==0){
+					config.map.npc_menu.objects[i].disabled=1;
+					continue;
+				}
+				strcpy(config.map.npc_menu.objects[i].elements[0].tex_path,
+							type->tex_path[TEX_ICON]);
+				sprintf(config.map.npc_menu.objects[i].elements[1].text,"%-4d",type->cost);
+				if (config.map.players[id].npc_set[i].size<0)
+					sprintf(config.map.npc_menu.objects[i].text,"#%-6d",type->cost);
+				else
+					sprintf(config.map.npc_menu.objects[i].text,"&%-6d",config.map.players[id].npc_set[i].size);
+			}
+		}
 		recvMap(config.map.players[id].group);
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){

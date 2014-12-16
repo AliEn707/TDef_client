@@ -85,7 +85,7 @@ void loadMenu(menu* root,char* path){
 						fscanf(file,"%d\n",&m->objects[i].touch);
 					}
 					if(strcmp(buf,"focus")==0){
-						fscanf(file,"%d\n",&m->objects[i].focus);
+						fscanf(file,"%hd\n",&m->objects[i].focus);
 					}
 					if(strcmp(buf,"single")==0){
 						fscanf(file,"%d\n",&m->objects[i].single);
@@ -560,6 +560,12 @@ int loadNpcTypes(){
 		if (strcmp(buf,"texattackdown")==0){
 			fscanf(file,"%s\n",n_n->tex_path[TEX_ATTACK_DOWN]);
 		}
+		if (strcmp(buf,"texicon")==0){
+			fscanf(file,"%s\n",n_n->tex_path[TEX_ICON]);
+		}
+		if (strcmp(buf,"texdestroy")==0){
+			fscanf(file,"%s\n",n_n->tex_path[TEX_DESTROY]);
+		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
 			typesNpcAdd(n_n->id,n_n);
@@ -673,6 +679,36 @@ int loadTowerTypes(){
 		}
 		if (strcmp(buf,"texidle")==0){
 			fscanf(file,"%s\n",t_t->tex_path[TEX_IDLE]);
+		}
+		if (strcmp(buf,"texicon")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ICON]);
+		}
+		if (strcmp(buf,"texdestroy")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_DESTROY]);
+		}
+		if (strcmp(buf,"texattackleft")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_LEFT]);
+		}
+		if (strcmp(buf,"texattackright")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_RIGHT]);
+		}
+		if (strcmp(buf,"texattackleftup")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_LEFT_UP]);
+		}
+		if (strcmp(buf,"texattackleftdown")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_LEFT_DOWN]);
+		}
+		if (strcmp(buf,"texattackrightup")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_RIGHT_UP]);
+		}
+		if (strcmp(buf,"texattackrightdown")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_RIGHT_DOWN]);
+		}
+		if (strcmp(buf,"texattackup")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_UP]);
+		}
+		if (strcmp(buf,"texattackdown")==0){
+			fscanf(file,"%s\n",t_t->tex_path[TEX_ATTACK_DOWN]);
 		}
 		if (strcmp(buf,"//-")==0){
 			fscanf(file,"%s\n",buf);
@@ -991,7 +1027,7 @@ void loadFiles(){
 //	loadMap("test");
 	//add load config
 	//load locales
-	localeLoad("en.txt");
+	localeLoad("en");
 }
 
 void setTestData(){

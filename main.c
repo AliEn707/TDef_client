@@ -1,7 +1,8 @@
 //#include <windows.h> 
 #include <time.h> 
 
-
+#include "headers.h"
+/*
 #include "../main.h"
 #include "../locale.h"
 #include "../tga.h"
@@ -14,7 +15,7 @@
 #include "../network.h"
 #include "../lights.h"
 #include "../public.h"
-
+*/
 
 
 

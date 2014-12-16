@@ -49,7 +49,7 @@
 #define TEX_HIGH  1
 #define TEX_MAX 0 
 
-#define TEXTURES 20
+#define TEXTURES 21
 #define TEXTURE_FRAMES 25
 
 #define BASE_TEX_LAYERS 10
@@ -57,15 +57,15 @@
 //textures npc
 #define TEX_IDLE 0
 #define TEX_DESTROY 1
-#define TEX_WALK_LEFT 2
-#define TEX_WALK_UP 3
-#define TEX_WALK_DOWN 4
-#define TEX_WALK_RIGHT 5
-#define TEX_WALK_RIGHT_UP 6
-#define TEX_WALK_RIGHT_DOWN 7
-#define TEX_WALK_LEFT_UP 8
-#define TEX_WALK_LEFT_DOWN 9
-#define TEX_ATTACK 10
+#define TEX_ICON 2
+#define TEX_WALK_LEFT 3
+#define TEX_WALK_UP 4
+#define TEX_WALK_DOWN 5
+#define TEX_WALK_RIGHT 6
+#define TEX_WALK_RIGHT_UP 7
+#define TEX_WALK_RIGHT_DOWN 8
+#define TEX_WALK_LEFT_UP 9
+#define TEX_WALK_LEFT_DOWN 10
 #define TEX_ATTACK_LEFT 11
 #define TEX_ATTACK_RIGHT 12
 #define TEX_ATTACK_UP 13
@@ -74,6 +74,7 @@
 #define TEX_ATTACK_RIGHT_DOWN 16
 #define TEX_ATTACK_LEFT_UP 17
 #define TEX_ATTACK_LEFT_DOWN 18
+#define TEX_ATTACK 19
 
 //map
 //msg to client

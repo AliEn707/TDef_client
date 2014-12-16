@@ -302,11 +302,13 @@ object * checkMouseOnObject(object * o){
 	int i;
 	for(i=0;i<o->$elements;i++)
 		if(checkMouseOnElement(o->position,&o->elements[i])!=0){
-			if (o->focus!=0)
-				o->in_focus=1;	
-			config.menu.selected=o;
-			cursor.text=o->text;
-			return o;
+			if (o->disabled==0){
+				if (o->focus!=0)
+					o->in_focus=1;	
+				config.menu.selected=o;
+				cursor.text=o->text;
+				return o;
+			}
 		}
 	if (o->focus!=0)
 		o->in_focus=0;

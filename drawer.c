@@ -120,7 +120,8 @@ int setTexture(texture * t){
 	return textureFrameNext(t);
 }
 
-void drawElement(element * e,int focus){
+static inline void drawElement(element * e,object * o){
+	float d_d= o->disabled==0?1:0.69f;
 	if (e->focus_tex!=0)
 		if (e->ftex.frames==0){
 			if(e->map!=0)
@@ -134,8 +135,8 @@ void drawElement(element * e,int focus){
 		else
 			loadTexture(&e->tex,e->tex_path);
 	}
-	if (focus==0){
-		Color4f(e->color.r,e->color.g,e->color.b,e->color.a);
+	if (o->in_focus==0){
+		Color4f(e->color.r*d_d,e->color.g*d_d,e->color.b*d_d,e->color.a*d_d);
 		if (e->focus_tex!=0)
 			setTexture(&e->ftex);
 		else
@@ -148,8 +149,8 @@ void drawElement(element * e,int focus){
 		if (e->fcolor.a==0)
 			goto texbreak;
 	}
-	//to create slide animation
-	if (focus==0){
+	//TODO: create slide animation
+	if (o->in_focus==0){
 		e->_position.x=e->position.x;
 		e->_position.y=e->position.y;
 	}else{
@@ -177,7 +178,7 @@ void drawElement(element * e,int focus){
 	
 texbreak:
 	//now draw wire
-	if (focus==0){
+	if (o->in_focus==0){
 		if (e->wirecolor.a==0)
 			goto wirebreak;
 		Color4f(e->wirecolor.r,e->wirecolor.g,e->wirecolor.b,e->wirecolor.a);
@@ -228,7 +229,7 @@ void drawObject(object * o){
 	glPushMatrix();
 		glTranslatef(o->position.x,o->position.y,0);
 		for(i=0;i<o->$elements;i++)
-			drawElement(&o->elements[i],o->in_focus);
+			drawElement(&o->elements[i],o);
 	glPopMatrix();
 }
 
@@ -400,13 +401,13 @@ void drawHealth(vec2 pos,vec2 size,float p,float s,int shield){
 	setTexture(&config.map.tex[HEALTH_PAPER]);
 	Color4f(1,1,1,1);
 	Begin(GL_TRIANGLE_FAN);
-		TexCoord2f (0, 0.0f);
+		TexCoord2f (0.005f, 0.005f);
 		Vertex2f(pos.x-add,pos.y-add-$paper);
-		TexCoord2f (1.0f, 0.0f);
+		TexCoord2f (0.995f, 0.005f);
 		Vertex2f(pos.x+size.x+add,pos.y-add-$paper);
-		TexCoord2f (1.0f, 1.0f);
+		TexCoord2f (0.995f, 0.995f);
 		Vertex2f(pos.x+size.x+add,pos.y+size.y+add);
-		TexCoord2f (0, 1.0f);
+		TexCoord2f (0.005f, 0.995f);
 		Vertex2f(pos.x-add,pos.y+size.y+add);
 	End();
 	setTexture(&config.map.tex[HEALTH]);
@@ -1000,11 +1001,19 @@ void drawMinimap(){
 	glPopMatrix();
 }
 
-void drawPlayerHealth(){
-	
+static inline void drawPlayerInfo(){
+	char buf[100];
+	sprintf(buf,"%d",config.map.player->money);
+	Color4f(1,1,1,1);
+	Color4f(0,0,0,1);
+	//TODO: change a lot
+	glFontTextOut(localeTextGet(buf),
+			SCREEN_OFFSET, 
+			config.options.window.height-SCREEN_OFFSET,
+			0);
 }
 
-void drawMessage(){
+static inline void drawMessage(){
 	if (*config.message==0)
 		return;
 	glEnable(GL_TEXTURE_2D);
@@ -1112,6 +1121,7 @@ void drawScene(){
 		}
 		glViewport(0, 0, config.options.window.width, config.options.window.height);
 		
+		drawPlayerInfo();
 		drawMinimap();
 	}
 	

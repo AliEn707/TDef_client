@@ -86,7 +86,7 @@ void localeTexSet(char2 chr){
 int localeLoad(char * path){
 	FILE *file; 
 	char fullpath[100];
-	sprintf(fullpath,"../locale/%s",path);
+	sprintf(fullpath,"../locale/%s.loc",path);
 	if((file = fopen(fullpath, "rb"))==0){
 		perror("fopen localeLoad");
 		return 0;
