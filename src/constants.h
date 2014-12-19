@@ -26,7 +26,7 @@
 #define MINIMAP_AREA_SHIFT 12
 
 //textures map
-#define MAP_COMON_TEXTURES_MAX 500
+#define MAP_COMON_TEXTURES_MAX 700
 #define ERROR_T 1
 #define WALKABLE 2
 #define BUILDABLE 3
@@ -35,7 +35,9 @@
 #define DARKNESS 6
 #define HEALTH 7
 #define HEALTH_PAPER 8
-#define COMON_TEXTURES_START 9
+#define TOWER_MARK 9
+#define CURRENT_NODE 10
+#define COMON_TEXTURES_START 11
 
 //process object
 #define MOUSE 1
@@ -86,6 +88,7 @@
 //msg to server
 #define MSG_SPAWN_TOWER 1
 #define MSG_SPAWN_NPC 2
+#define MSG_DROP_TOWER 3
 
 //public
 //msg to server

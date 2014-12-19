@@ -568,8 +568,22 @@ static inline void drawTower(tower* t){
 				TexCoord2f (0.005f, 0.995f);
 				Vertex2f(-0.5f,0.5f);
 			End();
+		//draw marked tower
+		if (config.map.selected_tower==t->id){
+			setTexture(&config.map.tex[TOWER_MARK]);
+			Begin(GL_TRIANGLE_FAN);
+				TexCoord2f (0.005f, 0.005f);
+				Vertex2f(-0.5f,-0.5f);
+				TexCoord2f (0.995f, 0.005f);
+				Vertex2f(0.5f,-0.5f);
+				TexCoord2f (0.995f, 0.995f);
+				Vertex2f(0.5f,0.5f);
+				TexCoord2f (0.005f, 0.995f);
+				Vertex2f(-0.5f,0.5f);
+			End();
+		}
 			//draw level and health
-			glTranslatef(0,0,5);//need to draw over all
+//			glTranslatef(0,0,5);//need to draw over all
 			float health;
 			float shield;
 			if (t->type==BASE){
@@ -1133,6 +1147,9 @@ void drawScene(){
 	}
 	if (config.map.enable!=0){
 		drawMenuMap();
+	}
+	if (config.global.context_menu.enable!=0){
+		drawMenu(&config.global.context_menu);
 	}
 	if (config.menu.enable!=0)
 		drawMenu(&config.menu.root);

@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 
 /*
@@ -51,7 +51,55 @@ void processKeysMenu(SDL_Event event){
 		//config.global.keys[event.key.keysym.sym]=0;
 	}
 }
+//context menu
 
+menu* contextMenuInit(int obj,int elems,float size,texture ** t,void(**a_a)(void*_arg),int arg[][4]){
+	menu* m=&config.global.context_menu;
+	int i;
+	float alpha=2*M_PI/obj;
+	float r=obj>2?(1.41421356f*size)/(2*sinf(alpha)):size;
+	realizeMenu(m);
+	m->$objects=obj;
+	m->objects=malloc(m->$objects*sizeof(object));
+	memset(m->objects,0,m->$objects*sizeof(object));
+	for(i=0;i<m->$objects;i++){
+		m->objects[i].$elements=elems;
+		m->objects[i].elements=malloc(m->objects[i].$elements*sizeof(element));
+		memset(m->objects[i].elements,0,m->objects[i].$elements*sizeof(element));
+		int j;
+		//for positions
+		//n=7;n.times {|i| c=(360.0/n); p c+(180-c)/2+(c*i)}
+		m->objects[i].position.x=cursor.state.x-size/2+r*cosf(alpha*(i+0.5f)+M_PI/2);
+		m->objects[i].position.y=cursor.state.y-size/2-r*sinf(alpha*(i+0.5f)+M_PI/2);
+		if (a_a!=0){
+			if (a_a[i]!=0){
+				m->objects[i].action=a_a[i];
+				m->objects[i].touch=1;
+				m->objects[i].single=1;
+			}
+			if (arg!=0)
+				memcpy(m->objects[i].arg,arg[i],sizeof(int[4]));
+		}
+		for(j=0;j<m->objects[i].$elements;j++){
+			m->objects[i].elements[j].color.r=1.0f;
+			m->objects[i].elements[j].color.g=1.0f;
+			m->objects[i].elements[j].color.b=1.0f;
+			m->objects[i].elements[j].color.a=1.0f;
+			m->objects[i].elements[j].size.x=size;
+			m->objects[i].elements[j].size.y=size;
+			//set texture
+			if (t!=0)
+				if (t[i]!=0)
+					memcpy(&m->objects[i].elements[j].tex,t[i],sizeof(texture));
+		}
+	}
+	return m;
+}
+//TODO: add erase 
+
+void contextMenuDisable(){
+	config.global.context_menu.enable=0;
+}
 
 //actions
 

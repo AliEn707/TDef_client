@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 /*
 ╔══════════════════════════════════════════════════════════════╗
@@ -148,10 +148,11 @@ void processObjectAction(int type,int key){
 		return;
 	}
 	if(config.menu.selected->touch!=0)
-		if(config.menu.selected->action!=0)
+		if(config.menu.selected->action!=0){
 			if (config.menu.selected->action!=actionKeyboard)
 				textStop();
 			config.menu.selected->action(config.menu.selected);
+		}
 	
 	if(config.menu.selected->single!=0){
 		if(type==KEYBOARD)
@@ -249,6 +250,8 @@ void processEvent(SDL_Event event){
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			config.global.mouse[event.button.button]=1;
+			contextMenuDisable();
+			config.map.selected_tower=0;
 			//if (config.menu.enable!=0)
 				processMouseMenu(event);
 			//else
@@ -362,6 +365,10 @@ int checkMouseState(){
 		if (config.public.enable!=0){
 			checkMenuPublic();
 		}
+		if (config.global.context_menu.enable!=0){
+			checkMouseMenu(&config.global.context_menu);
+		}
+		
 	}
 //			if (config.menu.selected!=0)
 //				config.menu.selected->in_focus=1;

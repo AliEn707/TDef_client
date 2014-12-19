@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 /*
 ╔══════════════════════════════════════════════════════════════╗
@@ -249,6 +249,8 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[DARKNESS],"global/darkness");
 	loadTexture(&config.map.tex[HEALTH],"global/health");
 	loadTexture(&config.map.tex[HEALTH_PAPER],"global/health_paper");
+	loadTexture(&config.map.tex[TOWER_MARK],"global/tower_mark");
+	loadTexture(&config.map.tex[CURRENT_NODE],"global/current_node");
 	initLights();
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	

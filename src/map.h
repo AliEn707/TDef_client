@@ -38,10 +38,10 @@ void setActionMenu();
 void actionShowWalkMap(void * arg);
 
 void actionMoveMap(void * arg);
-
 void actionZoomMap(void * arg);
 
 void actionSpawnTower(void * arg);
+void actionDropTower(void * arg);
 
 void actionSpawnNpc(void * arg);
 
@@ -52,6 +52,8 @@ void actionMinimap(void * arg);
 void actionTowerSpawnBrush(void * arg);
 
 void actionNpcSpawnBrush(void * arg);
+
+void actionTowerRemove(void * arg);
 
 //brush
 

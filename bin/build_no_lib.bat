@@ -5,7 +5,7 @@
 @set PATH=%root%\MinGW\bin;%PATH%
 
 
-mingw32-gcc *.c ../*.c  -lSDL2main -lSDL2 -lSDL2_net -lopengl32 -lglu32 -Wall -g  -c 
-mingw32-g++ ../*.cpp *.o -lSDL2main -lSDL2 -lSDL2_net -lopengl32 -lglu32 -static-libstdc++ -static-libgcc -Wall -g -o TDef
+mingw32-gcc ../src/*.c  -lSDL2main -lSDL2 -lSDL2_net -lopengl32 -lglu32 -Wall -g  -c 
+mingw32-g++ ../src/*.cpp *.o -lSDL2main -lSDL2 -lSDL2_net -lopengl32 -lglu32 -static-libstdc++ -static-libgcc -Wall -g -o TDef
 del *.o
 pause

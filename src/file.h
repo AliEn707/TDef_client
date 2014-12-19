@@ -1,4 +1,5 @@
 void loadMenu(menu * root,char* path);
+void realizeMenu(menu* m);
 
 int loadTexture(texture * t, char * path);
 int loadMTexture(texture * t, char * path);

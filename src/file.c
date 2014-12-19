@@ -1037,7 +1037,7 @@ void setTestData(){
 	#define x2 7.5
 	#define y2 5.5
 	
-	config.map.player_id=0;
+	config.map.player_id=1;
 	config.map.player=&config.map.players[config.map.player_id];
 	config.map.players[2].group=1;
 	
@@ -1056,11 +1056,12 @@ void setTestData(){
 	config.map.npc_array[0].health=87;
 	
 	config.map.tower_array[0].$$$=STRUCT_TOWER;
-	config.map.tower_array[0].id=-1;
+	config.map.tower_array[0].id=235;
 	config.map.tower_array[0].type=1;
 	config.map.tower_array[0].owner=1;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
+	config.map.grid[to2di(2.5,2.5)].tower_id=235;
 	
 	config.map.bullet_array[0].$$$=STRUCT_BULLET;
 	config.map.bullet_array[0].id=-1;
@@ -1113,6 +1114,8 @@ void cleanAll(){
 	realizeMenu(&config.auth_menu);
 //	realizeMenu(&config.map.screen_menu);
 //	realizeMenu(&config.map.action_menu);
+	
+	realizeMenu(&config.global.context_menu);
 	
 	realizeTypes();
 	cleanMap();

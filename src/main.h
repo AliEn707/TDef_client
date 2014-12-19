@@ -322,6 +322,7 @@ struct menu_conf{
 	object* selected;
 }menu_conf;
 
+//what is this??
 typedef
 struct {
 	char tex_path[BASE_TEX_LAYERS][100];
@@ -375,7 +376,8 @@ struct {
 typedef
 struct map_conf{
 	int enable;
-	int focus;
+	int focus; //focused node under cursor
+	int selected_tower; //selected tower
 	int show_walk;
 	int grid_size;
 	gnode * grid;
@@ -444,7 +446,9 @@ struct global_conf{
 	int mouse[100];
 	g_params transform;
 	g_params _transform;
-
+	
+	menu context_menu;
+	
 	float frame_time;
 	struct {
 		struct {

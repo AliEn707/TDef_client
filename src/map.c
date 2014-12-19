@@ -336,6 +336,19 @@ void actionSpawnTower(void * arg){
 //	send(config.map.network.socket,sizeof(mtype),0);
 }
 
+void actionDropTower(void * arg){
+	object * o=arg;
+	int * p=(o->arg);
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_DROP_TOWER;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnTower");
+//	else printf("send %d %d %d",mtype,p[0],p[1]);
+	SDLNet_TCP_Send(config.map.network.socket,&p[0],sizeof(int));
+//	send(config.map.network.socket,sizeof(mtype),0);
+}
+
 void actionSpawnNpc(void * arg){
 	object * o=arg;
 	int * p=(o->arg);
@@ -380,15 +393,19 @@ void actionTowerSpawnBrush(void * arg){
 	printf("set Brush Tower button id %d\n",config.map.brush.id);
 }
 
-
+void actionTowerRemove(void * arg){
+	
+}
 ///brush
 
 void brushTowerCreate(){
+//	printf("send %hd %hd\n",config.map.focus,config.map.brush.id);
 	if (config.map.grid[config.map.focus].buildable<=0){
-		dropBrush();
+//		dropBrush();
+		setScreenMessage("#cant_create_tower_here");
 		return;
 	}
-//	printf("send %hd %hd\n",config.map.focus,config.map.brush.id);
+	//TODO: add money check
 	if (config.map.network.socket==0)
 		return;
 	char mtype=MSG_SPAWN_TOWER;
@@ -400,11 +417,34 @@ void brushTowerCreate(){
 //	send(config.map.network.socket,sizeof(mtype),0);
 }
 
+#define CONTEXT_MENU_BUTTONS 3
+//textures init array
+static texture * context_textures[CONTEXT_MENU_BUTTONS]={&config.map.tex[LIGHT],&config.map.tex[BUILDABLE],&config.map.tex[WALKABLE]};
+//actions init array
+static void(*context_actions[CONTEXT_MENU_BUTTONS])(void*)={actionTestMenu,actionTestMenu,actionTestMenu};
+//proceed click on node
 void processBrush(){
 	printf("click on node %d\n",config.map.focus);
-	if (config.map.brush.action==0)
-		return;
-	config.map.brush.action();
+	//defaul actions
+	if (config.map.grid[config.map.focus].tower_id!=0){
+		tower* t=getTowerById(config.map.grid[config.map.focus].tower_id);
+		if (t!=0)
+			if (t->owner==config.map.player_id && t->type!=BASE){ //may act only on player own towers
+				menu *m_m=contextMenuInit(CONTEXT_MENU_BUTTONS,
+										1,50, 
+										context_textures,
+										context_actions,	//to set array must be (void(*[])(void*))
+										(int[CONTEXT_MENU_BUTTONS][4]){{config.map.focus},{config.map.focus}}); 
+				//TODO: add texts to init
+				m_m->enable=1;
+	//			setScreenMessage("#something");
+				dropBrush();
+				config.map.selected_tower=t->id;
+			}
+	}
+	
+	if (config.map.brush.action!=0)
+		config.map.brush.action();
 //	config.map.focus;
 //	config.map.brush;
 }

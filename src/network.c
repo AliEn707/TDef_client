@@ -152,8 +152,8 @@ static inline int recvTowerMap(){
 //		printf("egt tower on %d with %d\n",position,id);
 		config.map.grid[position].tower_id=id;
 //		printf("%d\n",config.map.grid[position].tower_id);
-		t->position.x=position/config.map.grid_size+0.5;
-		t->position.y=position%config.map.grid_size+0.5;
+		t->position.x=getGridX(position);
+		t->position.y=getGridY(position);
 //		printf("tower on %g %g\n",t->position.x,t->position.y);
 		
 	}
