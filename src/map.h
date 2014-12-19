@@ -40,7 +40,6 @@ void actionShowWalkMap(void * arg);
 void actionMoveMap(void * arg);
 void actionZoomMap(void * arg);
 
-void actionSpawnTower(void * arg);
 void actionDropTower(void * arg);
 
 void actionSpawnNpc(void * arg);

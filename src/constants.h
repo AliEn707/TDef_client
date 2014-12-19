@@ -37,7 +37,8 @@
 #define HEALTH_PAPER 8
 #define TOWER_MARK 9
 #define CURRENT_NODE 10
-#define COMON_TEXTURES_START 11
+#define REMOVE_OBJECT 11
+#define COMON_TEXTURES_START 12
 
 //process object
 #define MOUSE 1

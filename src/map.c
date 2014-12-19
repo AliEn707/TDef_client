@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 
 /*
@@ -322,20 +322,6 @@ void actionZoomMap(void * arg){
 	setZoom(o->arg[0]*CAMERA_ZOOM*0.85);
 }
 
-void actionSpawnTower(void * arg){
-	object * o=arg;
-	int * p=(o->arg);
-	if (config.map.network.socket==0)
-		return;
-	char mtype=MSG_SPAWN_TOWER;
-	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
-		perror("send spawnTower");
-//	else printf("send %d %d %d",mtype,p[0],p[1]);
-	SDLNet_TCP_Send(config.map.network.socket,&p[0],sizeof(int));
-	SDLNet_TCP_Send(config.map.network.socket,&p[1],sizeof(int));
-//	send(config.map.network.socket,sizeof(mtype),0);
-}
-
 void actionDropTower(void * arg){
 	object * o=arg;
 	int * p=(o->arg);
@@ -393,9 +379,6 @@ void actionTowerSpawnBrush(void * arg){
 	printf("set Brush Tower button id %d\n",config.map.brush.id);
 }
 
-void actionTowerRemove(void * arg){
-	
-}
 ///brush
 
 void brushTowerCreate(){
@@ -413,15 +396,17 @@ void brushTowerCreate(){
 		perror("send spawnTower");
 //	else printf("send %d %d %d",mtype,p[0],p[1]);
 	SDLNet_TCP_Send(config.map.network.socket,&config.map.focus,sizeof(int));
-	SDLNet_TCP_Send(config.map.network.socket,&config.map.brush.id,sizeof(config.map.brush.id));
+	SDLNet_TCP_Send(config.map.network.socket,&config.map.brush.id,sizeof(config.map.brush.id)); //short
 //	send(config.map.network.socket,sizeof(mtype),0);
 }
 
 #define CONTEXT_MENU_BUTTONS 3
 //textures init array
-static texture * context_textures[CONTEXT_MENU_BUTTONS]={&config.map.tex[LIGHT],&config.map.tex[BUILDABLE],&config.map.tex[WALKABLE]};
+static texture * context_textures[CONTEXT_MENU_BUTTONS]={&config.map.tex[REMOVE_OBJECT],&config.map.tex[BUILDABLE],&config.map.tex[WALKABLE]};
 //actions init array
-static void(*context_actions[CONTEXT_MENU_BUTTONS])(void*)={actionTestMenu,actionTestMenu,actionTestMenu};
+static void(*context_actions[CONTEXT_MENU_BUTTONS])(void*)={actionDropTower,actionTestMenu,actionTestMenu};
+//texts init array
+static char * context_obj_texts[CONTEXT_MENU_BUTTONS]={"remove tower"};
 //proceed click on node
 void processBrush(){
 	printf("click on node %d\n",config.map.focus);
@@ -431,10 +416,15 @@ void processBrush(){
 		if (t!=0)
 			if (t->owner==config.map.player_id && t->type!=BASE){ //may act only on player own towers
 				menu *m_m=contextMenuInit(CONTEXT_MENU_BUTTONS,
-										1,50, 
+										1,54, 
 										context_textures,
 										context_actions,	//to set array must be (void(*[])(void*))
-										(int[CONTEXT_MENU_BUTTONS][4]){{config.map.focus},{config.map.focus}}); 
+										(int[CONTEXT_MENU_BUTTONS][4]){{config.map.focus},
+																	{config.map.focus}},
+										context_obj_texts,
+										0,
+										0
+										); 
 				//TODO: add texts to init
 				m_m->enable=1;
 	//			setScreenMessage("#something");

@@ -251,6 +251,7 @@ int drawerThread(void *ptr){
 	loadTexture(&config.map.tex[HEALTH_PAPER],"global/health_paper");
 	loadTexture(&config.map.tex[TOWER_MARK],"global/tower_mark");
 	loadTexture(&config.map.tex[CURRENT_NODE],"global/current_node");
+	loadTexture(&config.map.tex[REMOVE_OBJECT],"global/remove_object");
 	initLights();
 	loadTexture(&config.map.minimap.tex,"global/minimap");
 	

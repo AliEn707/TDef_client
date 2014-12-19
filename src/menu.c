@@ -53,7 +53,7 @@ void processKeysMenu(SDL_Event event){
 }
 //context menu
 
-menu* contextMenuInit(int obj,int elems,float size,texture ** t,void(**a_a)(void*_arg),int arg[][4]){
+menu* contextMenuInit(int obj,int elems,float size,texture**t,void(**a_a)(void*_arg),int arg[][4],char**otext,vec2*tpos,char**etext){
 	menu* m=&config.global.context_menu;
 	int i;
 	float alpha=2*M_PI/obj;
@@ -80,6 +80,9 @@ menu* contextMenuInit(int obj,int elems,float size,texture ** t,void(**a_a)(void
 			if (arg!=0)
 				memcpy(m->objects[i].arg,arg[i],sizeof(int[4]));
 		}
+		if (otext!=0)
+			if (otext[i]!=0)
+				sprintf(m->objects[i].text,"%s",otext[i]);
 		for(j=0;j<m->objects[i].$elements;j++){
 			m->objects[i].elements[j].color.r=1.0f;
 			m->objects[i].elements[j].color.g=1.0f;
@@ -91,6 +94,11 @@ menu* contextMenuInit(int obj,int elems,float size,texture ** t,void(**a_a)(void
 			if (t!=0)
 				if (t[i]!=0)
 					memcpy(&m->objects[i].elements[j].tex,t[i],sizeof(texture));
+			if (etext!=0)
+				if (etext[i]!=0)
+					sprintf(m->objects[i].elements[j].text,"%s",etext[i]);
+			if (tpos!=0)
+				memcpy(&m->objects[i].elements[j].text_position,&tpos[i],sizeof(vec2));
 		}
 	}
 	return m;
