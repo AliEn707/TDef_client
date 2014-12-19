@@ -1,1 +1,1 @@
-gcc main.c ../*.c ../*.cpp -lSDL2main -lSDL2 -lSDL2_net -lGL -lGLU -lm -lstdc++ -Wl,-rpath="/usr/lib"  -Wall -g -o TDef
+gcc main.c ../src/*.c ../src/*.cpp -lSDL2main -lSDL2 -lSDL2_net -lGL -lGLU -lm -lstdc++ -Wl,-rpath="/usr/lib"  -Wall -g -o TDef
