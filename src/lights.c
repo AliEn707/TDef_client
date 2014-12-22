@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 /*
 ╔══════════════════════════════════════════════════════════════╗
 ║ 										                       ║
@@ -80,25 +80,37 @@ static inline void drawLight(vec2 * pos, float size){
 void drawLights(){
 	int i;
 	setTexture(&config.map.tex[LIGHT]);
+	Color4f(1,1,1,1);
 	glEnable(GL_TEXTURE_2D);
 //	glPushMatrix();
 //	globalTransform();
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0)
-				if (checkGridLines(config.map.tower_array[i].position.x,config.map.tower_array[i].position.y))
-					drawLight(&config.map.tower_array[i].position,1.5);
+				if (checkGridLines(config.map.tower_array[i].position.x,config.map.tower_array[i].position.y)){
+					int owner=config.map.tower_array[i].owner;
+					float size=1; //if less -> more transparent; black -> transparent, bright -> black;
+					if (owner!=config.map.player_id)
+						size=(config.map.players[owner].group==config.map.player->group?0.7f:0.0f);
+					drawLight(&config.map.tower_array[i].position,1.5*size);
+				}
 		for(i=0;i<config.map.npc_max;i++)
 			if (config.map.npc_array[i].id!=0)
-				if (checkGridLines(config.map.npc_array[i].position.x,config.map.npc_array[i].position.y))
-					drawLight(&config.map.npc_array[i].position,1);	
+				if (checkGridLines(config.map.npc_array[i].position.x,config.map.npc_array[i].position.y)){
+					int owner=config.map.npc_array[i].owner;
+					float size=1;
+					if (owner!=config.map.player_id)
+						size=(config.map.players[owner].group==config.map.player->group?0.7f:0.0f);
+					drawLight(&config.map.npc_array[i].position,1*size);	
+				}
 //	glPopMatrix();
 }
 #define scale 4.0f
 void drawLightsMap(){
 //	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 //	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+//	glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 	glBlendFunc(GL_SRC_ALPHA,GL_SRC_ALPHA);
-	Color4f(1,1,1,1);
+	
 	
 /*	if (config.options.darkness.tex_size>128){
 		setTexture(&config.map.tex[DARKNESS]);

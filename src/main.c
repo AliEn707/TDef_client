@@ -42,7 +42,7 @@ int main(){
 	config.options.tex_filter_min=GL_LINEAR_MIPMAP_LINEAR;
 	//night mode switch
 	config.options.darkness.enable=0;
-	config.options.darkness.tex_size=32;
+	config.options.darkness.tex_size=64;
 	//brightness 
 	config.options.brightness=0.7;
 	//color add to screen colors

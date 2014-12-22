@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 /*
 ╔══════════════════════════════════════════════════════════════╗
@@ -282,6 +282,9 @@ static inline int recvPlayerMap(){
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
 		recvMap(config.map.players[id].base_type.health);
+	}
+	if(checkMask(bit_mask,PLAYER_LEVEL)){//on create
+		recvMap(config.map.players[id].level);
 	}
 	if(checkMask(bit_mask,PLAYER_MONEY)){
 		recvMap(config.map.players[id].money);

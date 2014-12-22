@@ -1027,7 +1027,7 @@ void loadFiles(){
 //	loadMap("test");
 	//add load config
 	//load locales
-	localeLoad("en");
+	localeLoad("ru");
 }
 
 void setTestData(){

@@ -1,4 +1,4 @@
- #define PUBLIC_SERVER  "localhost"//"192.168.56.56"//"localhost" //"public.tdef.tk"
+ #define PUBLIC_SERVER  "home.wsstudio.tk"//"192.168.56.56"//"localhost" //"public.tdef.tk"
  #define PUBLIC_PORT 7001
  
  //sizeof text in element
@@ -131,6 +131,7 @@
 #define PLAYER_HEALTH 1
 #define PLAYER_MONEY 2
 #define PLAYER_CREATE 4
+#define PLAYER_LEVEL 8
 
 #define NPC_HEALTH 1
 #define NPC_POSITION 2
