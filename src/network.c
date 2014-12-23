@@ -279,6 +279,15 @@ static inline int recvPlayerMap(){
 			}
 		}
 		recvMap(config.map.players[id].group);
+		//get info about base
+		recvMap(config.map.players[id].base_type.health);
+		int base;
+		recvMap(base);
+		if (base!=0){
+			tower * t=getTowerById(base);
+			if (t!=0)
+				config.map.players[id].base=t;
+		}
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
 		recvMap(config.map.players[id].base_type.health);

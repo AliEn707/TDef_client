@@ -1039,6 +1039,8 @@ void setTestData(){
 	
 	config.map.player_id=1;
 	config.map.player=&config.map.players[config.map.player_id];
+	config.map.player->base=&config.map.tower_array[0];
+	config.map.player->base_type.health=100;
 	config.map.players[2].group=1;
 	
 	config.map.npc_array[1].$$$=STRUCT_NPC;
@@ -1059,6 +1061,7 @@ void setTestData(){
 	config.map.tower_array[0].id=235;
 	config.map.tower_array[0].type=1;
 	config.map.tower_array[0].owner=1;
+	config.map.tower_array[0].health=60;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
 	config.map.grid[to2di(2.5,2.5)].tower_id=235;

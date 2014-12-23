@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 /*
 ╔══════════════════════════════════════════════════════════════╗
@@ -535,7 +535,8 @@ static inline void drawNpcs(){
 static inline void drawTower(tower* t) __attribute__((always_inline));
 static inline void drawTower(tower* t){
 	float size=1.4f;
-	tower_type * type=typesTowerGet(t->type);
+	tower_type * type;
+	type=t->type!=BASE?typesTowerGet(t->type):&config.map.players[t->owner].base_type;
 	if (type==0)
 		return;
 	if (type->t_size!=0)
@@ -584,17 +585,10 @@ static inline void drawTower(tower* t){
 		}
 			//draw level and health
 //			glTranslatef(0,0,5);//need to draw over all
-			float health;
-			float shield;
-			if (t->type==BASE){
-				health=1.0*t->health/config.map.players[t->owner].base_type.health;
-				health=config.map.players[t->owner].base_type.shield?1.0*t->shield/config.map.players[t->owner].base_type.shield:0;
-			}else{
-				health=1.0*t->health/type->health;
-				shield=type->shield?1.0*t->shield/type->shield:0;
-		
-			}
-			if (health<0.95 || shield<0.95)
+			float health=type->health!=0?1.0*t->health/type->health:0;
+			float shield=type->shield?1.0*t->shield/type->shield:0;
+	
+			if (health<0.95 || (shield<0.95 && type->shield!=0))
 				drawHealth((vec2){-0.325,0.5},(vec2){0.75,0.035},health,shield,type->shield);
 			Color4f(1,1,1,1);
 //		glPushMatrix();
@@ -1015,17 +1009,94 @@ void drawMinimap(){
 	glPopMatrix();
 }
 
+#define SHIFT_X 5
+#define SHIFT_Y 5
+#define ICON_SIZE 80
+#define INFO_WIDTH (500-ICON_SIZE)
+#define INFO_HEIGHT (SHIFT_Y+ICON_SIZE)
 static inline void drawPlayerInfo(){
+	vec2 pos={SCREEN_OFFSET+SHIFT_X,config.options.window.height-SCREEN_OFFSET-SHIFT_Y-ICON_SIZE};
+	vec2 money={SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET};
 	char buf[100];
-	sprintf(buf,"%d",config.map.player->money);
+	char2 * text;
+	//draw base icon
+	tower_type * type=0;
+	tower * t=config.map.player->base;
+	if (t!=0)
+		type=&config.map.players[t->owner].base_type;
+	if (type==0)
+		return;
+	
+	if (t->tex[TEX_ICON].frames==0){
+		if (type->tex[TEX_ICON].frames==0)
+			//npc stored in global tex memory
+			loadTexture(&type->tex[TEX_ICON],type->tex_path[TEX_ICON]);
+		memcpy(&t->tex[TEX_ICON],&type->tex[TEX_ICON],sizeof(texture));
+	}
+	sprintf(buf,"#%10d ",config.map.player->money);
+	text=localeTextGet(buf);
+	float height=glFontHeight(text);
+	float shift=0.05f;
+	float length=glFontWigth(text);
+	money.x=pos.x+ICON_SIZE;
+	money.y=pos.y+height;
+	//draw back
 	Color4f(1,1,1,1);
+	glDisable(GL_TEXTURE_2D);
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f(0.0f, 0.0f);
+		Vertex2f(money.x-shift,money.y-height-shift);
+		TexCoord2f(1.0f, 0.0f);
+		Vertex2f(money.x+length+shift,money.y-height-shift);
+		TexCoord2f(1.0f, 1.0f);
+		Vertex2f(money.x+length+shift,money.y+shift);
+		TexCoord2f(0.0f, 1.0f);
+		Vertex2f(money.x-shift,money.y+shift);
+	End();
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f(0.0f, 0.0f);
+		Vertex2f(pos.x-SHIFT_X,pos.y-SHIFT_Y);
+		TexCoord2f(1.0f, 0.0f);
+		Vertex2f(pos.x+ICON_SIZE+SHIFT_X,pos.y-SHIFT_Y);
+		TexCoord2f(1.0f, 1.0f);
+		Vertex2f(pos.x+ICON_SIZE+SHIFT_X,pos.y+ICON_SIZE+SHIFT_Y);
+		TexCoord2f(0.0f, 1.0f);
+		Vertex2f(pos.x-SHIFT_X,pos.y+ICON_SIZE+SHIFT_Y);
+	End();
+	
+	float health=type->health?1.0*t->health/type->health:0;
+	float shield=type->shield?1.0*t->shield/type->shield:0;
+	drawHealth((vec2){pos.x+ICON_SIZE,pos.y+ICON_SIZE-INFO_HEIGHT/5},(vec2){INFO_WIDTH-ICON_SIZE,INFO_HEIGHT/5},health,shield,type->shield);
+	
+	Color4f(1,1,1,1);
+	glEnable(GL_TEXTURE_2D);
+	setTexture(&t->tex[TEX_ICON]);
+	Begin(GL_TRIANGLE_FAN);
+		TexCoord2f (0.005f, 0.005f);
+		Vertex2f(pos.x,pos.y);
+		TexCoord2f (0.995f, 0.005f);
+		Vertex2f(pos.x+ICON_SIZE,pos.y);
+		TexCoord2f (0.995f, 0.995f);
+		Vertex2f(pos.x+ICON_SIZE,pos.y+ICON_SIZE);
+		TexCoord2f (0.005f, 0.995f);
+		Vertex2f(pos.x,pos.y+ICON_SIZE);
+	End();
+	
+	
 	Color4f(0,0,0,1);
 	//TODO: change a lot
-	glFontTextOut(localeTextGet(buf),
-			SCREEN_OFFSET, 
-			config.options.window.height-SCREEN_OFFSET,
+	glFontTextOut(text,
+			money.x, 
+			money.y,
 			0);
+	sprintf(buf,"%d ",config.map.player->level);
+	glFontTextOut(localeTextGet(buf),pos.x,pos.y+ICON_SIZE+SHIFT_Y,0);
 }
+#undef SHIFT_X 
+#undef SHIFT_Y 
+#undef ICON_SIZE 
+#undef INFO_WIDTH 
+#undef INFO_HEIGHT
 
 static inline void drawMessage(){
 	if (*config.message==0)
