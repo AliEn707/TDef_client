@@ -64,6 +64,7 @@ static inline void drawLight(vec2 * pos, float size){
 	glPushMatrix();
 	glTranslatef(pos->x,pos->y,0);
 	backTransform();
+	glTranslatef(0,0.2,0);
 		Begin(GL_TRIANGLE_FAN);
 			TexCoord2f (0.0f, 0.0f);
 			Vertex2f(-size,-size);

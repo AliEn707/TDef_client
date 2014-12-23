@@ -1,2 +1,2 @@
-localhost
+home.wsstudio.tk
 34140
