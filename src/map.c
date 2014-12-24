@@ -78,6 +78,17 @@ void checkMouseMap(){
 		config.map.focus=-1;
 		return;
 	}
+	//check icons
+	vec2 pos={ICON_POS_X,ICON_POS_Y};
+	if (cursor.state.x>=pos.x && cursor.state.x<=pos.x+ICON_SIZE && cursor.state.y>=pos.y && cursor.state.y<=pos.y+ICON_SIZE){
+		config.menu.selected=&config.map.base_obj;
+		return;
+	}	
+	if (cursor.state.x>=H_ICON_POS_X && cursor.state.x<=H_ICON_POS_X+H_ICON_SIZE && cursor.state.y>=H_ICON_POS_Y && cursor.state.y<=H_ICON_POS_Y+H_ICON_SIZE){
+		config.menu.selected=&config.map.hero_obj;
+		return;
+	}	
+	//check minimap
 	if(config.map.minimap.enable!=0) 
 		if (cursor.state.x>config.options.window.width-MINIMAP_AREA_WIDTH-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET && 
 				cursor.state.y>config.options.window.height-MINIMAP_AREA_HEIGHT-MINIMAP_AREA_SHIFT*2-SCREEN_OFFSET &&
@@ -379,33 +390,25 @@ void actionTowerSpawnBrush(void * arg){
 	printf("set Brush Tower button id %d\n",config.map.brush.id);
 }
 
-///brush
-
-void brushTowerCreate(){
-//	printf("send %hd %hd\n",config.map.focus,config.map.brush.id);
-	if (config.map.grid[config.map.focus].buildable<=0){
-//		dropBrush();
-		setScreenMessage("#cant_create_tower_here");
-		return;
-	}
-	//TODO: add money check
-	if (config.map.network.socket==0)
-		return;
-	char mtype=MSG_SPAWN_TOWER;
-	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
-		perror("send spawnTower");
-//	else printf("send %d %d %d",mtype,p[0],p[1]);
-	SDLNet_TCP_Send(config.map.network.socket,&config.map.focus,sizeof(int));
-	SDLNet_TCP_Send(config.map.network.socket,&config.map.brush.id,sizeof(config.map.brush.id)); //short
-//	send(config.map.network.socket,sizeof(mtype),0);
+void actionBaseIcon(void * arg){
+	printf("base icon action\n");
 }
+
+void actionHeroIcon(void * arg){
+	printf("hero icon action\n");
+	object * o=arg;
+	config.map.brush.id=(short)o->arg[0];
+	config.map.brush.type=BRUSH_HERO_POSITION;
+	config.map.brush.action=brushHeroPos;
+}
+
+
+///brush
 
 #define CONTEXT_MENU_BUTTONS 3
 //textures init array
 static texture * context_textures[CONTEXT_MENU_BUTTONS]={&config.map.tex[REMOVE_OBJECT],&config.map.tex[BUILDABLE],&config.map.tex[WALKABLE]};
-//actions init array
 static void(*context_actions[CONTEXT_MENU_BUTTONS])(void*)={actionDropTower,actionTestMenu,actionTestMenu};
-//texts init array
 static char * context_obj_texts[CONTEXT_MENU_BUTTONS]={"remove tower"};
 //proceed click on node
 void processBrush(){
@@ -444,4 +447,41 @@ void dropBrush(){
 	config.map.brush.type=0;
 	config.map.brush.action=0;
 	printf("clear Brush\n");
+}
+
+void brushTowerCreate(){
+//	printf("send %hd %hd\n",config.map.focus,config.map.brush.id);
+	if (config.map.grid[config.map.focus].buildable<=0){
+//		dropBrush();
+		setScreenMessage("#cant_create_tower_here");
+		return;
+	}
+	//TODO: add money check
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_SPAWN_TOWER;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnTower");
+//	else printf("send %d %d %d",mtype,p[0],p[1]);
+	SDLNet_TCP_Send(config.map.network.socket,&config.map.focus,sizeof(int));
+	SDLNet_TCP_Send(config.map.network.socket,&config.map.brush.id,sizeof(config.map.brush.id)); //short
+//	send(config.map.network.socket,sizeof(mtype),0);
+}
+
+void brushHeroPos(){
+	float x=screenToGridX(cursor.state.x,cursor.state.y);
+	float y=screenToGridY(cursor.state.x,cursor.state.y);
+	int pos=to2di(x,y);
+	if (pos<0 || pos>=sqr(config.map.grid_size))
+		return;
+	printf("send hero to %d node\n",pos);
+	//TODO: pos check
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_MOVE_HERO;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnTower");
+//	else printf("send %d %d %d",mtype,p[0],p[1]);
+	SDLNet_TCP_Send(config.map.network.socket,&pos,sizeof(pos));
+	dropBrush();
 }

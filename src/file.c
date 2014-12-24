@@ -1028,6 +1028,13 @@ void loadFiles(){
 	//add load config
 	//load locales
 	localeLoad("ru");
+	
+	config.map.base_obj.action=actionBaseIcon;
+	config.map.base_obj.touch=1;
+	config.map.base_obj.single=1;
+	config.map.hero_obj.action=actionHeroIcon;
+	config.map.hero_obj.touch=1;
+	config.map.hero_obj.single=1;
 }
 
 void setTestData(){
@@ -1040,7 +1047,11 @@ void setTestData(){
 	config.map.player_id=1;
 	config.map.player=&config.map.players[config.map.player_id];
 	config.map.player->base=&config.map.tower_array[0];
+	config.map.player->hero=&config.map.npc_array[0];
 	config.map.player->base_type.health=100;
+	config.map.player->base_type.shield=100;
+	config.map.player->hero_type.health=100;
+	config.map.player->hero_type.shield=100;
 	config.map.players[2].group=1;
 	
 	config.map.npc_array[1].$$$=STRUCT_NPC;
@@ -1056,12 +1067,15 @@ void setTestData(){
 	config.map.npc_array[0].id=-200;
 	config.map.npc_array[0].type=1;
 	config.map.npc_array[0].health=87;
+	config.map.npc_array[0].shield=47;
+	config.map.npc_array[0].owner=1;
 	
 	config.map.tower_array[0].$$$=STRUCT_TOWER;
 	config.map.tower_array[0].id=235;
 	config.map.tower_array[0].type=1;
 	config.map.tower_array[0].owner=1;
 	config.map.tower_array[0].health=60;
+	config.map.tower_array[0].shield=60;
 	config.map.tower_array[0].position.x=2.5;
 	config.map.tower_array[0].position.y=2.5;
 	config.map.grid[to2di(2.5,2.5)].tower_id=235;

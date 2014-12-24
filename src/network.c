@@ -280,7 +280,6 @@ static inline int recvPlayerMap(){
 		}
 		recvMap(config.map.players[id].group);
 		//get info about base
-		recvMap(config.map.players[id].base_type.health);
 		int base;
 		recvMap(base);
 		if (base!=0){
@@ -288,6 +287,18 @@ static inline int recvPlayerMap(){
 			if (t!=0)
 				config.map.players[id].base=t;
 		}
+		recvMap(config.map.players[id].base_type.health);
+		//get info about hero
+		int hero;
+		recvMap(hero);
+		if (hero!=0){
+			npc * n=getNpcById(hero);
+			if (n!=0)
+				config.map.players[id].hero=n;
+		}
+		recvMap(config.map.players[id].hero_type.health);
+		recvMap(config.map.players[id].hero_type.shield);
+		
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
 		recvMap(config.map.players[id].base_type.health);

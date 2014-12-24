@@ -10,6 +10,8 @@
 #define TEX_FPS 13.0f
 //base
 #define BASE 0
+//hero
+#define HERO 0
 
 #define MAX_TEXTURES 10000
 //texture global
@@ -90,6 +92,7 @@
 #define MSG_SPAWN_TOWER 1
 #define MSG_SPAWN_NPC 2
 #define MSG_DROP_TOWER 3
+#define MSG_MOVE_HERO 4
 
 //public
 //msg to server
@@ -160,6 +163,7 @@
 
 //brush
 #define BRUSH_TOWER_SPAWN 1
+#define BRUSH_HERO_POSITION 2
 
 //struct objects types
 #define STRUCT_NPC 2

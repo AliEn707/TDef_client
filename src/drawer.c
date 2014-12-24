@@ -463,10 +463,10 @@ void drawHealth(vec2 pos,vec2 size,float p,float s,int shield){
 }
 #undef add
 
-static inline void drawNpc(npc* n) __attribute__((always_inline));
+//static inline void drawNpc(npc* n) __attribute__((always_inline));
 static inline void drawNpc(npc* n){
 	float size=0.89f;
-	npc_type * type=typesNpcGet(n->type);
+	npc_type * type=n->type!=HERO?typesNpcGet(n->type):&config.map.players[n->owner].hero_type;
 	if (type==0)
 		return;
 	if (type->t_size!=0)
@@ -521,7 +521,7 @@ static inline void drawNpc(npc* n){
 	glPopMatrix();
 }
 
-static inline void drawNpcs() __attribute__((always_inline));
+//static inline void drawNpcs() __attribute__((always_inline));
 static inline void drawNpcs(){
 	int i;
 	for(i=0;i<config.map.npc_max;i++)
@@ -532,7 +532,7 @@ static inline void drawNpcs(){
 			}
 }
 
-static inline void drawTower(tower* t) __attribute__((always_inline));
+//static inline void drawTower(tower* t) __attribute__((always_inline));
 static inline void drawTower(tower* t){
 	float size=1.4f;
 	tower_type * type;
@@ -602,7 +602,7 @@ static inline void drawTower(tower* t){
 	glPopMatrix();
 }
 
-static inline void drawTowers() __attribute__((always_inline));
+//static inline void drawTowers() __attribute__((always_inline));
 static inline void drawTowers(){
 	int i;
 	for(i=0;i<config.map.tower_max;i++)
@@ -613,7 +613,7 @@ static inline void drawTowers(){
 			}
 }
 
-static inline void drawBullet(bullet* b) __attribute__((always_inline));
+//static inline void drawBullet(bullet* b) __attribute__((always_inline));
 static inline void drawBullet(bullet* b){
 	
 //	printf("%g %g| %g %g %d\n",b->position.x,b->position.y,b->direction.x,b->direction.y,b->type);
@@ -720,7 +720,7 @@ drawBulletExit:
 	glPopMatrix();
 }
 
-static inline void drawBullets() __attribute__((always_inline));
+//static inline void drawBullets() __attribute__((always_inline));
 static inline void drawBullets(){
 	int i;
 	bullet_type * type;
@@ -728,6 +728,10 @@ static inline void drawBullets(){
 	for(i=0;i<config.map.bullet_max;i++)
 		if (config.map.bullet_array[i].id!=0){
 			type=typesBulletGet(config.map.bullet_array[i].type);
+			if (type==0){
+				config.map.bullet_array[i].id=0;
+				return;
+			}
 			if (type->solid!=0 || 
 					checkGridLines(config.map.bullet_array[i].position.x,config.map.bullet_array[i].position.y)){
 //				drawBullet(&config.map.bullet_array[i]);
@@ -741,7 +745,7 @@ static inline void drawBullets(){
 }
 
 
-static inline void drawSplash(splash* s) __attribute__((always_inline));
+//static inline void drawSplash(splash* s) __attribute__((always_inline));
 static inline void drawSplash(splash* s){
 	splash_type * type=typesSplashGet(s->type);
 	if (type==0)
@@ -776,18 +780,18 @@ static inline void drawSplash(splash* s){
 	glPopMatrix();
 }
 
-static inline void drawSplashes() __attribute__((always_inline));
+//static inline void drawSplashes() __attribute__((always_inline));
 static inline void drawSplashes(){
 	int i;
 	for(i=0;i<config.map.splash_max;i++)
-		if (config.map.splash_array[i].type!=0)
+		if (config.map.splash_array[i].$$$!=0)
 			if (checkGridLines(config.map.splash_array[i].position.x,config.map.splash_array[i].position.y)){
 //				drawSplash(&config.map.splash_array[i]);
 				hashAdd(config.map.splash_array[i].position.x+config.map.grid_size-config.map.splash_array[i].position.y,&config.map.splash_array[i]);
 			}
 }
 
-static inline void drawWall(wall* w) __attribute__((always_inline));
+//static inline void drawWall(wall* w) __attribute__((always_inline));
 static inline void drawWall(wall* w){
 	glPushMatrix();
 	glTranslatef(getGridX(w->position),getGridY(w->position),0);
@@ -825,7 +829,7 @@ static inline void drawWall(wall* w){
 	#undef size
 }
 
-static inline void drawWalls() __attribute__((always_inline));
+//static inline void drawWalls() __attribute__((always_inline));
 static inline void drawWalls(){
 	int i;
 	float x;
@@ -841,7 +845,7 @@ static inline void drawWalls(){
 		}
 }
 
-static inline void drawMapObject(map_object* o) __attribute__((always_inline));
+//static inline void drawMapObject(map_object* o) __attribute__((always_inline));
 static inline void drawMapObject(map_object* o){
 	glPushMatrix();
 	glTranslatef(o->position.x,o->position.y,0);
@@ -871,7 +875,7 @@ static inline void drawMapObject(map_object* o){
 	glPopMatrix();
 }
 
-static inline void drawMapObjects() __attribute__((always_inline));
+//static inline void drawMapObjects() __attribute__((always_inline));
 static inline void drawMapObjects(){
 	int i;
 	for(i=0;i<config.map.map_$objects;i++)
@@ -1009,35 +1013,19 @@ void drawMinimap(){
 	glPopMatrix();
 }
 
-#define SHIFT_X 5
-#define SHIFT_Y 5
-#define ICON_SIZE 80
-#define INFO_WIDTH (500-ICON_SIZE)
-#define INFO_HEIGHT (SHIFT_Y+ICON_SIZE)
+#define MONEY_WIDTH 80
 static inline void drawPlayerInfo(){
-	vec2 pos={SCREEN_OFFSET+SHIFT_X,config.options.window.height-SCREEN_OFFSET-SHIFT_Y-ICON_SIZE};
+	vec2 pos={ICON_POS_X,ICON_POS_Y};
+	vec2 hpos={H_ICON_POS_X,H_ICON_POS_Y};
 	vec2 money={SCREEN_OFFSET,config.options.window.height-SCREEN_OFFSET};
 	char buf[100];
 	char2 * text;
-	//draw base icon
-	tower_type * type=0;
-	tower * t=config.map.player->base;
-	if (t!=0)
-		type=&config.map.players[t->owner].base_type;
-	if (type==0)
-		return;
 	
-	if (t->tex[TEX_ICON].frames==0){
-		if (type->tex[TEX_ICON].frames==0)
-			//npc stored in global tex memory
-			loadTexture(&type->tex[TEX_ICON],type->tex_path[TEX_ICON]);
-		memcpy(&t->tex[TEX_ICON],&type->tex[TEX_ICON],sizeof(texture));
-	}
-	sprintf(buf,"#%10d ",config.map.player->money);
+	sprintf(buf,"#%d ",config.map.player->money);
 	text=localeTextGet(buf);
 	float height=glFontHeight(text);
 	float shift=0.05f;
-	float length=glFontWigth(text);
+	float length=MONEY_WIDTH;//glFontWigth(text);
 	money.x=pos.x+ICON_SIZE;
 	money.y=pos.y+height;
 	//draw back
@@ -1055,48 +1043,97 @@ static inline void drawPlayerInfo(){
 	End();
 	Begin(GL_TRIANGLE_FAN);
 		TexCoord2f(0.0f, 0.0f);
-		Vertex2f(pos.x-SHIFT_X,pos.y-SHIFT_Y);
+		Vertex2f(pos.x-ICON_SHIFT_X,pos.y-ICON_SHIFT_Y);
 		TexCoord2f(1.0f, 0.0f);
-		Vertex2f(pos.x+ICON_SIZE+SHIFT_X,pos.y-SHIFT_Y);
+		Vertex2f(pos.x+ICON_SIZE+ICON_SHIFT_X,pos.y-ICON_SHIFT_Y);
 		TexCoord2f(1.0f, 1.0f);
-		Vertex2f(pos.x+ICON_SIZE+SHIFT_X,pos.y+ICON_SIZE+SHIFT_Y);
+		Vertex2f(pos.x+ICON_SIZE+ICON_SHIFT_X,pos.y+ICON_SIZE+ICON_SHIFT_Y);
 		TexCoord2f(0.0f, 1.0f);
-		Vertex2f(pos.x-SHIFT_X,pos.y+ICON_SIZE+SHIFT_Y);
+		Vertex2f(pos.x-ICON_SHIFT_X,pos.y+ICON_SIZE+ICON_SHIFT_Y);
 	End();
-	
-	float health=type->health?1.0*t->health/type->health:0;
-	float shield=type->shield?1.0*t->shield/type->shield:0;
-	drawHealth((vec2){pos.x+ICON_SIZE,pos.y+ICON_SIZE-INFO_HEIGHT/5},(vec2){INFO_WIDTH-ICON_SIZE,INFO_HEIGHT/5},health,shield,type->shield);
-	
-	Color4f(1,1,1,1);
-	glEnable(GL_TEXTURE_2D);
-	setTexture(&t->tex[TEX_ICON]);
 	Begin(GL_TRIANGLE_FAN);
-		TexCoord2f (0.005f, 0.005f);
-		Vertex2f(pos.x,pos.y);
-		TexCoord2f (0.995f, 0.005f);
-		Vertex2f(pos.x+ICON_SIZE,pos.y);
-		TexCoord2f (0.995f, 0.995f);
-		Vertex2f(pos.x+ICON_SIZE,pos.y+ICON_SIZE);
-		TexCoord2f (0.005f, 0.995f);
-		Vertex2f(pos.x,pos.y+ICON_SIZE);
+		TexCoord2f(0.0f, 0.0f);
+		Vertex2f(hpos.x-ICON_SHIFT_X,hpos.y-ICON_SHIFT_Y);
+		TexCoord2f(1.0f, 0.0f);
+		Vertex2f(hpos.x+H_ICON_SIZE+ICON_SHIFT_X,hpos.y-ICON_SHIFT_Y);
+		TexCoord2f(1.0f, 1.0f);
+		Vertex2f(hpos.x+H_ICON_SIZE+ICON_SHIFT_X,hpos.y+H_ICON_SIZE+ICON_SHIFT_Y);
+		TexCoord2f(0.0f, 1.0f);
+		Vertex2f(hpos.x-ICON_SHIFT_X,hpos.y+H_ICON_SIZE+ICON_SHIFT_Y);
 	End();
 	
+	//draw base icon
+	do {
+		tower_type * type=0;
+		tower * t=config.map.player->base;
+		if (t!=0){
+			type=&config.map.players[t->owner].base_type;
+		}
+		if (type==0)
+			break;
+		if (t->tex[TEX_ICON].frames==0){
+			if (type->tex[TEX_ICON].frames==0)
+				//npc stored in global tex memory
+				loadTexture(&type->tex[TEX_ICON],type->tex_path[TEX_ICON]);
+			memcpy(&t->tex[TEX_ICON],&type->tex[TEX_ICON],sizeof(texture));
+		}
+		float health=type->health?1.0*t->health/type->health:0;
+		float shield=type->shield?1.0*t->shield/type->shield:0;
+		drawHealth((vec2){pos.x+ICON_SIZE,pos.y+ICON_SIZE-INFO_HEIGHT/5},(vec2){INFO_WIDTH-ICON_SIZE,INFO_HEIGHT/5},health,shield,type->shield);
+		Color4f(1,1,1,1);
+		glEnable(GL_TEXTURE_2D);
+		setTexture(&t->tex[TEX_ICON]);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.005f, 0.005f);
+			Vertex2f(pos.x,pos.y);
+			TexCoord2f (0.995f, 0.005f);
+			Vertex2f(pos.x+ICON_SIZE,pos.y);
+			TexCoord2f (0.995f, 0.995f);
+			Vertex2f(pos.x+ICON_SIZE,pos.y+ICON_SIZE);
+			TexCoord2f (0.005f, 0.995f);
+			Vertex2f(pos.x,pos.y+ICON_SIZE);
+		End();
+		
+	}while(0);
+	//draw hero icon
+	do {
+		npc_type * type=0;
+		npc * n=config.map.player->hero;
+		if (n!=0){
+			type=&config.map.players[n->owner].hero_type;
+		}
+		if (type==0)
+			break;
+		if (n->tex[TEX_ICON].frames==0){
+			if (type->tex[TEX_ICON].frames==0)
+				//npc stored in global tex memory
+				loadTexture(&type->tex[TEX_ICON],type->tex_path[TEX_ICON]);
+			memcpy(&n->tex[TEX_ICON],&type->tex[TEX_ICON],sizeof(texture));
+		}
+		float health=type->health?1.0*n->health/type->health:0;
+		float shield=type->shield?1.0*n->shield/type->shield:0;
+		drawHealth((vec2){pos.x+ICON_SIZE+MONEY_WIDTH,pos.y+INFO_HEIGHT/6},(vec2){INFO_WIDTH-ICON_SIZE-MONEY_WIDTH-5,INFO_HEIGHT/6},health,shield,type->shield);
+		Color4f(1,1,1,1);
+		glEnable(GL_TEXTURE_2D);
+		setTexture(&n->tex[TEX_ICON]);
+		Begin(GL_TRIANGLE_FAN);
+			TexCoord2f (0.005f, 0.005f);
+			Vertex2f(hpos.x,hpos.y);
+			TexCoord2f (0.995f, 0.005f);
+			Vertex2f(hpos.x+H_ICON_SIZE,hpos.y);
+			TexCoord2f (0.995f, 0.995f);
+			Vertex2f(hpos.x+H_ICON_SIZE,hpos.y+H_ICON_SIZE);
+			TexCoord2f (0.005f, 0.995f);
+			Vertex2f(hpos.x,hpos.y+H_ICON_SIZE);
+		End();
+	}while(0);
 	
 	Color4f(0,0,0,1);
 	//TODO: change a lot
-	glFontTextOut(text,
-			money.x, 
-			money.y,
-			0);
+	glFontTextOut(text, money.x, money.y, 0);
 	sprintf(buf,"%d ",config.map.player->level);
-	glFontTextOut(localeTextGet(buf),pos.x,pos.y+ICON_SIZE+SHIFT_Y,0);
+	glFontTextOut(localeTextGet(buf),pos.x,pos.y+ICON_SIZE+ICON_SHIFT_Y,0);
 }
-#undef SHIFT_X 
-#undef SHIFT_Y 
-#undef ICON_SIZE 
-#undef INFO_WIDTH 
-#undef INFO_HEIGHT
 
 static inline void drawMessage(){
 	if (*config.message==0)

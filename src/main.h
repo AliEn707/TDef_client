@@ -350,7 +350,9 @@ struct {
 	int money;
 	tower_type base_type;
 	tower * base;
-	//add hero info
+	
+	npc_type hero_type;
+	npc * hero;
 } player;
 
 typedef
@@ -430,6 +432,9 @@ struct map_conf{
 		short id;
 		void (*action)(void);
 	} brush;
+	
+	object base_obj;
+	object hero_obj;
 	
 	player * player;
 	int player_id;

@@ -14,6 +14,19 @@ void globalTransform();
 
 void backTransform();
 
+//player info
+#define ICON_SHIFT_X 5
+#define ICON_SHIFT_Y 5
+#define ICON_POS_X (SCREEN_OFFSET+ICON_SHIFT_X)
+#define ICON_POS_Y (config.options.window.height-SCREEN_OFFSET-ICON_SHIFT_Y-ICON_SIZE)
+#define ICON_SIZE 80
+#define INFO_WIDTH (458-ICON_SIZE)
+#define INFO_HEIGHT (ICON_SHIFT_Y+ICON_SIZE)
+#define H_ICON_POS_X (ICON_POS_X+INFO_WIDTH)
+#define H_ICON_POS_Y (ICON_POS_Y)
+#define H_ICON_SIZE 80
+
+
 
 #define Color4f(red,green,blue,alpha) glColor4f((red)*config.options.brightness*config.options.color.r,(green)*config.options.brightness*config.options.color.g,(blue)*config.options.brightness*config.options.color.b,alpha)
 

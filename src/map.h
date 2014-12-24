@@ -54,9 +54,13 @@ void actionNpcSpawnBrush(void * arg);
 
 void actionTowerRemove(void * arg);
 
+void actionBaseIcon(void * arg);
+void actionHeroIcon(void * arg);
+
 //brush
 
 void brushTowerCreate();
+void brushHeroPos();
 
  void processBrush();
  
