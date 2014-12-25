@@ -1071,15 +1071,17 @@ static inline void drawPlayerInfo(){
 		}
 		if (type==0)
 			break;
+		
+		float health=type->health?1.0*t->health/type->health:0;
+		float shield=type->shield?1.0*t->shield/type->shield:0;
+		drawHealth((vec2){pos.x+ICON_SIZE,pos.y+ICON_SIZE-INFO_HEIGHT/5},(vec2){INFO_WIDTH-ICON_SIZE,INFO_HEIGHT/5},health,shield,type->shield);
+		
 		if (t->tex[TEX_ICON].frames==0){
 			if (type->tex[TEX_ICON].frames==0)
 				//npc stored in global tex memory
 				loadTexture(&type->tex[TEX_ICON],type->tex_path[TEX_ICON]);
 			memcpy(&t->tex[TEX_ICON],&type->tex[TEX_ICON],sizeof(texture));
 		}
-		float health=type->health?1.0*t->health/type->health:0;
-		float shield=type->shield?1.0*t->shield/type->shield:0;
-		drawHealth((vec2){pos.x+ICON_SIZE,pos.y+ICON_SIZE-INFO_HEIGHT/5},(vec2){INFO_WIDTH-ICON_SIZE,INFO_HEIGHT/5},health,shield,type->shield);
 		Color4f(1,1,1,1);
 		glEnable(GL_TEXTURE_2D);
 		setTexture(&t->tex[TEX_ICON]);
@@ -1099,20 +1101,29 @@ static inline void drawPlayerInfo(){
 	do {
 		npc_type * type=0;
 		npc * n=config.map.player->hero;
-		if (n!=0){
-			type=&config.map.players[n->owner].hero_type;
+		type=&config.map.player->hero_type;
+		
+		float health;
+		float shield;
+		
+		if (n==0){
+			health=config.map.player->_hero_counter?1.0*config.map.player->hero_counter/config.map.player->_hero_counter:0;
+			shield=health;
+		}else{
+			health=type->health?1.0*n->health/type->health:0;
+			shield=type->shield?1.0*n->shield/type->shield:0;
 		}
-		if (type==0)
+		drawHealth((vec2){pos.x+ICON_SIZE+MONEY_WIDTH,pos.y+INFO_HEIGHT/6},(vec2){INFO_WIDTH-ICON_SIZE-MONEY_WIDTH-5,INFO_HEIGHT/6},health,shield,type->shield);
+		//don't need to draw anything else
+		if (n==0)
 			break;
+		
 		if (n->tex[TEX_ICON].frames==0){
 			if (type->tex[TEX_ICON].frames==0)
 				//npc stored in global tex memory
 				loadTexture(&type->tex[TEX_ICON],type->tex_path[TEX_ICON]);
 			memcpy(&n->tex[TEX_ICON],&type->tex[TEX_ICON],sizeof(texture));
 		}
-		float health=type->health?1.0*n->health/type->health:0;
-		float shield=type->shield?1.0*n->shield/type->shield:0;
-		drawHealth((vec2){pos.x+ICON_SIZE+MONEY_WIDTH,pos.y+INFO_HEIGHT/6},(vec2){INFO_WIDTH-ICON_SIZE-MONEY_WIDTH-5,INFO_HEIGHT/6},health,shield,type->shield);
 		Color4f(1,1,1,1);
 		glEnable(GL_TEXTURE_2D);
 		setTexture(&n->tex[TEX_ICON]);

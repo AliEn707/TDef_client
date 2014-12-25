@@ -353,6 +353,8 @@ struct {
 	
 	npc_type hero_type;
 	npc * hero;
+	int hero_counter;
+	int _hero_counter;
 } player;
 
 typedef

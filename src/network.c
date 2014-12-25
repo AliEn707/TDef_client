@@ -97,7 +97,6 @@ static inline int recvNpcMap(){
 			shift+=add;
 //	printf("%g %g\n",shift, add);
 	n->prev_time=time_now;
-	
 	recvMap(bit_mask);
 	if (checkMask(bit_mask,NPC_CREATE)){
 //		printf("get new npc %d\n",n->type);
@@ -120,12 +119,15 @@ static inline int recvNpcMap(){
 	if(checkMask(bit_mask,NPC_LEVEL)){
 		recvMap(n->level);
 	}
-	if(checkMask(bit_mask,NPC_HEALTH))
+	if(checkMask(bit_mask,NPC_HEALTH)){
 		recvMap(n->health);
+	}
 	if(checkMask(bit_mask,NPC_SHIELD))
 		recvMap(n->shield);
 	if (n->id==0 && checkMask(bit_mask,NPC_CREATE))
 		n->id=id;
+//	if (checkMask(bit_mask,NPC_CREATE))
+//		printf("%d has %d %d\n",n->id,n->health,n->shield);
 	return 0;
 }
 
@@ -279,6 +281,7 @@ static inline int recvPlayerMap(){
 			}
 		}
 		recvMap(config.map.players[id].group);
+		recvMap(config.map.players[id]._hero_counter);
 		//get info about base
 		int base;
 		recvMap(base);
@@ -291,19 +294,27 @@ static inline int recvPlayerMap(){
 		
 		recvMap(config.map.players[id].hero_type.health);
 		recvMap(config.map.players[id].hero_type.shield);
-		
 	}
-	if(checkMask(bit_mask,PLAYER_HERO) || checkMask(bit_mask,PLAYER_CREATE)){
+	if(checkMask(bit_mask,PLAYER_HERO)){
 		//get info about hero
 		int hero;
 		recvMap(hero);
 		if (hero!=0){
 			npc * n=getNpcById(hero);
-			if (n!=0)
+			if (n!=0){
 				config.map.players[id].hero=n;
+//				printf("hero %d %d\n",n->health,n->shield);
+			}
+		}else{
+			config.map.players[id].hero=0;
+			printf("drop hero\n");
 		}
 	}
-	if(checkMask(bit_mask,PLAYER_HEALTH) || checkMask(bit_mask,PLAYER_CREATE)){
+	if(checkMask(bit_mask,PLAYER_HERO_COUNTER)){
+		recvMap(config.map.players[id].hero_counter);
+		printf("hero counter %d of %d\n",config.map.player->hero_counter,config.map.player->_hero_counter);
+	}
+	if(checkMask(bit_mask,PLAYER_HEALTH)){
 		recvMap(config.map.players[id].base_type.health);
 	}
 	if(checkMask(bit_mask,PLAYER_LEVEL)){//on create

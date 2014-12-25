@@ -136,6 +136,7 @@
 #define PLAYER_CREATE 4
 #define PLAYER_LEVEL 8
 #define PLAYER_HERO 16
+#define PLAYER_HERO_COUNTER 32
 
 #define NPC_HEALTH 1
 #define NPC_POSITION 2
