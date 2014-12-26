@@ -154,7 +154,7 @@ void actionMapTest(void * arg){
 		fscanf(file,"%d\n",&config.map.network.port);
 		fclose(file);
 	}
-	mapStart("test");
+	mapStart("4");//test");
 }
 
 void actionAuth(void * arg){

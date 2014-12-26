@@ -318,6 +318,11 @@ void loadMap(char* path){
 	free(walk);
 	free(build);
 	
+	config.map.npc_max=1000;
+	config.map.tower_max=1000;
+	config.map.bullet_max=1000;
+	
+	
 	while(feof(file)==0){
 		memset(buf,0,sizeof(buf));
 		fscanf(file,"%s ",buf);
