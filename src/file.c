@@ -914,10 +914,14 @@ void realizeTypes(){
 }
 
 static inline void parseTexArg(char* str,texture * t){
+	float $_$;
 	sscanf(str, "frames %d\n",&t->frames);
 	sscanf(str, "loop %hd\n",&t->loop);
-	sscanf(str, "lfdelay %hd\n",&t->lf_delay);
-	sscanf(str, "fddelay %hd\n",&t->fd_delay);
+	if (sscanf(str, "lfdelay %f\n",&$_$))
+		t->lf_delay=$_$*1000/config.time_per_frame;
+	if (sscanf(str, "fddelay %f\n",&$_$))
+		t->fd_delay=$_$*1000/config.time_per_frame;
+	printf("set %g %u %hd %hd\n",$_$,config.time_per_frame,t->lf_delay,t->fd_delay);
 }
 
 int loadTex(texture * t, char * path, int(load)(FILE * f)){

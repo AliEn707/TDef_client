@@ -13,12 +13,14 @@ int textureFrameNext(texture *t){
 	if (config.texture_no_change==0)
 		t->current_frame+=Df;
 	if (t->current_frame>=t->frames){
-		if (t->loop==0){
-			t->current_frame=t->frames-1;
+		t->current_frame=t->frames-1;
 			if (t->lf_delay_counter<=t->lf_delay){
 				t->lf_delay_counter++;
 				return 0;
-			}
+			}else
+				t->lf_delay_counter=0;
+		if (t->loop==0){
+			
 				
 		}else
 			t->current_frame=0;

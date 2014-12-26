@@ -33,7 +33,7 @@ int main(){
 	config.time_per_tick=1000/30;
 	config.options.window.width=800;
 	config.options.window.height=600;
-	config.time_per_frame=1000/700;//60;
+	config.time_per_frame=1000/60;//60;
 	CAMERA_SPEED=8;
 	CAMERA_ZOOM=4;
 	CURSOR_SPEED=9;

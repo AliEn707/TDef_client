@@ -138,8 +138,8 @@ int workerMap(void *ptr){
 			if(config.map.bullet_array[i].id!=0){
 				config.map.bullet_array[i].position.x+=config.map.bullet_array[i].direction.x;
 				config.map.bullet_array[i].position.y+=config.map.bullet_array[i].direction.y;
-				if (config.map.bullet_array[i].detonate!=0){// && 
-//						config.map.bullet_array[i].anim_ended!=0){
+				if (config.map.bullet_array[i].detonate!=0 && 
+						config.map.bullet_array[i].anim_ended!=0){
 					config.map.bullet_array[i].id=0;
 					memset(&config.map.bullet_array[i],0,sizeof(bullet));
 				}
