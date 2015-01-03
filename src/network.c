@@ -79,21 +79,21 @@ TCPsocket networkConnMap(char * addr,int port){
 static inline int recvNpcMap(){
 	npc * n;
 	int id,bit_mask;
-	npc tmp;
-	
+	npc n_n;
 	recvMap(id);
 	//find npc by id
 	if ((n=getNpcById(id))==0){
-		perror("getNpcById recvNpcMap");
-		n=&tmp;
+//		perror("getNpcById recvNpcMap");
+		n=&n_n; //need for perf_test
 	}
 	float shift;
 //	if (n->prev_time==0)
 		shift=config.global.latency;
 	float add;
 	int time_now=SDL_GetTicks();
+	
 	if (n->prev_time!=0)
-		if ((add=(time_now-n->prev_time)/config.time_per_tick)>shift)
+		if ((add=((config.perf.add_time=(time_now-n->prev_time)))/config.time_per_tick)>shift)
 			shift+=add;
 //	printf("%g %g\n",shift, add);
 	n->prev_time=time_now;
@@ -128,6 +128,7 @@ static inline int recvNpcMap(){
 		n->id=id;
 //	if (checkMask(bit_mask,NPC_CREATE))
 //		printf("%d has %d %d\n",n->id,n->health,n->shield);
+	config.perf.npc=n;
 	return 0;
 }
 
@@ -140,7 +141,7 @@ static inline int recvTowerMap(){
 	recvMap(id);
 	//find npc by id
 	if((t=getTowerById(id))==0){
-		perror("getTowerById recvTowerMap");
+//		perror("getTowerById recvTowerMap");
 		t=&tmp;
 	}
 	recvMap(bit_mask);
@@ -180,7 +181,7 @@ static inline int recvBulletMap(){
 	recvMap(id);
 	//find npc by id
 	if((b=getBulletById(id))==0){
-		perror("getBulletById recvBulletMap");
+//		perror("getBulletById recvBulletMap");
 		b=&tmp;
 	}
 	float shift;

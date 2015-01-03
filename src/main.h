@@ -571,6 +571,12 @@ struct g_config{
 		color3 color;
 		float tdf;
 	} options; //params for options menu
+	
+	//for perf_test
+	struct {
+		npc *npc;
+		int add_time;
+	} perf;
 }g_config;
 
 
