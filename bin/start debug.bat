@@ -2,4 +2,4 @@
 
 @set PATH=%root%\MinGW\bin;%PATH%
 
-gdb Tdef -ex run -ex bt -ex q
+gdb %1 -ex run -ex bt -ex q

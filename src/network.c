@@ -313,7 +313,7 @@ static inline int recvPlayerMap(){
 	}
 	if(checkMask(bit_mask,PLAYER_HERO_COUNTER)){
 		recvMap(config.map.players[id].hero_counter);
-		printf("hero counter %d of %d\n",config.map.player->hero_counter,config.map.player->_hero_counter);
+//		printf("hero counter %d of %d\n",config.map.player->hero_counter,config.map.player->_hero_counter);
 	}
 	if(checkMask(bit_mask,PLAYER_HEALTH)){
 		recvMap(config.map.players[id].base_type.health);

@@ -270,13 +270,33 @@ void realizeMenu(menu* m){
 	memset(m,0,sizeof(menu));
 }
 
-
+void realizeMap(){
+	int i;
+	free(config.map.grid);
+	config.map.grid=0;
+	free(config.map.walls);
+	config.map.walls=0;
+	free(config.map.map_objects);
+	config.map.map_objects=0;
+	free(config.map.tower_array);
+	config.map.tower_array=0;
+	free(config.map.npc_array);
+	config.map.npc_array=0;
+	free(config.map.bullet_array);
+	config.map.bullet_array=0;
+	free(config.map.splash_array);
+	config.map.splash_array=0;
+	
+	for(i=0;i<4;i++)
+		free(config.map.grid_out[i]);
+}
 
 void loadMap(char* path){
 	gnode * grid;
 	FILE * file;
 	char fullpath[300];
 	printf("load map....");
+	realizeMap();
 //	if (config.map.textures_size==0){
 //		glDeleteTextures (config.map.textures_size,(unsigned int*)config.map.textures);
 //		config.map.textures_size=0;
@@ -469,27 +489,6 @@ void loadMapGrafics(char* path){
 //	config.map.enable=1;
 	setDefaultTransform();
 	printf("done\n");
-}
-
-void realizeMap(){
-	int i;
-	free(config.map.grid);
-	config.map.grid=0;
-	free(config.map.walls);
-	config.map.walls=0;
-	free(config.map.map_objects);
-	config.map.map_objects=0;
-	free(config.map.tower_array);
-	config.map.tower_array=0;
-	free(config.map.npc_array);
-	config.map.npc_array=0;
-	free(config.map.bullet_array);
-	config.map.bullet_array=0;
-	free(config.map.splash_array);
-	config.map.splash_array=0;
-	
-	for(i=0;i<4;i++)
-		free(config.map.grid_out[i]);
 }
 
 int loadNpcTypes(){
@@ -921,7 +920,7 @@ static inline void parseTexArg(char* str,texture * t){
 		t->lf_delay=$_$*1000/config.time_per_frame;
 	if (sscanf(str, "fddelay %f\n",&$_$))
 		t->fd_delay=$_$*1000/config.time_per_frame;
-	printf("set %g %u %hd %hd\n",$_$,config.time_per_frame,t->lf_delay,t->fd_delay);
+//	printf("set %g %u %hd %hd\n",$_$,config.time_per_frame,t->lf_delay,t->fd_delay);
 }
 
 int loadTex(texture * t, char * path, int(load)(FILE * f)){

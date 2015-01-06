@@ -114,7 +114,8 @@ int workerMap(void *ptr){
 				if (config.map.npc_array[i].current_tex==TEX_DESTROY && 
 						config.map.npc_array[i].anim_ended!=0){
 					config.map.npc_array[i].$$$=0; 
-					memset(&config.map.npc_array[i],0,sizeof(npc));					
+					memset(&config.map.npc_array[i],0,sizeof(npc));	
+//					printf("del npc\n");							
 				}
 				if (checkNpcTexWalk(config.map.npc_array[i].current_tex)){
 //					config.map.npc_array[i].current_tex=getWalkTex(config.map.npc_array[i].direction);
@@ -125,11 +126,12 @@ int workerMap(void *ptr){
 		//tower
 		for(i=0;i<config.map.tower_max;i++)
 			if (config.map.tower_array[i].id!=0){
-				if (config.map.tower_array[i].health<=0 && 
-						config.map.tower_array[i].anim_ended!=0){
+				if (config.map.tower_array[i].health<=0){// && 
+				//		config.map.tower_array[i].anim_ended!=0){
 					config.map.tower_array[i].$$$=0;
 					config.map.grid[posToId(config.map.tower_array[i].position)].tower_id=0;
 					memset(&config.map.tower_array[i],0,sizeof(tower));
+//					printf("del tower\n");
 					//change to set animation
 				}
 			}
@@ -138,10 +140,11 @@ int workerMap(void *ptr){
 			if(config.map.bullet_array[i].id!=0){
 				config.map.bullet_array[i].position.x+=config.map.bullet_array[i].direction.x;
 				config.map.bullet_array[i].position.y+=config.map.bullet_array[i].direction.y;
-				if (config.map.bullet_array[i].detonate!=0 && 
-						config.map.bullet_array[i].anim_ended!=0){
+				if (config.map.bullet_array[i].detonate!=0){// && 
+				//		config.map.bullet_array[i].anim_ended!=0){
 					config.map.bullet_array[i].id=0;
 					memset(&config.map.bullet_array[i],0,sizeof(bullet));
+//					printf("del bullet %d \n",config.map.bullet_array[i].anim_ended);
 				}
 			}
 		//splash

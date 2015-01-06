@@ -20,20 +20,29 @@
 
 typedef
 struct {
-	
+	unsigned long latency;
+	int _latency;
 	struct {
 		TCPsocket sock;
 		int latency;
-	} player[4];
+		npc* npcs;
+		int room_id;
+		int id;
+	} player[40];
 } room;
 
 struct {
 	int main_running;
 	int global_count;
+	int time;
+	room * room;
 	
-	int $servers;
+	int $rooms;
+	int $players;
 	int time_per_serv;
+	int npc_per_player;
 	int latency;
+	char map[50];
 	
 	TCPsocket sock;
 	char server[50];
