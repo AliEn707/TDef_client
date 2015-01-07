@@ -575,6 +575,7 @@ struct g_config{
 	//for perf_test
 	struct {
 		npc *npc;
+		int created;
 		int add_time;
 	} perf;
 }g_config;

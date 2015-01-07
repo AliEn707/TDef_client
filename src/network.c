@@ -129,6 +129,8 @@ static inline int recvNpcMap(){
 //	if (checkMask(bit_mask,NPC_CREATE))
 //		printf("%d has %d %d\n",n->id,n->health,n->shield);
 	config.perf.npc=n;
+	if (checkMask(bit_mask,NPC_CREATE))
+		config.perf.created=1;
 	return 0;
 }
 

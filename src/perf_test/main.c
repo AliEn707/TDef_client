@@ -64,12 +64,13 @@ int main(int argc, char *argv[]){
 	perf_test.time_per_serv=20000;//msec
 	perf_test.npc_per_player=30;
 	sprintf(perf_test.map,"4");
+	sprintf(perf_test.server,"localhost");
 	if (parseArgs(argv)){
 		printf("args error\n");
 		return 2;
 	}
 	printf("using parameters:\nmax rooms %d\n",perf_test.$rooms);
-	printf("server %s\n",perf_test.map);
+	printf("server %s\n",perf_test.server);
 	printf("map %s\n",perf_test.map);
 	printf("players per room %d\n",perf_test.$players);
 	printf("time per room %g sec\n",perf_test.time_per_serv/1000.0);
@@ -117,7 +118,7 @@ int main(int argc, char *argv[]){
 	i=0;
 	j=0;
 	
-	if ((perf_test.room[i].player[j].sock=networkConn("localhost",34140))==0){
+	if ((perf_test.room[i].player[j].sock=networkConn(perf_test.server,34140))==0){
 		printf("error connect to server, exiting\n");
 		return 1;
 	}
@@ -214,6 +215,8 @@ int main(int argc, char *argv[]){
 									actionSpawnNpc(&o);
 								}
 							}
+							if (config.perf.created!=0)
+								printf("new npc\n");
 						}
 						if (config.perf.add_time>=0){
 							perf_test.room[i].latency+=config.perf.add_time;
