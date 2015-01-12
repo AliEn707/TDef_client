@@ -23,21 +23,26 @@
 int parseArgs(char** argv){
 	int i;
 	for (i=0;argv[i]!=0;i++){
+		int got=0;
+		if (strcmp("-direct",argv[i])==0)
+			got+=(perf_test.direct=1);
 		if (strcmp("-m",argv[i])==0)
-			sscanf(argv[++i],"%s",perf_test.map);
+			got+=sscanf(argv[++i],"%s",perf_test.map);
 		if (strcmp("-s",argv[i])==0)
-			sscanf(argv[++i],"%s",perf_test.server);
+			got+=sscanf(argv[++i],"%s",perf_test.server);
 		if (strcmp("-p",argv[i])==0)
-			sscanf(argv[++i],"%d",&perf_test.port);
+			got+=sscanf(argv[++i],"%d",&perf_test.port);
 		if (strcmp("-r",argv[i])==0)
-			sscanf(argv[++i],"%d",&perf_test.$rooms);
+			got+=sscanf(argv[++i],"%d",&perf_test.$rooms);
 		if (strcmp("-u",argv[i])==0)
-			sscanf(argv[++i],"%d",&perf_test.$players);
+			got+=sscanf(argv[++i],"%d",&perf_test.$players);
 		if (strcmp("-t",argv[i])==0)
-			sscanf(argv[++i],"%d",&perf_test.time_per_serv);
+			got+=sscanf(argv[++i],"%d",&perf_test.time_per_serv);
 		if (strcmp("-n",argv[i])==0)
-			sscanf(argv[++i],"%d",&perf_test.npc_per_player);
-		
+			got+=sscanf(argv[++i],"%d",&perf_test.npc_per_player);
+		if (got!=0){
+			printf("command %s not recognised\n",argv[i]);
+		}
 	}
 	return 0;
 }
@@ -66,7 +71,7 @@ int main(int argc, char *argv[]){
 	memset(&config,0,sizeof(config));
 	memset(&perf_test,0,sizeof(perf_test));
 	//defaults
-	perf_test.port=11111;
+	perf_test.port=34140;
 	perf_test.$players=3;
 	perf_test.$rooms=1;
 	perf_test.time_per_serv=20000;//msec
@@ -77,12 +82,6 @@ int main(int argc, char *argv[]){
 		printf("args error\n");
 		return 2;
 	}
-	printf("using parameters:\nmax rooms %d\n",perf_test.$rooms);
-	printf("server %s\n",perf_test.server);
-	printf("map %s\n",perf_test.map);
-	printf("players per room %d\n",perf_test.$players);
-	printf("time per room %g sec\n",perf_test.time_per_serv/1000.0);
-	printf("npc per player %d\n",perf_test.npc_per_player);
 	if (SDL_Init(SDL_INIT_VIDEO) < 0 ){ 
 		printf("SDL_Init\n");
 	 	exit(1);
@@ -99,52 +98,64 @@ int main(int argc, char *argv[]){
 	loadMenu(&config.map.tower_menu,"../data/towermenu.cfg");
 	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 //////////
-/*	
-//not used yet
-	if ((perf_test.sock=networkConn(perf_test.server,perf_test.port))==0){
-		printf("error connect to server, exiting\n");
-		return 1;
-	}
-	short l_l=strlen(perf_test.map);
-	SDLNet_TCP_Send(perf_test.sock,&l_l,sizeof(l_l));
-	SDLNet_TCP_Send(perf_test.sock,perf_test.map,l_l);
-*/	
-	if ((perf_test.room=malloc(sizeof(room)*perf_test.$rooms))==0){
-		perror("malloc rooms");
-		return -4;
-	}
-	memset(perf_test.room,0,sizeof(room)*perf_test.$rooms);
 	socketset = SDLNet_AllocSocketSet(perf_test.$rooms*perf_test.$players); 
 
-	if (SDLNet_TCP_AddSocket(socketset, perf_test.sock)<0)
-		perror("add to sockset");
-
+//not used yet
+	if (perf_test.direct==0){	
+		if ((perf_test.sock=networkConn(perf_test.server,11111))==0){
+			printf("error connect to server, exiting\n");
+			return 1;
+		}
+		short l_l=strlen(perf_test.map);
+		SDLNet_TCP_Send(perf_test.sock,&l_l,sizeof(l_l));
+		SDLNet_TCP_Send(perf_test.sock,perf_test.map,l_l);
+		
+		if ((perf_test.room=malloc(sizeof(room)*perf_test.$rooms))==0){
+			perror("malloc rooms");
+			return -4;
+		}
+		memset(perf_test.room,0,sizeof(room)*perf_test.$rooms);
+		
+		if (SDLNet_TCP_AddSocket(socketset, perf_test.sock)<0){
+			perror("add to sockset");
+			return -6;
+		}
+	}else{
+		i=0;
+		j=0;
+		perf_test.$rooms=1;
+	
+		if ((perf_test.room[i].player[j].sock=networkConn(perf_test.server,perf_test.port))==0){
+			printf("error connect to server, exiting\n");
+			return 1;
+		}
+		config.map.network.socket=perf_test.room[i].player[j].sock;
+		networkMapAuth();
+		perf_test.room[i].player[j].id=config.map.player_id;
+		if (SDLNet_TCP_AddSocket(socketset, config.map.network.socket)<0)
+			perror("add to sockset");
+		
+		loadMap(perf_test.map);
+		perf_test.room[i].player[j].npcs=config.map.npc_array;
+		fakeMapClean();
+		/*for(i=0;i<perf_test.npc_per_player;i++){
+			object o;
+			o.arg[0]=rand()%NPC_TYPES;
+			actionSpawnNpc(&o);
+		}*/
+	}
+/////////////
+	printf("using parameters:\nmax rooms %d\n",perf_test.$rooms);
+	printf("server %s\n",perf_test.server);
+	printf("map %s\n",perf_test.map);
+	printf("players per room %d\n",perf_test.$players);
+	printf("time per room %g sec\n",perf_test.time_per_serv/1000.0);
+	printf("npc per player %d\n",perf_test.npc_per_player);
+	
 	perf_test.main_running=1;
 	printf("done\n");
 	
-//for test
-	i=0;
-	j=0;
 	
-	if ((perf_test.room[i].player[j].sock=networkConn(perf_test.server,34140))==0){
-		printf("error connect to server, exiting\n");
-		return 1;
-	}
-	config.map.network.socket=perf_test.room[i].player[j].sock;
-	networkMapAuth();
-	perf_test.room[i].player[j].id=config.map.player_id;
-	if (SDLNet_TCP_AddSocket(socketset, config.map.network.socket)<0)
-		perror("add to sockset");
-	
-	loadMap(perf_test.map);
-	perf_test.room[i].player[j].npcs=config.map.npc_array;
-	//fakeMapClean();
-	/*for(i=0;i<perf_test.npc_per_player;i++){
-		object o;
-		o.arg[0]=rand()%NPC_TYPES;
-		actionSpawnNpc(&o);
-	}*/
-/////////////
 	while(perf_test.main_running){ 
 //		workSync(&time);
 		config.global_count++;

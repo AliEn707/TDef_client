@@ -36,6 +36,7 @@ struct {
 	int main_running;
 	int global_count;
 	int time;
+	int direct;
 	room * room;
 	
 	int $rooms;
