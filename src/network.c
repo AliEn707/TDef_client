@@ -124,13 +124,15 @@ static inline int recvNpcMap(){
 	}
 	if(checkMask(bit_mask,NPC_SHIELD))
 		recvMap(n->shield);
-	if (n->id==0 && checkMask(bit_mask,NPC_CREATE))
+	if (n->id==0 && checkMask(bit_mask,NPC_CREATE)) {
 		n->id=id;
+		config.perf.created=1;
+	}
 //	if (checkMask(bit_mask,NPC_CREATE))
 //		printf("%d has %d %d\n",n->id,n->health,n->shield);
 	config.perf.npc=n;
-	if (checkMask(bit_mask,NPC_CREATE))
-		config.perf.created=1;
+	/*if (checkMask(bit_mask,NPC_CREATE))
+		config.perf.created=1;*/
 	return 0;
 }
 

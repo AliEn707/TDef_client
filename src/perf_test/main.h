@@ -28,6 +28,7 @@ struct {
 		npc* npcs;
 		int room_id;
 		int id;
+		int npc_count;
 	} player[40];
 } room;
 

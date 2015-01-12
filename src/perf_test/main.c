@@ -44,11 +44,19 @@ int parseArgs(char** argv){
 	
 int askForRoom(){
 	printf("ask for room\n");
+	if ((perf_test.sock=networkConn(perf_test.server,perf_test.port))==0){
+		printf("error connect to server, exiting\n");
+		return 1;
+	}
+	char c = 'c';
+	int i = 500;
+	SDLNet_TCP_Send(perf_test.sock,&c,sizeof(char));
+	SDLNet_TCP_Send(perf_test.sock,&i,sizeof(int));	
 	return 0;
 }
 
 #undef main
-int main(int argc, char *argv[]){   
+int main(int argc, char *argv[]){
 //int main(){   
 	SDLNet_SocketSet socketset;
 	signed i,j;
@@ -128,15 +136,15 @@ int main(int argc, char *argv[]){
 	if (SDLNet_TCP_AddSocket(socketset, config.map.network.socket)<0)
 		perror("add to sockset");
 	
-/////////////
 	loadMap(perf_test.map);
 	perf_test.room[i].player[j].npcs=config.map.npc_array;
 	//fakeMapClean();
-	for(i=0;i<perf_test.npc_per_player;i++){
+	/*for(i=0;i<perf_test.npc_per_player;i++){
 		object o;
 		o.arg[0]=rand()%NPC_TYPES;
 		actionSpawnNpc(&o);
-	}
+	}*/
+/////////////
 	while(perf_test.main_running){ 
 //		workSync(&time);
 		config.global_count++;
@@ -168,11 +176,11 @@ int main(int argc, char *argv[]){
 					loadMap(perf_test.map);
 					perf_test.room[i].player[j].npcs=config.map.npc_array;
 					
-					for(i=0;i<perf_test.npc_per_player;i++){
+					/*for(i=0;i<perf_test.npc_per_player;i++){
 						object o;
 						o.arg[0]=rand()%NPC_TYPES;
 						actionSpawnNpc(&o);
-					}
+					}*/
 					fakeMapClean();
 				}
 				perf_test.$rooms++;
@@ -207,23 +215,31 @@ int main(int argc, char *argv[]){
 						if (config.perf.npc!=0){
 		//					if (config.perf.npc->owner!=0)
 		//						printf("new npc of %d\n",config.perf.npc->owner);
-							if (config.perf.npc->health<0){
+							if (config.perf.npc->health<=0){
 								printf("npc dead\n");
-								if (config.perf.npc->owner==config.map.player_id && config.perf.npc->type!=0){
-									object o;
-									o.arg[0]=rand()%NPC_TYPES;
-									actionSpawnNpc(&o);
-								}
+								if (config.perf.npc->type!=0 && config.perf.npc->owner==config.map.player_id)
+									perf_test.room[i].player[j].npc_count--;
+								memset(config.perf.npc, 0, sizeof(npc));
 							}
-							if (config.perf.created!=0)
+							if (config.perf.created!=0) {
 								printf("new npc\n");
+								if (config.perf.npc->type!=0 && config.perf.npc->owner==config.map.player_id)
+									perf_test.room[i].player[j].npc_count++;
+							}
+						}
+						if (config.global_count%100 == 0 && perf_test.room[i].player[j].npc_count < perf_test.npc_per_player){
+							object o;
+							o.arg[0]=rand()%NPC_TYPES;
+							actionSpawnNpc(&o);
 						}
 						if (config.perf.add_time>=0){
 							perf_test.room[i].latency+=config.perf.add_time;
 							perf_test.room[i]._latency++;
 						}
+						fakeMapClean();
 					}
-				printf("latency %g ms\n",perf_test.room[i].latency*1.0/perf_test.room[i]._latency);
+				//printf("latency %g ms\n",perf_test.room[i].latency*1.0/perf_test.room[i]._latency);
+				printf("npcs: %d money: %d\n", perf_test.room[0].player[0].npc_count, config.map.player->money);
 			}
 		}
 	}
