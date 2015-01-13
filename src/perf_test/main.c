@@ -22,7 +22,7 @@
 
 int parseArgs(char** argv){
 	int i;
-	for (i=0;argv[i]!=0;i++){
+	for (i=1;argv[i]!=0;i++){
 		int got=0;
 		if (strcmp("-direct",argv[i])==0)
 			got+=(perf_test.direct=1);
@@ -40,8 +40,9 @@ int parseArgs(char** argv){
 			got+=sscanf(argv[++i],"%d",&perf_test.time_per_serv);
 		if (strcmp("-n",argv[i])==0)
 			got+=sscanf(argv[++i],"%d",&perf_test.npc_per_player);
-		if (got!=0){
+		if (got==0){
 			printf("command %s not recognised\n",argv[i]);
+			exit(1);
 		}
 	}
 	return 0;
@@ -99,7 +100,12 @@ int main(int argc, char *argv[]){
 	loadMenu(&config.map.npc_menu,"../data/npcmenu.cfg");
 //////////
 	socketset = SDLNet_AllocSocketSet(perf_test.$rooms*perf_test.$players); 
-
+	if ((perf_test.room=malloc(sizeof(room)*perf_test.$rooms))==0){
+		perror("malloc rooms");
+		return -4;
+	}
+	memset(perf_test.room,0,sizeof(room)*perf_test.$rooms);
+		
 //not used yet
 	if (perf_test.direct==0){	
 		if ((perf_test.sock=networkConn(perf_test.server,11111))==0){
@@ -110,16 +116,7 @@ int main(int argc, char *argv[]){
 		SDLNet_TCP_Send(perf_test.sock,&l_l,sizeof(l_l));
 		SDLNet_TCP_Send(perf_test.sock,perf_test.map,l_l);
 		
-		if ((perf_test.room=malloc(sizeof(room)*perf_test.$rooms))==0){
-			perror("malloc rooms");
-			return -4;
-		}
-		memset(perf_test.room,0,sizeof(room)*perf_test.$rooms);
 		
-		if (SDLNet_TCP_AddSocket(socketset, perf_test.sock)<0){
-			perror("add to sockset");
-			return -6;
-		}
 	}else{
 		i=0;
 		j=0;
@@ -144,6 +141,10 @@ int main(int argc, char *argv[]){
 			actionSpawnNpc(&o);
 		}*/
 	}
+	if (SDLNet_TCP_AddSocket(socketset, perf_test.sock)<0){
+		perror("add to sockset");
+		return -6;
+	}
 /////////////
 	printf("using parameters:\nmax rooms %d\n",perf_test.$rooms);
 	printf("server %s\n",perf_test.server);
@@ -162,7 +163,8 @@ int main(int argc, char *argv[]){
 //		SDL_Delay(100);
 		int time=SDL_GetTicks();
 		if (perf_test.time==0 || time-perf_test.time>perf_test.time_per_serv){
-			askForRoom();
+			if (perf_test.direct==0)
+				askForRoom();
 			perf_test.time=time;
 		}
 			
