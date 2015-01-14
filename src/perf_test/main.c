@@ -49,17 +49,36 @@ int parseArgs(char** argv){
 }
 	
 int askForRoom(){
+	TCPsocket sock;
 	printf("ask for room\n");
-	if ((perf_test.sock=networkConn(perf_test.server,perf_test.port))==0){
+	if ((sock=networkConn(perf_test.server,perf_test.port))==0){
 		printf("error connect to server, exiting\n");
 		return 1;
 	}
 	char c = 'c';
 	int i = 500;
-	SDLNet_TCP_Send(perf_test.sock,&c,sizeof(char));
-	SDLNet_TCP_Send(perf_test.sock,&i,sizeof(int));	
+	SDLNet_TCP_Send(sock,&c,sizeof(char));
+	SDLNet_TCP_Send(sock,&i,sizeof(int));	
+	SDLNet_TCP_Close(sock);
 	return 0;
 }
+
+void showLatency(){
+	int i;
+	float latency=0;
+	int _latency=0;
+	printf("%d rooms\n latency:",perf_test.rooms);
+	for (i=0;i<perf_test.rooms;i++){
+		latency+=perf_test.room[i].latency;
+		_latency++;
+		printf(" %g",perf_test.room[i].latency*1.0/perf_test.room[i]._latency);
+		perf_test.room[i].latency=0;
+		perf_test.room[i]._latency=1;
+	}
+	printf("\n");
+	printf("latency %g ms\n",latency/_latency);
+}
+
 
 #undef main
 int main(int argc, char *argv[]){
@@ -108,11 +127,13 @@ int main(int argc, char *argv[]){
 		
 //not used yet
 	if (perf_test.direct==0){	
+		printf("Connection over manager\n");
 		if ((perf_test.sock=networkConn(perf_test.server,11111))==0){
 			printf("error connect to server, exiting\n");
 			return 1;
 		}
 		short l_l=strlen(perf_test.map);
+		l_l=strlen(perf_test.map);
 		SDLNet_TCP_Send(perf_test.sock,&l_l,sizeof(l_l));
 		SDLNet_TCP_Send(perf_test.sock,perf_test.map,l_l);
 		
@@ -121,7 +142,8 @@ int main(int argc, char *argv[]){
 		i=0;
 		j=0;
 		perf_test.$rooms=1;
-	
+		printf("Direct connection\n");
+		
 		if ((perf_test.room[i].player[j].sock=networkConn(perf_test.server,perf_test.port))==0){
 			printf("error connect to server, exiting\n");
 			return 1;
@@ -164,17 +186,18 @@ int main(int argc, char *argv[]){
 		int time=SDL_GetTicks();
 		if (perf_test.time==0 || time-perf_test.time>perf_test.time_per_serv){
 			if (perf_test.direct==0)
-				askForRoom();
+				if (perf_test.rooms<perf_test.$rooms)
+					askForRoom();
 			perf_test.time=time;
+			showLatency();
 		}
 			
 		if (SDLNet_CheckSockets(socketset, 10)!=0){
-
 			if(SDLNet_SocketReady(perf_test.sock)) {
 				int port;
 				printf("next room ready\n");
 				recvData(perf_test.sock,&port,sizeof(port));
-				i=perf_test.$rooms;
+				i=perf_test.rooms;
 				for(j=0;j<perf_test.$players;j++){
 					if ((perf_test.room[i].player[j].sock=networkConn(perf_test.server,port))==0){
 						printf("error connect to server, exiting\n");
@@ -184,7 +207,7 @@ int main(int argc, char *argv[]){
 					networkMapAuth();
 					perf_test.room[i].player[j].id=config.map.player_id;
 					perf_test.room[i].player[j].room_id=i;
-					if (SDLNet_TCP_AddSocket(socketset, config.map.network.socket)<0)
+					if (SDLNet_TCP_AddSocket(socketset, perf_test.room[i].player[j].sock)<0)
 						perror("add to sockset");
 					loadMap(perf_test.map);
 					perf_test.room[i].player[j].npcs=config.map.npc_array;
@@ -196,31 +219,21 @@ int main(int argc, char *argv[]){
 					}*/
 					fakeMapClean();
 				}
-				perf_test.$rooms++;
-				float latency=0;
-				int _latency=0;
-				printf("room latency:");
-				for (i=0;i<perf_test.$rooms;i++){
-					latency+=perf_test.room[i].latency;
-					_latency++;
-					perf_test.room[i].latency=0;
-					perf_test.room[i]._latency=0;
-					printf(" %g",perf_test.room[i].latency*1.0/perf_test.room[i]._latency);
-				}
-				printf("\n");
-				printf("latency %g ms\n",latency/_latency);
+				perf_test.rooms++;
+				showLatency();
 			}
 
 			//for all players
 			for(i=0;i<perf_test.$rooms;i++){
 				for(j=0;j<perf_test.$players;j++)
-					if(SDLNet_SocketReady(config.map.network.socket)) {
+					if(SDLNet_SocketReady(perf_test.room[i].player[j].sock)) {
 						//add more players-bots
 						config.map.network.socket=perf_test.room[i].player[j].sock;
 						memset(&config.perf,0,sizeof(config.perf));
 						config.perf.add_time=-1;
 						config.map.npc_array=perf_test.room[i].player[j].npcs;
 						config.map.player_id=perf_test.room[i].player[j].id;
+						config.map.player=&config.map.player[config.map.player_id];
 						if(recvMesMap()<0){
 							printf("connection lost\n");
 							perf_test.main_running=0;
@@ -229,13 +242,13 @@ int main(int argc, char *argv[]){
 		//					if (config.perf.npc->owner!=0)
 		//						printf("new npc of %d\n",config.perf.npc->owner);
 							if (config.perf.npc->health<=0){
-								printf("npc dead\n");
+//								printf("npc dead\n");
 								if (config.perf.npc->type!=0 && config.perf.npc->owner==config.map.player_id)
 									perf_test.room[i].player[j].npc_count--;
 								memset(config.perf.npc, 0, sizeof(npc));
 							}
 							if (config.perf.created!=0) {
-								printf("new npc\n");
+//								printf("new npc\n");
 								if (config.perf.npc->type!=0 && config.perf.npc->owner==config.map.player_id)
 									perf_test.room[i].player[j].npc_count++;
 							}
@@ -247,12 +260,14 @@ int main(int argc, char *argv[]){
 						}
 						if (config.perf.add_time>=0){
 							perf_test.room[i].latency+=config.perf.add_time;
-							perf_test.room[i]._latency++;
+							perf_test.room[i].latency/=2;
+							perf_test.room[i]._latency=1;
 						}
 						fakeMapClean();
 					}
 				//printf("latency %g ms\n",perf_test.room[i].latency*1.0/perf_test.room[i]._latency);
-				printf("npcs: %d money: %d\n", perf_test.room[0].player[0].npc_count, config.map.player->money);
+//					if (config.map.player!=0)
+//						printf("npcs: %d money: %d\n", perf_test.room[0].player[0].npc_count, config.map.player->money);
 			}
 		}
 	}

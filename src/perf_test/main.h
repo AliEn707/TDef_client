@@ -24,7 +24,7 @@ struct {
 	int _latency;
 	struct {
 		TCPsocket sock;
-		int latency;
+		float latency;
 		npc* npcs;
 		int room_id;
 		int id;
@@ -40,6 +40,7 @@ struct {
 	room * room;
 	
 	int $rooms;
+	int rooms;
 	int $players;
 	int time_per_serv;
 	int npc_per_player;

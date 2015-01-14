@@ -312,7 +312,7 @@ static inline int recvPlayerMap(){
 			}
 		}else{
 			config.map.players[id].hero=0;
-			printf("drop hero\n");
+//			printf("drop hero\n");
 		}
 	}
 	if(checkMask(bit_mask,PLAYER_HERO_COUNTER)){
@@ -327,7 +327,7 @@ static inline int recvPlayerMap(){
 	}
 	if(checkMask(bit_mask,PLAYER_MONEY)){
 		recvMap(config.map.players[id].money);
-		printf("player money %d \n",config.map.players[id].money);
+//		printf("player money %d \n",config.map.players[id].money);
 	}
 	return 0;
 }

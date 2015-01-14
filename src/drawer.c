@@ -704,7 +704,7 @@ static inline void drawBullet(bullet* b){
 		Color4f(1,1,1,1);
 		if (setTexture(&b->tex[b->current_tex])){
 			b->anim_ended=1;
-			printf("b anim ended\n");
+//			printf("b anim ended\n");
 		}
 //		Begin(GL_LINE_LOOP);
 		Begin(GL_TRIANGLE_FAN);
