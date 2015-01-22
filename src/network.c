@@ -329,6 +329,9 @@ static inline int recvPlayerMap(){
 		recvMap(config.map.players[id].money);
 //		printf("player money %d \n",config.map.players[id].money);
 	}
+	if(checkMask(bit_mask,PLAYER_TARGET)){
+		recvMap(config.map.players[id].target);
+	}
 	return 0;
 }
 
@@ -374,6 +377,7 @@ void checkMapLatency(){
 
 int networkMapAuth(){
 	recvMap(config.map.player_id);
+	recvMap(config.map.$players);
 	config.map.player=&config.map.players[config.map.player_id];
 	checkMapLatency();
 	return 0;

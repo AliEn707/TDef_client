@@ -346,8 +346,9 @@ struct {
 	int id;
 	int level;
 	int group;
-
+	
 	int money;
+	short target;
 	tower_type base_type;
 	tower * base;
 	
@@ -438,9 +439,11 @@ struct map_conf{
 	object base_obj;
 	object hero_obj;
 	
+	
 	player * player;
 	int player_id;
 	player players[20];
+	int $players;
 	object * tower_objects[TOWER_SET_SIZE];
 	object * npc_objects[NPC_SET_SIZE];
 } map_conf;

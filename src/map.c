@@ -402,6 +402,19 @@ void actionHeroIcon(void * arg){
 	config.map.brush.action=brushHeroPos;
 }
 
+void actionSetTarget(void * arg){
+	object * o=arg;
+	int * p=(o->arg);
+	if (config.map.network.socket==0)
+		return;
+	char mtype=MSG_SPAWN_NPC;
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+	mtype=p[0];
+	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
+		perror("send spawnNpc");
+
+}
 
 ///brush
 

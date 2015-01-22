@@ -1,6 +1,8 @@
  #define PUBLIC_SERVER  "home.wsstudio.tk"//"192.168.56.56"//"localhost" //"public.tdef.tk"
  #define PUBLIC_PORT 7001
  
+ #include "bits.h"
+ 
  //sizeof text in element
  #define ELEM_$TEXT 33
 // screen frames per texture frames
@@ -93,6 +95,7 @@
 #define MSG_SPAWN_NPC 2
 #define MSG_DROP_TOWER 3
 #define MSG_MOVE_HERO 4
+#define MSG_SET_TARGET 5
 
 //public
 //msg to server
@@ -131,28 +134,29 @@
 #define setMask(z,x) z->bit_mask|=x
 //#define checkMask(z,x) z->bit_mask&x
 
-#define PLAYER_HEALTH 1
-#define PLAYER_MONEY 2
-#define PLAYER_CREATE 4
-#define PLAYER_LEVEL 8
-#define PLAYER_HERO 16
-#define PLAYER_HERO_COUNTER 32
+#define PLAYER_HEALTH BIT_1
+#define PLAYER_MONEY BIT_2
+#define PLAYER_CREATE BIT_3
+#define PLAYER_LEVEL BIT_4
+#define PLAYER_HERO BIT_5
+#define PLAYER_HERO_COUNTER BIT_6
+#define PLAYER_TARGET BIT_7
 
-#define NPC_HEALTH 1
-#define NPC_POSITION 2
-#define NPC_CREATE 4
-#define NPC_LEVEL 8
-#define NPC_SHIELD 16
+#define NPC_HEALTH BIT_1
+#define NPC_POSITION BIT_2
+#define NPC_CREATE BIT_3
+#define NPC_LEVEL BIT_4
+#define NPC_SHIELD BIT_5
 
-#define TOWER_HEALTH 1
-#define TOWER_TARGET 2
-#define TOWER_CREATE 4
-#define TOWER_LEVEL 8
-#define TOWER_SHIELD 16
+#define TOWER_HEALTH BIT_1
+#define TOWER_TARGET BIT_2
+#define TOWER_CREATE BIT_3
+#define TOWER_LEVEL BIT_4
+#define TOWER_SHIELD BIT_5
 
-#define BULLET_POSITION 1
-#define BULLET_DETONATE 2
-#define BULLET_CREATE 4
+#define BULLET_POSITION BIT_1
+#define BULLET_DETONATE BIT_2
+#define BULLET_CREATE BIT_3
 
 //global controls
 #define CURSOR_SPEED cursor.speed
