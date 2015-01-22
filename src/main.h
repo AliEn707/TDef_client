@@ -394,6 +394,7 @@ struct map_conf{
 	menu action_menu;
 	menu npc_menu;
 	menu tower_menu;
+	menu target_menu;
 	
 	int time_now;
 	

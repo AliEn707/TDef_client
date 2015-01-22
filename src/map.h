@@ -57,6 +57,7 @@ void actionTowerRemove(void * arg);
 void actionBaseIcon(void * arg);
 void actionHeroIcon(void * arg);
 
+void actionSetTarget(void * arg);
 //brush
 
 void brushTowerCreate();

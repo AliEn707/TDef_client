@@ -1132,6 +1132,7 @@ void cleanMap(){
 	config.map.action_menu.map=1;
 	realizeMenu(&config.map.screen_menu);
 	config.map.screen_menu.map=1;
+	realizeMenu(&config.map.target_menu);
 }
 
 void cleanAll(){

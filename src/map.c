@@ -58,6 +58,7 @@ static inline void menuCheckDraw(int (action)(menu * root)){
 	action(&config.map.tower_menu);
 	action(&config.map.npc_menu);
 	action(&config.map.screen_menu);
+	action(&config.map.target_menu);
 	if (config.map.action_menu.enable!=0)
 		action(&config.map.action_menu);
 }
@@ -405,9 +406,10 @@ void actionHeroIcon(void * arg){
 void actionSetTarget(void * arg){
 	object * o=arg;
 	int * p=(o->arg);
+	printf("work\n");
 	if (config.map.network.socket==0)
 		return;
-	char mtype=MSG_SPAWN_NPC;
+	char mtype=MSG_SET_TARGET;
 	if(SDLNet_TCP_Send(config.map.network.socket,&mtype,sizeof(mtype))<0)
 		perror("send spawnNpc");
 	mtype=p[0];

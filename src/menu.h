@@ -10,6 +10,7 @@ void processKeysMenu(SDL_Event event);
 menu* contextMenuInit(int obj,int elems,float size,texture ** t,void(**a_a)(void*_arg),int arg[][4],char**otext,vec2*tpos,char**etext);
 void contextMenuDisable();
 
+void targetMenuInit(menu * m, int players);
 //actions
 void actionTestMenu(void * arg); //test
 

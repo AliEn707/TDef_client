@@ -109,6 +109,46 @@ void contextMenuDisable(){
 	config.global.context_menu.enable=0;
 }
 
+
+void targetMenuInit(menu * m, int players){
+	int i;
+	int j=0;
+	int elems=1;
+	int dsize=SCREEN_OFFSET;
+	realizeMenu(m);
+	m->$objects=players+3;
+	m->objects=malloc(m->$objects*sizeof(object));
+	memset(m->objects,0,m->$objects*sizeof(object));
+	for(i=0;i<m->$objects;i++){
+		m->objects[i].$elements=elems;
+		m->objects[i].elements=malloc(m->objects[i].$elements*sizeof(element));
+		memset(m->objects[i].elements,0,m->objects[i].$elements*sizeof(element));
+		
+		m->objects[i].position.x=config.options.window.width-dsize*(players-(i-(m->$objects-players)))-SCREEN_OFFSET;
+		m->objects[i].position.y=config.options.window.height-dsize;
+		
+		m->objects[i].elements[j].color.r=1.0f;
+		m->objects[i].elements[j].color.g=1.0f;
+		m->objects[i].elements[j].color.b=1.0f;
+		m->objects[i].elements[j].color.a=1.0f;
+		m->objects[i].elements[j].size.x=dsize;
+		m->objects[i].elements[j].size.y=dsize;
+		sprintf(m->objects[i].elements[j].text,"+");
+		sprintf(m->objects[i].text,"%d",i-1);
+		if (i-1==-1)
+			sprintf(m->objects[i].text,"#Hero_target");
+		if (i-1==0)
+			sprintf(m->objects[i].text,"#Rand_target");
+		
+		m->objects[i].action=actionSetTarget;
+		m->objects[i].touch=1;
+		m->objects[i].focus=1;
+		m->objects[i].single=1;
+		m->objects[i].arg[0]=i-1;
+		m->objects[i].elements[j].tex.frames=-1;
+	}
+	m->enable=1;
+}
 //actions
 
 void actionTestMenu(void * arg){
