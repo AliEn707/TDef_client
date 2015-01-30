@@ -133,22 +133,49 @@ void targetMenuInit(menu * m, int players){
 		m->objects[i].elements[j].color.a=1.0f;
 		m->objects[i].elements[j].size.x=dsize;
 		m->objects[i].elements[j].size.y=dsize;
-		sprintf(m->objects[i].elements[j].text,"+");
+		m->objects[i].elements[j].text_position.y=0;
+		m->objects[i].elements[j].text_position.x=4;
+		
+		sprintf(m->objects[i].elements[j].text,"#deselected_target");
 		sprintf(m->objects[i].text,"%d",i-1);
 		if (i-1==-1)
 			sprintf(m->objects[i].text,"#Hero_target");
 		if (i-1==0)
 			sprintf(m->objects[i].text,"#Rand_target");
-		
+		if (i-1>0)
+			m->objects[i].disabled=1;
 		m->objects[i].action=actionSetTarget;
 		m->objects[i].touch=1;
 		m->objects[i].focus=1;
 		m->objects[i].single=1;
+		
 		m->objects[i].arg[0]=i-1;
 		m->objects[i].elements[j].tex.frames=-1;
 	}
 	m->enable=1;
 }
+
+void targetMenuEnable(menu * m,int i){
+	m->objects[i+2].disabled=0;
+}
+
+void targetMenuDisable(menu * m,int i){
+	m->objects[i+2].disabled=1;	
+}
+
+void targetMenuSelected(menu * m,int i){
+	int j;
+	for(j=0;j<m->$objects;j++){
+		if (i+1==j){
+			//set i to selected
+			sprintf(m->objects[j].elements[0].text,"#selected_target");
+		}else{
+			//deselect other
+			sprintf(m->objects[j].elements[0].text,"#deselected_target");
+		}
+	}
+}
+
 //actions
 
 void actionTestMenu(void * arg){

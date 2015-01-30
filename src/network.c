@@ -299,6 +299,8 @@ static inline int recvPlayerMap(){
 		
 		recvMap(config.map.players[id].hero_type.health);
 		recvMap(config.map.players[id].hero_type.shield);
+		
+		targetMenuEnable(&config.map.target_menu,id);
 	}
 	if(checkMask(bit_mask,PLAYER_HERO)){
 		//get info about hero
@@ -332,6 +334,7 @@ static inline int recvPlayerMap(){
 	if(checkMask(bit_mask,PLAYER_TARGET)){
 //		printf("recv target\n");
 		recvMap(config.map.players[id].target);
+		targetMenuSelected(&config.map.target_menu,config.map.players[id].target);
 	}
 	return 0;
 }

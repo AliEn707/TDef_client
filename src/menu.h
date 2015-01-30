@@ -11,6 +11,10 @@ menu* contextMenuInit(int obj,int elems,float size,texture ** t,void(**a_a)(void
 void contextMenuDisable();
 
 void targetMenuInit(menu * m, int players);
+
+void targetMenuEnable(menu * m,int i);
+void targetMenuDisable(menu * m,int i);
+void targetMenuSelected(menu * m,int i);
 //actions
 void actionTestMenu(void * arg); //test
 

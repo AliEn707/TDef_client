@@ -259,11 +259,11 @@ typedef
 struct object{
 	int type;
 	short focus;
-	int in_focus;
 	int touch;
 	int single;
-	int hide;
-	short disabled;
+	int in_focus:2;
+	int hide:2;
+	int disabled:2;
 	vec2 position;
 	element * elements;
 	int $elements;
