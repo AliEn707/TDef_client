@@ -105,7 +105,8 @@ static inline int recvNpcMap(){
 //		recvMap(n->destination);
 	}
 //	if (checkMask(bit_mask,NPC_POSITION)){
-	recvMap(n->destination);
+	recvMap(n->destination.x);
+	recvMap(n->destination.y);
 	if (!checkNpcTexAttack(n->current_tex)){
 		if (checkMask(bit_mask,NPC_CREATE))
 			memcpy(&n->position,&n->destination,sizeof(vec2));
@@ -200,7 +201,8 @@ static inline int recvBulletMap(){
 	b->prev_time=time_now;
 	
 	recvMap(bit_mask);
-	recvMap(b->destination);
+	recvMap(b->destination.x);
+	recvMap(b->destination.y);
 	if (checkMask(bit_mask,BULLET_CREATE))
 		memcpy(&b->position,&b->destination,sizeof(vec2));
 //	printf("\t%g %g\n",b->position.x,b->position.y);
@@ -224,7 +226,8 @@ static inline int recvBulletMap(){
 				memcpy(&n->direction,&dir,sizeof(vec2));
 				memcpy(&n->position,&n->destination,sizeof(vec2));
 			}
-		recvMap(b->source);
+		recvMap(b->source.x);
+		recvMap(b->source.y);
 //		recvMap(b->destination);
 	}
 	//need to to correct solid, may be...
@@ -380,6 +383,7 @@ void checkMapLatency(){
 }
 
 int networkMapAuth(){
+	SDLNet_TCP_Send(config.map.network.socket,"Hello Server! ^_^",13);
 	recvMap(config.map.player_id);
 	recvMap(config.map.$players);
 	targetMenuInit(&config.map.target_menu, config.map.$players);
