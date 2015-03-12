@@ -104,19 +104,19 @@ static inline int recvNpcMap(){
 		recvMap(n->type);
 //		recvMap(n->destination);
 	}
-//	if (checkMask(bit_mask,NPC_POSITION)){
-	recvMap(n->destination.x);
-	recvMap(n->destination.y);
-	if (!checkNpcTexAttack(n->current_tex)){
-		if (checkMask(bit_mask,NPC_CREATE))
-			memcpy(&n->position,&n->destination,sizeof(vec2));
-		vec2 dir={n->destination.x-n->position.x,n->destination.y-n->position.y};
-		dir.x/=shift;
-		dir.y/=shift;
-		memcpy(&n->direction,&dir,sizeof(vec2));
-		n->current_tex=getWalkTex(n->direction);
+	if (checkMask(bit_mask,NPC_POSITION)){
+		recvMap(n->destination.x);
+		recvMap(n->destination.y);
+		if (!checkNpcTexAttack(n->current_tex)){
+			if (checkMask(bit_mask,NPC_CREATE))
+				memcpy(&n->position,&n->destination,sizeof(vec2));
+			vec2 dir={n->destination.x-n->position.x,n->destination.y-n->position.y};
+			dir.x/=shift;
+			dir.y/=shift;
+			memcpy(&n->direction,&dir,sizeof(vec2));
+			n->current_tex=getWalkTex(n->direction);
+		}
 	}
-//	}
 	if(checkMask(bit_mask,NPC_LEVEL)){
 		recvMap(n->level);
 	}
