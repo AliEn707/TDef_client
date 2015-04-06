@@ -80,7 +80,6 @@ static inline int recvNpcMap(){
 	npc * n;
 	int id,bit_mask;
 	npc n_n;
-	recvMap(id);
 	//find npc by id
 	if ((n=getNpcById(id))==0){
 //		perror("getNpcById recvNpcMap");
@@ -98,6 +97,8 @@ static inline int recvNpcMap(){
 //	printf("%g %g\n",shift, add);
 	n->prev_time=time_now;
 	recvMap(bit_mask);
+	recvMap(id);
+	
 	if (checkMask(bit_mask,NPC_CREATE)){
 //		printf("get new npc %d\n",n->type);
 		recvMap(n->owner);
@@ -143,13 +144,13 @@ static inline int recvTowerMap(){
 	int id,bit_mask;
 	tower tmp;
 	
-	recvMap(id);
 	//find npc by id
 	if((t=getTowerById(id))==0){
 //		perror("getTowerById recvTowerMap");
 		t=&tmp;
 	}
 	recvMap(bit_mask);
+	recvMap(id);
 	if (checkMask(bit_mask,TOWER_CREATE)){
 //		printf("get new tower %d\n",t->type);		
 		recvMap(t->type);
@@ -183,7 +184,6 @@ static inline int recvBulletMap(){
 	int id,bit_mask;
 	bullet tmp;
 	
-	recvMap(id);
 	//find npc by id
 	if((b=getBulletById(id))==0){
 //		perror("getBulletById recvBulletMap");
@@ -201,6 +201,7 @@ static inline int recvBulletMap(){
 	b->prev_time=time_now;
 	
 	recvMap(bit_mask);
+	recvMap(id);
 	recvMap(b->destination.x);
 	recvMap(b->destination.y);
 	if (checkMask(bit_mask,BULLET_CREATE))
@@ -247,9 +248,10 @@ static inline int recvBulletMap(){
 
 static inline int recvPlayerMap(){
 	int id,bit_mask,i;
-	recvMap(id);
 	//check npc
 	recvMap(bit_mask);
+	recvMap(id);
+	
 	if (checkMask(bit_mask,PLAYER_CREATE)){
 		recvMap(config.map.players[id].id);
 		recvMap(config.map.players[id].tower_set);
@@ -342,6 +344,14 @@ static inline int recvPlayerMap(){
 	return 0;
 }
 
+static inline int recvInfoMap(){
+	int info;
+	short t_t;
+	recvMap(info);
+	if (info==1)
+		recvMap(t_t);
+}
+
 int recvMesMap(){
 	char mes;
 //	int err;
@@ -363,6 +373,10 @@ int recvMesMap(){
 	if (mes==MSG_PLAYER){
 //		printf("get player\n");
 		return recvPlayerMap();
+	}
+	if (mes==5){
+//		printf("get player\n");
+		return recvInfoMap();
 	}
 	printf("unnown message\n");
 	return 0;
