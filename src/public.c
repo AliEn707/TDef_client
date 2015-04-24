@@ -122,6 +122,7 @@ int recvMesPublic(){
 	if (mes==MESSAGE_GAME_START){
 		memset(config.map.network.server,0,sizeof(config.map.network.server));
 //		printf("mes game start\n");
+		recvPublic(&bitmask,sizeof(bitmask));
 		//get sizeof hostname
 		recvPublic(&l_l,sizeof(l_l));
 		//get hostname
@@ -129,7 +130,6 @@ int recvMesPublic(){
 		//get port
 		recvPublic(&config.map.network.port,sizeof(config.map.network.port));
 		printf("ready to start game\n");
-		recvPublic(&bitmask,sizeof(bitmask));
 		e_e=eventsGet(bitmask);
 		printf("start map %s on port %d\n",e_e->map,config.map.network.port);
 		if (config.map.enable==0)
@@ -152,13 +152,17 @@ int recvMesPublic(){
 	}
 	if (mes==MESSAGE_EVENT_CHANGE){
 		printf("mes event\n");
+		int b;
+		recvPublic(&b,sizeof(b));
 		recvPublic(&bitmask,sizeof(bitmask));
 //		printf("get %d\n",bitmask);
 		e_e=eventsAdd(bitmask);
 		//add 0 check
 		recvPublic(&e_e->$rooms,sizeof(e_e->$rooms));
-		recvPublic(&l_l,sizeof(l_l));
-		recvPublic(e_e->map,l_l);
+		if (b&1){
+			recvPublic(&l_l,sizeof(l_l));
+			recvPublic(e_e->map,l_l);
+		}
 //		printf("get %d\n",bitmask);
 		//get other data
 		e_e->o->arg[0]=e_e->id;
