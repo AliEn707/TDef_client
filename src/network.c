@@ -79,6 +79,7 @@ TCPsocket networkConnMap(char * addr,int port){
 static inline int recvNpcMap(){
 	npc * n;
 	int id,bit_mask;
+	char c;
 	npc n_n;
 	//find npc by id
 	if ((n=getNpcById(id))==0){
@@ -126,6 +127,8 @@ static inline int recvNpcMap(){
 	}
 	if(checkMask(bit_mask,NPC_SHIELD))
 		recvMap(n->shield);
+	if(checkMask(bit_mask,NPC_STATUS))
+		recvMap(c);
 	if (n->id==0 && checkMask(bit_mask,NPC_CREATE)) {
 		n->id=id;
 		config.perf.created=1;
